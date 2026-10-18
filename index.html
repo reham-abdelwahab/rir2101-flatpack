@@ -167,6 +167,7 @@
             <h1 class="font-display font-bold text-base sm:text-lg text-paper-900 tracking-tight">Studio Flat-Pack Maker</h1>
             <span id="header-scale-pill" class="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300">1:20 (A4)</span>
             <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-paper-200 text-paper-800 hidden md:inline-block">RIR2101 Studio</span>
+            <span id="header-version-pill" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-paper-200 text-paper-800" title="Tool version">v</span>
           </div>
           <p class="text-[11px] text-paper-700 hidden sm:block">Custom Scale 2D Cut-Sheet Generator + Interactive 3D Fold & Diagnostic Test Lab</p>
           <p class="text-[10px] text-paper-700 hidden md:block"><span class="team-credit-en"></span></p>
@@ -1472,6 +1473,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
   </div>
 
   <script>
+    // =========================================================================
+    // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
+    // =========================================================================
+    const TOOL_VERSION = '3.4';
+
     // =========================================================================
     // STATE & NEUFERT ARCHETYPE PRESETS
     // =========================================================================
@@ -3101,6 +3107,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         <line x1="${6 + tbW*0.72}" y1="${tbY}" x2="${6 + tbW*0.72}" y2="${tbY + 14.5}" stroke="#1E1B18" stroke-width="0.35"/>
         <line x1="6" y1="${tbY + 14.5}" x2="${6 + tbW}" y2="${tbY + 14.5}" stroke="#1E1B18" stroke-width="0.3"/>
         <text x="10" y="${tbY + 16.6}" font-size="1.8" fill="#3E372B">${escapeXml(COURSE_TEAM.course)} · ${escapeXml(COURSE_TEAM.institution)}</text>
+        <text x="${2 + tbW}" y="${tbY + 16.6}" font-size="1.8" fill="#3E372B" text-anchor="end">Studio Flat-Pack Maker v${TOOL_VERSION}</text>
         <text x="10" y="${tbY + 18.6}" font-size="1.8" fill="#3E372B" font-weight="bold">${escapeXml(teamLine())}</text>
 
         <text x="10" y="${tbY + 5.5}" font-size="2.6" fill="#5C5343">STUDENT NAME &amp; ID:</text>
@@ -3638,6 +3645,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         <line x1="${6 + tbW * 0.72}" y1="${tbY}" x2="${6 + tbW * 0.72}" y2="${tbY + 13}" stroke="#1E1B18" stroke-width="0.4"/>
         <line x1="6" y1="${tbY + 13}" x2="${6 + tbW}" y2="${tbY + 13}" stroke="#1E1B18" stroke-width="0.3"/>
         <text x="10" y="${tbY + 14.8}" font-size="1.8" fill="#3E372B">${escapeXml(COURSE_TEAM.course)} · ${escapeXml(COURSE_TEAM.institution)}</text>
+        <text x="${2 + tbW}" y="${tbY + 14.8}" font-size="1.8" fill="#3E372B" text-anchor="end">Studio Flat-Pack Maker v${TOOL_VERSION}</text>
         <text x="10" y="${tbY + 16.8}" font-size="1.8" fill="#3E372B" font-weight="bold">${escapeXml(teamLine())}</text>
         <text x="10" y="${tbY + 5}" font-size="2.3" fill="#5C5343">STUDENT NAME &amp; ID:</text>
         <text x="10" y="${tbY + 11}" font-size="${Math.min(3.2, (tbW * 0.36 - 6) / (Math.max(1, name.length) * 0.62)).toFixed(2)}" font-weight="bold">${escapeXml(name || '— fill in Tab 1, Step 0 —')}</text>
@@ -3695,6 +3703,8 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       document.querySelectorAll('.team-credit-en').forEach(e => e.textContent = `${COURSE_TEAM.course} · ${teamLine()}`);
       document.querySelectorAll('.team-credit-ar').forEach(e => e.textContent = teamLineAr());
       document.querySelectorAll('.team-credit-inst').forEach(e => e.textContent = COURSE_TEAM.institution);
+      const vp = document.getElementById('header-version-pill');
+      if (vp) vp.textContent = 'v' + TOOL_VERSION;
     }
     window.addEventListener('DOMContentLoaded', installTeamCredits);
 

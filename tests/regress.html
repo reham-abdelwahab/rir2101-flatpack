@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FlatPack Regressions</title>
+<style>
+  body { font: 14px/1.4 system-ui, sans-serif; margin: 16px; background: #fff; color: #111; }
+  iframe { width: 1280px; height: 900px; border: 1px solid #ccc; }
+  .frames { display: none; }
+  .ok { color: #166534; } .bad { color: #b91c1c; font-weight: bold; }
+  pre { white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>FlatPack regressions</h1>
+<p>Compares the candidate build against a baseline build (the last verified master).
+Usage: <code>tests/regress.html?cand=../index.html&amp;base=../_baseline.html</code>.
+Without a baseline only the self-checks run. Results are also on <code>window.REGRESS</code>.</p>
+<pre id="out">running…</pre>
+<div class="frames"><iframe id="fc"></iframe><iframe id="fb"></iframe></div>
+<script>
+const qs = new URLSearchParams(location.search);
+const CAND = qs.get('cand') || '../index.html';
+const BASE = qs.get('base');
+const out = document.getElementById('out');
+const results = [];
+const log = (ok, name, detail = '') => { results.push({ ok, name, detail }); render(); };
+function render() {
+  out.innerHTML = results.map(r => `<span class="${r.ok ? 'ok' : 'bad'}">${r.ok ? 'PASS' : 'FAIL'}</span> ${r.name}${r.detail ? ' — ' + r.detail : ''}`).join('\n');
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function load(frame, src) {
+  return new Promise(res => {
+    frame.onload = async () => {
+      const w = frame.contentWindow;
+      w.__errors = [];
+      w.addEventListener('error', e => w.__errors.push(String(e.message)));
+      const ce = w.console.error.bind(w.console);
+      w.console.error = (...a) => { w.__errors.push(a.join(' ')); ce(...a); };
+      await sleep(600);
+      w.__S = w.eval('({ state, imgState, v: typeof TOOL_VERSION === "undefined" ? undefined : TOOL_VERSION })');
+      if (w.__S.state && w.__S.state.stampReady) await w.__S.state.stampReady;
+      res(w);
+    };
+    frame.src = src;
+  });
+}
+
+// Lines the candidate adds on purpose (version credit, verification stamp) are removed before comparing.
+const normalize = s => s
+  .replace(/<text[^>]*>Studio Flat-Pack Maker v[^<]*<\/text>/g, '')
+  .replace(/<text[^>]*>VERIFY: [^<]*<\/text>/g, '')
+  .replace(/<text[^>]*class="verify-stamp"[^>]*>[^<]*<\/text>/g, '')
+  .replace(/\s+/g, ' ');
+
+const ARCH = ['chair', 'sofa', 'table', 'bed', 'cabinet', 'shelf'];
+const SCALES = [10, 15, 20, 25, 30, 50];
+const SHEETS = ['A4', 'A3'];
+
+async function settle(w) { if (w.__S.state && w.__S.state.stampReady) await w.__S.state.stampReady; }
+
+async function sweep(w) {
+  const rows = [];
+  for (const a of ARCH) for (const sc of SCALES) for (const sh of SHEETS) {
+    w.selectArchetype(a); w.setSheetSize(sh); w.setScale(sc);
+    await settle(w);
+    rows.push({ key: `${a} 1:${sc} ${sh}`, fits: w.__S.state.fitsOnPage, svg: w.document.getElementById('a4-cut-svg').innerHTML });
+  }
+  return rows;
+}
+
+function chairImage() {
+  // 350 x 850 px side-profile chair silhouette (1 px = 1 mm real at 1:1) on a light background.
+  const c = document.createElement('canvas'); c.width = 500; c.height = 1000;
+  const x = c.getContext('2d');
+  x.fillStyle = '#f2f2f2'; x.fillRect(0, 0, 500, 1000);
+  x.fillStyle = '#222';
+  x.fillRect(75, 75, 40, 850);     // back post (full height 850)
+  x.fillRect(75, 455, 350, 40);    // seat (width 350)
+  x.fillRect(385, 495, 40, 430);   // front leg
+  return c.toDataURL('image/png');
+}
+
+async function trace(w) {
+  w.document.getElementById('inp-student-name').value = ''; w.document.getElementById('inp-student-id').value = ''; w.updateStudentMeta(); await settle(w);
+  w.switchMainTab('image');
+  w.imgLoadSrc(chairImage());
+  for (let i = 0; i < 50 && !w.__S.imgState.loaded; i++) await sleep(100);
+  w.__S.imgState.calib.p1 = [75, 950]; w.__S.imgState.calib.p2 = [425, 950]; w.__S.imgState.calib.cm = 35;
+  w.imgSetScale(10);
+  w.imgAutoTrace();
+  await sleep(300); await settle(w);
+  w.renderImageSheet(); await settle(w);
+  const ext = w.__S.imgState.extents;
+  const cut = w.__S.imgState.shapes.filter(s => s.kind === 'cut');
+  const xs = cut.flatMap(s => s.pts.map(p => p[0])), ys = cut.flatMap(s => s.pts.map(p => p[1]));
+  const mmPerPx = w.imgMmPerPx();
+  const size = xs.length ? [(Math.max(...xs) - Math.min(...xs)) * mmPerPx, (Math.max(...ys) - Math.min(...ys)) * mmPerPx] : [0, 0];
+  const svg = w.document.getElementById('image-cut-svg').innerHTML;
+  w.switchMainTab('tool');
+  return { size, shapes: JSON.stringify(w.__S.imgState.shapes), svg, ext };
+}
+
+async function helpRoundTrip(w) {
+  w.selectArchetype('table'); w.setSheetSize('A3'); w.setScale(15);
+  w.document.getElementById('inp-student-name').value = 'Test Student';
+  w.document.getElementById('inp-student-id').value = '12345';
+  w.updateStudentMeta(); await settle(w);
+  const keys = ['archetype', 'w', 'd', 'h', 'subH', 'scale', 'sheetSize', 'thicknessMm', 'joinery', 'studentName', 'studentId', 'projectRoom'];
+  const before = JSON.stringify(keys.map(k => w.__S.state[k])) + JSON.stringify(w.__S.state.curveOffsets);
+  const stampBefore = w.__S.state.stamp;
+  let copied = '';
+  const orig = w.document.execCommand.bind(w.document);
+  w.document.execCommand = (cmd) => { if (cmd === 'copy') copied = [...w.document.querySelectorAll('body > textarea')].pop()?.value || ''; return true; };
+  w.copyStudentDiagnosticCode();
+  w.document.execCommand = orig;
+  // scramble, then restore from the code
+  w.selectArchetype('chair'); w.setSheetSize('A4'); w.setScale(20);
+  w.document.getElementById('inp-student-name').value = ''; w.document.getElementById('inp-student-id').value = '';
+  w.updateStudentMeta(); await settle(w);
+  w.document.getElementById('inp-restore-code').value = copied;
+  w.loadStudentDiagnosticCode(); await settle(w);
+  const after = JSON.stringify(keys.map(k => w.__S.state[k])) + JSON.stringify(w.__S.state.curveOffsets);
+  return { ok: before === after, before, after, copied, stampBefore, stampAfter: w.__S.state.stamp };
+}
+
+function overlapCheck(w, svgId) {
+  // Text in the title block must not overlap: check every pair of <text> boxes in the bottom 26 mm.
+  const svg = w.document.getElementById(svgId);
+  const vb = svg.viewBox.baseVal; const tb = vb.height - 26;
+  const texts = [...svg.querySelectorAll('text')].filter(t => { try { return t.getBBox().y >= tb; } catch { return false; } });
+  const boxes = texts.map(t => ({ t: t.textContent.slice(0, 40), b: t.getBBox() }));
+  const bad = [];
+  for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+    const a = boxes[i].b, b = boxes[j].b;
+    if (a.x < b.x + b.width - 0.2 && b.x < a.x + a.width - 0.2 && a.y < b.y + b.height - 0.2 && b.y < a.y + a.height - 0.2) bad.push(`${boxes[i].t} ⟷ ${boxes[j].t}`);
+  }
+  const outside = boxes.filter(o => o.b.x < 6 || o.b.x + o.b.width > vb.width - 6).map(o => o.t);
+  return { bad, outside };
+}
+
+(async () => {
+  const wc = await load(document.getElementById('fc'), CAND);
+  const wb = BASE ? await load(document.getElementById('fb'), BASE) : null;
+
+  log(wc.__errors.length === 0, 'Candidate loads without console errors', wc.__errors.join(' | '));
+  log(typeof wc.__S.v === 'string', 'TOOL_VERSION constant present', String(wc.__S.v));
+  const pill = wc.document.getElementById('header-version-pill');
+  log(!!pill && pill.textContent === 'v' + wc.__S.v, 'Header shows version pill', pill ? pill.textContent : 'missing');
+
+  const sc = await sweep(wc);
+  const sb = wb ? await sweep(wb) : null;
+  const vText = sc.every(r => r.svg.includes('Studio Flat-Pack Maker v' + wc.__S.v));
+  log(vText, 'Version printed in Tab 1 title block (all 72 combinations)');
+  if (sb) {
+    const diffs = sc.filter((r, i) => normalize(r.svg) !== normalize(sb[i].svg) || r.fits !== sb[i].fits).map(r => r.key);
+    log(diffs.length === 0, '72-combination sweep identical to baseline (geometry, fit flags, labels)', diffs.slice(0, 6).join(', '));
+  }
+  log(sc.filter(r => !r.fits).length === (sb ? sb.filter(r => !r.fits).length : sc.filter(r => !r.fits).length), 'Overflow reported, never shrunk', `${sc.filter(r => !r.fits).length} of 72 combinations report "does not fit"`);
+
+  for (const [a, s, sh] of [['chair', 20, 'A4'], ['bed', 25, 'A3'], ['shelf', 10, 'A4']]) {
+    wc.selectArchetype(a); wc.setSheetSize(sh); wc.setScale(s);
+    wc.document.getElementById('inp-student-name').value = 'Abdelrahman Mohamed Abdelwahab'; wc.document.getElementById('inp-student-id').value = '231012345';
+    wc.updateStudentMeta(); await settle(wc);
+    const o = overlapCheck(wc, 'a4-cut-svg');
+    log(o.bad.length === 0 && o.outside.length === 0, `Tab 1 title block: no overlapping / clipped text (${a} 1:${s} ${sh})`, [...o.bad, ...o.outside].join('; '));
+  }
+
+  const tc = await trace(wc);
+  log(Math.abs(tc.size[0] - 35) < 0.6 && Math.abs(tc.size[1] - 85) < 0.6, 'Image tab traces 35×85 cm chair to ≈35×85 mm at 1:10', tc.size.map(v => v.toFixed(1)).join(' × ') + ' mm');
+  log(tc.svg.includes('Studio Flat-Pack Maker v' + wc.__S.v), 'Version printed in Tab 3 title block');
+  {
+    wc.switchMainTab('image'); await sleep(100);
+    const o = overlapCheck(wc, 'image-cut-svg');
+    log(o.bad.length === 0 && o.outside.length === 0, 'Tab 3 title block: no overlapping / clipped text', [...o.bad, ...o.outside].join('; '));
+    wc.switchMainTab('tool');
+  }
+  if (wb) {
+    const tb = await trace(wb);
+    log(tc.shapes === tb.shapes, 'Image-tab trace identical to baseline (shape points)');
+    log(normalize(tc.svg) === normalize(tb.svg), 'Image-tab sheet identical to baseline (apart from added lines)');
+  }
+
+  const h = await helpRoundTrip(wc);
+  log(h.ok, 'Help Code round-trips state exactly', h.ok ? '' : `${h.before} → ${h.after}`);
+  if ('stamp' in wc.__S.state) {
+    log(/^[A-Z2-7]{4}-[A-Z2-7]{4}$/.test(h.stampBefore || ''), 'Stamp format XXXX-XXXX', h.stampBefore);
+    log(h.stampBefore === h.stampAfter, 'Stamp identical after Help Code restore', `${h.stampBefore} → ${h.stampAfter}`);
+    log(h.copied.includes(h.stampBefore), 'Help Code message contains the stamp');
+  }
+
+  log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));
+  window.REGRESS = { pass: results.every(r => r.ok), results };
+  out.insertAdjacentHTML('beforeend', `\n\n<b>${window.REGRESS.pass ? 'ALL PASS' : 'FAILURES'}</b> (${results.filter(r => r.ok).length}/${results.length})`);
+})().catch(e => { log(false, 'Harness crashed', e.stack); window.REGRESS = { pass: false, results }; });
+</script>
+</body>
+</html>
