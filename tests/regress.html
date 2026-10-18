@@ -149,6 +149,20 @@ function overlapCheck(w, svgId) {
   const pill = wc.document.getElementById('header-version-pill');
   log(!!pill && pill.textContent === 'v' + wc.__S.v, 'Header shows version pill', pill ? pill.textContent : 'missing');
 
+  // Fully offline: nothing loaded from the network, every icon class in use has an inline mask
+  const ext = [...wc.document.querySelectorAll('link[href], script[src], img[src^="http"], iframe[src]')].map(e => e.href || e.src);
+  const netRes = wc.performance.getEntriesByType('resource').map(r => r.name).filter(u => !u.startsWith(wc.location.origin) && !u.startsWith('data:') && !u.startsWith('blob:'));
+  log(ext.length === 0 && netRes.length === 0, 'Fully offline: no external links or network requests', [...ext, ...netRes].join(', '));
+  const iconCls = new Set();
+  wc.document.documentElement.outerHTML.replace(/fa-(?!solid\b|regular\b)[a-z0-9-]+/g, m => iconCls.add(m));
+  for (const s of wc.document.querySelectorAll('script')) (s.textContent.match(/fa-(?!solid\b|regular\b)[a-z0-9-]+/g) || []).forEach(m => iconCls.add(m));
+  const noMask = [...iconCls].filter(c => {
+    const i = wc.document.createElement('i'); i.className = (c === 'fa-image' ? 'fa-regular ' : 'fa-solid ') + c; wc.document.body.appendChild(i);
+    const cs = wc.getComputedStyle(i); const m = cs.webkitMaskImage || cs.maskImage; const ok = m && m.startsWith('url("data:image/svg+xml');
+    i.remove(); return !ok;
+  });
+  if (/embedded-icons/.test(wc.document.head.innerHTML)) log(noMask.length === 0, `Every icon in use has an inline mask (${iconCls.size} icons)`, noMask.join(', '));
+
   const sc = await sweep(wc);
   const sb = wb ? await sweep(wb) : null;
   const vText = sc.every(r => r.svg.includes('Studio Flat-Pack Maker v' + wc.__S.v));

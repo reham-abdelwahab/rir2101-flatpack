@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.6 — 2026-10-18
+- Fully offline: the Font Awesome and Google Fonts links are removed.
+  - The 37 icons the tool uses are now inline SVG masks (Font Awesome Free 6.4.0, CC BY 4.0). The `<i class="fa-…">` markup is kept, so the JavaScript did not change.
+  - Fonts now fall back to local fonts: Segoe UI / system-ui for text, and Cascadia Mono / Consolas / Menlo for monospace.
+- There are no other changes. The geometry, stamp and Help Code are the same as in v3.5.
+
 ## v3.5 — 2026-10-18
 - Verification stamp `VERIFY: XXXX-XXXX · v3.5` on every Tab 1 and Tab 3 title block, in the `03_LABELS_BLACK` layer.
   - The stamp is the first 8 base32 characters of SHA-256(version | name | ID | piece | dimensions | scale | sheet | board | joinery | salt).
