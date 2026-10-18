@@ -51,8 +51,7 @@ function load(frame, src) {
 // Lines the candidate adds on purpose (version credit, verification stamp) are removed before comparing.
 const normalize = s => s
   .replace(/<text[^>]*>Studio Flat-Pack Maker v[^<]*<\/text>/g, '')
-  .replace(/<text[^>]*>VERIFY: [^<]*<\/text>/g, '')
-  .replace(/<text[^>]*class="verify-stamp"[^>]*>[^<]*<\/text>/g, '')
+  .replace(/<text[^>]*class="verify-line"[^>]*>.*?<\/text>/g, '')
   .replace(/\s+/g, ' ');
 
 const ARCH = ['chair', 'sofa', 'table', 'bed', 'cabinet', 'shelf'];
@@ -189,6 +188,46 @@ function overlapCheck(w, svgId) {
     log(/^[A-Z2-7]{4}-[A-Z2-7]{4}$/.test(h.stampBefore || ''), 'Stamp format XXXX-XXXX', h.stampBefore);
     log(h.stampBefore === h.stampAfter, 'Stamp identical after Help Code restore', `${h.stampBefore} → ${h.stampAfter}`);
     log(h.copied.includes(h.stampBefore), 'Help Code message contains the stamp');
+
+    // SHA-256 must match Web Crypto (block boundaries, Arabic, empty)
+    const samples = ['', 'abc', 'a'.repeat(55), 'a'.repeat(56), 'a'.repeat(64), 'مريم عماد|231012345', 'x'.repeat(200)];
+    const hex = u8 => [...u8].map(b => b.toString(16).padStart(2, '0')).join('');
+    let shaOk = true;
+    for (const s of samples) {
+      const ref = hex(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s))));
+      if (hex(wc.sha256Bytes(s)) !== ref) shaOk = false;
+    }
+    log(shaOk, 'Built-in SHA-256 matches crypto.subtle (7 samples)');
+
+    const svgNow = wc.document.getElementById('a4-cut-svg').textContent;
+    log(svgNow.includes(`VERIFY: ${wc.__S.state.stamp} · v${wc.__S.v}`), 'Tab 1 title block prints "VERIFY: XXXX-XXXX · vX.Y"');
+    log(/03_LABELS_BLACK/.test(wc.document.getElementById('a4-cut-svg').innerHTML.split('verify-line')[0]), 'Stamp sits in the 03_LABELS_BLACK layer');
+
+    // Every hashed field changes the stamp
+    const base = wc.sheetStampFields();
+    const s0 = wc.computeStamp(base);
+    const tweaks = { name: 'Other', id: '999', archetype: 'sofa', w: base.w + 1, d: base.d + 1, h: base.h + 1, subH: base.subH + 1, scale: base.scale + 5, sheet: base.sheet === 'A4' ? 'A3' : 'A4', thickness: base.thickness + 0.5, joinery: base.joinery === 'fold' ? 'slot' : 'fold', version: '9.9' };
+    const insensitive = Object.entries(tweaks).filter(([k, v]) => wc.computeStamp({ ...base, [k]: v }) === s0).map(([k]) => k);
+    log(insensitive.length === 0, 'Changing any hashed value changes the stamp', insensitive.join(', '));
+    log(wc.computeStamp({ ...base, name: '  ' + String(base.name).toUpperCase() + ' ', id: ' ' + base.id + ' ', version: 'v' + base.version }) === s0, 'Stamp tolerant of case / spaces / "v" prefix when re-typed');
+
+    // Verify box: fill from Help Code → match; edit scale → no match
+    wc.openShareSupportModal();
+    wc.document.getElementById('vf-help').value = h.copied;
+    wc.verifyFillFromHelp();
+    log(wc.verifySheet() === true, 'Verify box: Help Code fill + printed stamp → ✔', wc.document.getElementById('vf-result').textContent);
+    wc.document.getElementById('vf-scale').value = '10';
+    log(wc.verifySheet() === false, 'Verify box: edited scale → ✘', wc.document.getElementById('vf-result').textContent);
+    // manual entry from paper for Tab 3 sheet
+    const im = wc.__S.imgState;
+    wc.document.getElementById('vf-type').value = 'image'; wc.verifyTypeUI();
+    wc.document.getElementById('vf-name').value = wc.__S.state.studentName; wc.document.getElementById('vf-id').value = wc.__S.state.studentId;
+    wc.document.getElementById('vf-pieces').value = im.pieceSizes; wc.document.getElementById('vf-scale').value = im.scale;
+    wc.document.getElementById('vf-sheet').value = im.sheet; wc.document.getElementById('vf-ver').value = 'v' + wc.__S.v;
+    wc.document.getElementById('vf-stamp').value = im.stamp.toLowerCase();
+    log(wc.verifySheet() === true, 'Verify box: Tab 3 image sheet typed from paper → ✔', `${im.pieceSizes} → ${im.stamp}`);
+    log(wc.document.getElementById('image-cut-svg').textContent.includes(`VERIFY: ${im.stamp} · v${wc.__S.v}`), 'Tab 3 title block prints the stamp');
+    wc.closeShareSupportModal();
   }
 
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));

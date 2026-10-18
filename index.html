@@ -1401,6 +1401,37 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
               </button>
             </div>
           </div>
+
+          <!-- TA: Verify a printed sheet -->
+          <div id="verify-box" class="bg-white p-2.5 rounded-xl border border-paper-300 space-y-2">
+            <label class="block text-[11px] font-bold text-paper-900">For TAs: Verify a Printed Sheet (VERIFY: XXXX-XXXX stamp)</label>
+            <p class="text-[10px] text-paper-700">Type the values exactly as printed on the sheet (title block + the small line next to the stamp), or paste the student's Help Code and press <em>Fill</em>. A match means the printed values were not edited after the sheet came out of this tool. It deters tampering; it is not cryptographic proof (the check key ships inside this file).</p>
+            <div class="flex gap-2">
+              <input type="text" id="vf-help" placeholder="Optional: paste a STUDIO-HELP code to fill the fields" class="flex-1 px-2.5 py-1.5 rounded-xl border border-paper-300 text-xs font-mono bg-paper-50">
+              <button type="button" onclick="verifyFillFromHelp()" class="px-3.5 py-1.5 rounded-xl bg-paper-200 hover:bg-paper-300 text-paper-900 font-bold text-xs transition shrink-0">Fill</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px;" class="text-[10px] text-paper-700">
+              <label>Sheet type<select id="vf-type" onchange="verifyTypeUI()" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"><option value="cut">Tab 1 cut sheet</option><option value="image">Tab 3 image trace</option></select></label>
+              <label>Student name<input id="vf-name" type="text" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label>Student ID<input id="vf-id" type="text" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label class="vf-cut">Piece<select id="vf-arch" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"><option>chair</option><option>sofa</option><option>table</option><option>bed</option><option>cabinet</option><option>shelf</option></select></label>
+              <label class="vf-cut">W (cm)<input id="vf-w" type="number" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label class="vf-cut">D (cm)<input id="vf-d" type="number" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label class="vf-cut">H (cm)<input id="vf-h" type="number" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label class="vf-cut">SUB<input id="vf-sub" type="number" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label class="vf-cut">Board (mm)<input id="vf-th" type="number" step="0.1" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label class="vf-cut">Joinery<select id="vf-jn" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"><option value="fold">fold</option><option value="slot">slot</option></select></label>
+              <label class="vf-image" style="grid-column: 1 / -1; display: none;">Piece sizes as printed (cm), e.g. 35×85, 35×85, 45×45<input id="vf-pieces" type="text" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label>Scale 1:<input id="vf-scale" type="number" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label>Sheet<select id="vf-sheet" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"><option>A4</option><option>A3</option></select></label>
+              <label>Version (v…)<input id="vf-ver" type="text" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
+              <label>Printed stamp<input id="vf-stamp" type="text" placeholder="XXXX-XXXX" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs font-mono bg-paper-50"></label>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="verifySheet()" class="px-3.5 py-1.5 rounded-xl bg-paper-900 hover:bg-paper-800 text-amber-300 font-bold text-xs transition shrink-0">Check stamp</button>
+              <span id="vf-result" class="text-xs font-mono font-bold" role="status"></span>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -1476,7 +1507,100 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '3.4';
+    const TOOL_VERSION = '3.5';
+
+    // =========================================================================
+    // VERIFICATION STAMP (VERIFY: XXXX-XXXX · v<TOOL_VERSION> in every title block)
+    // Deters editing a sheet after printing; it is NOT cryptographic proof, because the
+    // salt ships inside this file. Change VERIFY_SALT each semester (any text): sheets
+    // printed with an older salt will then no longer verify.
+    // =========================================================================
+    const VERIFY_SALT = 'RIR2101-Fall2026-Bdxz7OJNsljC';
+
+    // Plain SHA-256 (synchronous, works from file:// too; matches crypto.subtle — see tests/regress.html)
+    function sha256Bytes(str) {
+      const W32 = 2 ** 32, K = [], H = [];
+      for (let n = 2; K.length < 64; n++) {
+        let prime = true;
+        for (let i = 2; i * i <= n; i++) if (n % i === 0) { prime = false; break; }
+        if (!prime) continue;
+        if (H.length < 8) H.push((Math.sqrt(n) * W32) | 0);
+        K.push((Math.cbrt(n) * W32) | 0);
+      }
+      const b = Array.from(new TextEncoder().encode(str));
+      const bitLen = b.length * 8;
+      b.push(0x80);
+      while (b.length % 64 !== 56) b.push(0);
+      for (let i = 7; i >= 0; i--) b.push(Math.floor(bitLen / 2 ** (8 * i)) & 255);
+      const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+      const w = new Array(64);
+      for (let o = 0; o < b.length; o += 64) {
+        for (let i = 0; i < 16; i++) w[i] = (b[o + 4 * i] << 24) | (b[o + 4 * i + 1] << 16) | (b[o + 4 * i + 2] << 8) | b[o + 4 * i + 3];
+        for (let i = 16; i < 64; i++) {
+          const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+          const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+          w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+        }
+        let [a, bb, c, d, e, f, g, h] = H;
+        for (let i = 0; i < 64; i++) {
+          const t1 = (h + (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + w[i]) | 0;
+          const t2 = ((rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & bb) ^ (a & c) ^ (bb & c))) | 0;
+          h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = bb; bb = a; a = (t1 + t2) | 0;
+        }
+        [a, bb, c, d, e, f, g, h].forEach((v, i) => { H[i] = (H[i] + v) | 0; });
+      }
+      const out = new Uint8Array(32);
+      H.forEach((v, i) => { out[4 * i] = v >>> 24; out[4 * i + 1] = (v >>> 16) & 255; out[4 * i + 2] = (v >>> 8) & 255; out[4 * i + 3] = v & 255; });
+      return out;
+    }
+
+    function base32(bytes) {
+      const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      let bits = 0, val = 0, out = '';
+      for (const byte of bytes) {
+        val = ((val << 8) | byte) & 0x1FFF; bits += 8;
+        while (bits >= 5) { out += A[(val >>> (bits - 5)) & 31]; bits -= 5; }
+      }
+      if (bits > 0) out += A[(val << (5 - bits)) & 31];
+      return out;
+    }
+
+    // Normalisation so a TA re-typing the printed values gets the same stamp
+    const vNorm = {
+      name: s => String(s || '').normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase(),
+      id: s => String(s || '').normalize('NFKC').replace(/\s+/g, '').toUpperCase(),
+      num: v => (v === '' || v == null || isNaN(+v)) ? '' : String(+v),
+      pieces: s => [...String(s || '').matchAll(/(\d+(?:\.\d+)?)\s*[x×X*]\s*(\d+(?:\.\d+)?)/g)].map(m => `${+m[1]}x${+m[2]}`).sort().join(','),
+      version: v => String(v || '').trim().replace(/^v/i, '')
+    };
+
+    // f = { version, name, id, archetype, w, d, h, subH, scale, sheet, thickness, joinery, pieces }
+    // archetype 'image' (Tab 3) hashes the printed piece sizes instead of w/d/h/subH.
+    function computeStamp(f) {
+      const dims = f.archetype === 'image'
+        ? vNorm.pieces(f.pieces)
+        : [f.w, f.d, f.h, f.subH].map(vNorm.num).join('x');
+      const parts = [vNorm.version(f.version), vNorm.name(f.name), vNorm.id(f.id), f.archetype, dims,
+        vNorm.num(f.scale), String(f.sheet || '').toUpperCase(),
+        f.archetype === 'image' ? '' : vNorm.num(f.thickness), f.archetype === 'image' ? '' : String(f.joinery || ''), VERIFY_SALT];
+      const s = base32(sha256Bytes(parts.join('|'))).slice(0, 8);
+      return s.slice(0, 4) + '-' + s.slice(4);
+    }
+
+    function sheetStampFields() {
+      return { version: TOOL_VERSION, name: state.studentName, id: state.studentId, archetype: state.archetype,
+        w: state.w, d: state.d, h: state.h, subH: state.subH, scale: state.scale, sheet: state.sheetSize,
+        thickness: state.thicknessMm, joinery: state.joinery };
+    }
+
+    // The values hashed into the stamp, printed next to it so a TA can re-type them from paper
+    function sheetSpecLine() {
+      return `${state.archetype.toUpperCase()} ${vNorm.num(state.w)}×${vNorm.num(state.d)}×${vNorm.num(state.h)} cm · SUB ${vNorm.num(state.subH)} · ${vNorm.num(state.thicknessMm)} mm ${String(state.joinery).toUpperCase()}`;
+    }
+
+    function verifyLineSvg(x, y, spec, stamp) {
+      return `<text class="verify-line" x="${x}" y="${y}" font-size="1.8" fill="#1E1B18" text-anchor="end"><tspan class="verify-spec" fill="#3E372B">${escapeXml(spec)} · </tspan><tspan class="verify-stamp" font-weight="bold">VERIFY: ${stamp} · v${TOOL_VERSION}</tspan></text>`;
+    }
 
     // =========================================================================
     // STATE & NEUFERT ARCHETYPE PRESETS
@@ -2340,6 +2464,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const ieh = clone.querySelector('#img-empty-hint'); if (ieh) ieh.classList.remove('hidden');
       const iov = clone.querySelector('#img-overlay'); if (iov) iov.innerHTML = '';
       ['inp-student-name', 'inp-student-id', 'inp-restore-code'].forEach(id => { const f = clone.querySelector('#' + id); if (f) f.setAttribute('value', ''); });
+      const vr = clone.querySelector('#vf-result'); if (vr) vr.textContent = '';
       const fullHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
       const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
@@ -2369,7 +2494,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         cv: state.curveOffsets,
         nm: state.studentName,
         id: state.studentId,
-        rm: state.projectRoom
+        rm: state.projectRoom,
+        vs: state.stamp,
+        v: TOOL_VERSION
       };
       const base64Code = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
       const issueSummary = issues.length === 0
@@ -2381,6 +2508,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         `• Piece: ${archetypes[state.archetype].title} (${state.w}x${state.d}x${state.h}cm, Sub:${state.subH}cm)\n` +
         `• Scale: 1:${state.scale} on ${state.sheetSize} (${state.thicknessMm}mm, ${state.joinery})\n` +
         `• Status: ${issueSummary}\n` +
+        `• Sheet stamp: VERIFY: ${state.stamp} · v${TOOL_VERSION}\n` +
         `• Restore Code: STUDIO-HELP:[${base64Code}]`;
 
       const tempArea = document.createElement('textarea');
@@ -2440,10 +2568,60 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
         closeShareSupportModal();
         validateAndProceed('check');
-        showToast(`Loaded ${decoded.nm || 'Student'}'s exact session!`);
+        if (decoded.vs && decoded.vs !== state.stamp) {
+          showToast(`Loaded ${decoded.nm || 'Student'}'s session — but the stamp in the code (${decoded.vs}, v${decoded.v || '?'}) does not match this tool's (${state.stamp}). Older version, older salt, or edited code.`);
+        } else {
+          showToast(`Loaded ${decoded.nm || 'Student'}'s exact session!`);
+        }
       } catch (err) {
         showToast('Invalid Help Code format. Make sure to copy the full STUDIO-HELP:[...] text.');
       }
+    }
+
+    // ---- TA: verify a printed sheet's VERIFY stamp ----
+    function verifyTypeUI() {
+      const img = document.getElementById('vf-type').value === 'image';
+      document.querySelectorAll('#verify-box .vf-cut').forEach(e => e.style.display = img ? 'none' : '');
+      document.querySelectorAll('#verify-box .vf-image').forEach(e => e.style.display = img ? '' : 'none');
+    }
+
+    function verifyFillFromHelp() {
+      const raw = document.getElementById('vf-help').value.trim();
+      try {
+        const m = raw.match(/STUDIO-HELP:\[([A-Za-z0-9+/=]+)\]/);
+        const c = JSON.parse(decodeURIComponent(escape(atob(m ? m[1] : raw))));
+        const set = (id, v) => { document.getElementById(id).value = v ?? ''; };
+        set('vf-type', 'cut'); verifyTypeUI();
+        set('vf-name', c.nm); set('vf-id', c.id); set('vf-arch', c.a);
+        set('vf-w', c.w); set('vf-d', c.d); set('vf-h', c.h); set('vf-sub', c.sH);
+        set('vf-th', c.th); set('vf-jn', c.jn || 'fold'); set('vf-scale', c.sc); set('vf-sheet', c.sh || 'A4');
+        set('vf-ver', c.v || ''); set('vf-stamp', c.vs || '');
+        document.getElementById('vf-result').textContent = c.vs ? 'Filled. Compare the stamp with the printed sheet, then Check.' : 'Filled (this code has no stamp: made before v3.4).';
+        document.getElementById('vf-result').style.color = '#5C5343';
+      } catch (err) {
+        showToast('Invalid Help Code. Copy the full STUDIO-HELP:[...] text.');
+      }
+    }
+
+    function verifySheet() {
+      const val = id => document.getElementById(id).value;
+      const type = val('vf-type');
+      const expected = computeStamp({
+        version: val('vf-ver'), name: val('vf-name'), id: val('vf-id'),
+        archetype: type === 'image' ? 'image' : val('vf-arch'),
+        w: val('vf-w'), d: val('vf-d'), h: val('vf-h'), subH: val('vf-sub'),
+        thickness: val('vf-th'), joinery: val('vf-jn'), pieces: val('vf-pieces'),
+        scale: val('vf-scale'), sheet: val('vf-sheet')
+      });
+      const printed = val('vf-stamp').toUpperCase().replace(/[^A-Z2-7]/g, '').replace(/^(.{4})(.{4}).*$/, '$1-$2');
+      const out = document.getElementById('vf-result');
+      if (!printed) { out.textContent = `Enter the printed stamp. These values give ${expected}.`; out.style.color = '#5C5343'; return; }
+      const ok = printed === expected;
+      out.textContent = ok
+        ? `✔ MATCH — ${expected}: the printed values are the ones the tool stamped.`
+        : `✘ NO MATCH — printed ${printed}, values give ${expected}. A value was edited, mistyped, or the sheet is from another salt/version.`;
+      out.style.color = ok ? '#166534' : '#B91C1C';
+      return ok;
     }
 
     function forceProceedAction() {
@@ -3101,6 +3279,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       // =======================================================================
       const tbY = sheetH - 25;
       const tbW = sheetW - 12;
+      state.stamp = computeStamp(sheetStampFields());
       labelLayer += `
         <rect x="6" y="${tbY}" width="${tbW}" height="19" fill="#F6F3EC" stroke="#1E1B18" stroke-width="0.4"/>
         <line x1="${6 + tbW*0.36}" y1="${tbY}" x2="${6 + tbW*0.36}" y2="${tbY + 14.5}" stroke="#1E1B18" stroke-width="0.35"/>
@@ -3108,6 +3287,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         <line x1="6" y1="${tbY + 14.5}" x2="${6 + tbW}" y2="${tbY + 14.5}" stroke="#1E1B18" stroke-width="0.3"/>
         <text x="10" y="${tbY + 16.6}" font-size="1.8" fill="#3E372B">${escapeXml(COURSE_TEAM.course)} · ${escapeXml(COURSE_TEAM.institution)}</text>
         <text x="${2 + tbW}" y="${tbY + 16.6}" font-size="1.8" fill="#3E372B" text-anchor="end">Studio Flat-Pack Maker v${TOOL_VERSION}</text>
+        ${verifyLineSvg(2 + tbW, tbY + 18.6, sheetSpecLine(), state.stamp)}
         <text x="10" y="${tbY + 18.6}" font-size="1.8" fill="#3E372B" font-weight="bold">${escapeXml(teamLine())}</text>
 
         <text x="10" y="${tbY + 5.5}" font-size="2.6" fill="#5C5343">STUDENT NAME &amp; ID:</text>
@@ -3640,12 +3820,16 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       } else banner.classList.add('hidden');
       // ---- title block ----
       const tbY = sheetH - 23, tbW = sheetW - 12;
+      imgState.pieceSizes = pieces.map(pc => pc.sub.replace(/\s*cm.*$/, '')).join(', ');
+      imgState.stamp = computeStamp({ version: TOOL_VERSION, name: state.studentName, id: state.studentId, archetype: 'image',
+        pieces: imgState.pieceSizes, scale: imgState.scale, sheet: imgState.sheet });
       lab += `<rect x="6" y="${tbY}" width="${tbW}" height="17" fill="#FCFBF8" stroke="#1E1B18" stroke-width="0.5"/>
         <line x1="${6 + tbW * 0.36}" y1="${tbY}" x2="${6 + tbW * 0.36}" y2="${tbY + 13}" stroke="#1E1B18" stroke-width="0.4"/>
         <line x1="${6 + tbW * 0.72}" y1="${tbY}" x2="${6 + tbW * 0.72}" y2="${tbY + 13}" stroke="#1E1B18" stroke-width="0.4"/>
         <line x1="6" y1="${tbY + 13}" x2="${6 + tbW}" y2="${tbY + 13}" stroke="#1E1B18" stroke-width="0.3"/>
         <text x="10" y="${tbY + 14.8}" font-size="1.8" fill="#3E372B">${escapeXml(COURSE_TEAM.course)} · ${escapeXml(COURSE_TEAM.institution)}</text>
         <text x="${2 + tbW}" y="${tbY + 14.8}" font-size="1.8" fill="#3E372B" text-anchor="end">Studio Flat-Pack Maker v${TOOL_VERSION}</text>
+        ${verifyLineSvg(2 + tbW, tbY + 16.8, `IMAGE TRACE · ${pieces.length} PCS`, imgState.stamp)}
         <text x="10" y="${tbY + 16.8}" font-size="1.8" fill="#3E372B" font-weight="bold">${escapeXml(teamLine())}</text>
         <text x="10" y="${tbY + 5}" font-size="2.3" fill="#5C5343">STUDENT NAME &amp; ID:</text>
         <text x="10" y="${tbY + 11}" font-size="${Math.min(3.2, (tbW * 0.36 - 6) / (Math.max(1, name.length) * 0.62)).toFixed(2)}" font-weight="bold">${escapeXml(name || '— fill in Tab 1, Step 0 —')}</text>
@@ -3705,6 +3889,8 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       document.querySelectorAll('.team-credit-inst').forEach(e => e.textContent = COURSE_TEAM.institution);
       const vp = document.getElementById('header-version-pill');
       if (vp) vp.textContent = 'v' + TOOL_VERSION;
+      const vv = document.getElementById('vf-ver');
+      if (vv && !vv.value) vv.value = TOOL_VERSION;
     }
     window.addEventListener('DOMContentLoaded', installTeamCredits);
 

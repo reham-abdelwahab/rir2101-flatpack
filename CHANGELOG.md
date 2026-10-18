@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.5 — 2026-10-18
+- Verification stamp `VERIFY: XXXX-XXXX · v3.5` on every Tab 1 and Tab 3 title block, in the `03_LABELS_BLACK` layer.
+  - The stamp is the first 8 base32 characters of SHA-256(version | name | ID | piece | dimensions | scale | sheet | board | joinery | salt).
+  - The hashed values are printed next to the stamp so that a TA can re-type them from paper.
+- The Help Code now carries the stamp and the tool version. Restoring a code warns if the stamp no longer matches.
+- New "Verify a sheet" box in Share & Troubleshoot: fill it from a Help Code or type the values from the sheet, and it shows ✔ or ✘.
+- The stamp deters tampering but is not cryptographic proof. See the README.
+
 ## v3.4 — 2026-10-18
 - Course team credits in the header, in both title blocks (2-line credit row) and in the handout footers.
 - File copied to the A313 course folder and published on GitHub Pages.
