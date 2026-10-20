@@ -340,6 +340,74 @@ function overlapCheck(w, svgId) {
     log(lz.querySelector('[id="01_CUT_RED"]').getAttribute('stroke-width') === String(wc.eval('LASER_STROKE')) && !lz.querySelector('[id="02_SCORE_BLUE"]').hasAttribute('stroke-dasharray'), 'Laser SVG: hairline strokes (LASER_STROKE), continuous score');
   }
 
+  // ---------------- v4 · B three tabs + piece editor · F picture-led help ----------------
+  if (wc.document.getElementById('tab-make')) {
+    const d = wc.document, $ = id => d.getElementById(id);
+    const tabs = ['make', 'print', 'help'].map(t => $('btn-tab-' + t));
+    const tabOk = tabs.every(b => b && b.querySelector('img[data-img]') && b.querySelector('img').getAttribute('src')?.startsWith('data:image') && /[؀-ۿ]/.test(b.textContent) && /[A-Z]{3,}/.test(b.textContent));
+    log(tabOk && d.querySelectorAll('.v4-tab-btn').length === 3, 'Three tabs with T1 / T6 / T7 icons and EN | AR labels', tabs.map(b => b && b.querySelector('img')?.dataset.img).join(' '));
+    wc.switchMainTab('print'); const p1 = !$('tab-print').classList.contains('hidden') && $('tab-make').classList.contains('hidden');
+    wc.switchMainTab('help'); const p2 = !$('tab-help').classList.contains('hidden');
+    wc.switchMainTab('make'); const p3 = !$('tab-make').classList.contains('hidden');
+    log(p1 && p2 && p3, 'Tab switching: MAKE → PRINT & BUILD → HELP');
+    // every step A–E: a picture + one EN line + one AR line
+    const stepProbs = ['A', 'B', 'C', 'D', 'E'].filter(L => {
+      const s = $('step-' + L), figs = [...s.querySelectorAll('figure')];
+      return !s.querySelector('.v4-step-head img[src^="data:image"]') || (L !== 'E' && !figs.length) || figs.some(f => !f.querySelector('img[src^="data:image"]') || !f.querySelector('.bi-en') || !/[؀-ۿ]/.test(f.querySelector('.bi-ar')?.textContent || ''));
+    });
+    log(stepProbs.length === 0, 'Steps A–E: icon + picture(s) with one EN line + one AR line', stepProbs.join(', '));
+    const blank = [...d.querySelectorAll('img[data-img]')].filter(im => !(im.getAttribute('src') || '').startsWith('data:image'));
+    log(blank.length === 0, 'Every picture is inline (data: URI) — works offline', `${blank.length} without data`);
+    // pieces list + editor
+    const A = wc.eval('archetypes');
+    const before = wc.eval('pieces.length');
+    wc.addPiece(); wc.selectArchetype('bed'); wc.setPieceMethod('fold'); wc.setPieceQty(2);
+    wc.savePiece(); wc.refreshV4();
+    const ps = wc.eval('pieces'), last = ps[ps.length - 1];
+    log(ps.length === before + 1 && last.archetype === 'bed' && last.qty === 2 && last.w === A.bed.w && $('piece-editor').classList.contains('hidden'), 'Piece editor: add → type → quantity → save', `${ps.length} pieces, last ${last.archetype} ×${last.qty}`);
+    log(/fits on \d+ A[34] sheet/.test($('pieces-sheet-count').textContent), 'Pieces list shows "fits on N sheets"', $('pieces-sheet-count').textContent);
+    wc.editPiece(ps.length - 1); wc.setPieceMethod('waffle'); wc.refreshV4();
+    const wfOk = !$('ed-waffle').classList.contains('hidden') && /X-ribs \d+ · Y-ribs \d+/.test($('wf-counts').textContent) && $('wf-iso').innerHTML.length > 100;
+    log(wfOk, 'Waffle panel: live rib count, sheet count, validation, isometric preview', $('wf-counts').textContent);
+    wc.setPieceMethod('fold'); wc.savePiece();
+    // build strips only for the methods used
+    wc.switchMainTab('print');
+    const keys = [...$('build-strips').querySelectorAll('img')].map(i => i.dataset.img).join(' ');
+    log(keys === 'H07 H08 H09 H10 H12', 'Build strips: fold-only pieces → H07 H08 H09 H10 H12 only', keys);
+    log(/Sheet 1 of \d+/.test($('sheet-pager').textContent) && $('sheet-view').querySelector('svg [id="01_CUT_RED"]'), 'Sheets tab: page 1 of N with the nested sheet', $('sheet-pager').textContent);
+    wc.switchMainTab('make');
+    // Help Code carries every piece; restoring it rebuilds the list
+    wc.document.getElementById('inp-student-name').value = 'Help Code'; wc.document.getElementById('inp-student-id').value = '42'; wc.updateStudentMeta();
+    let code = ''; const ex = d.execCommand.bind(d); d.execCommand = c => { if (c === 'copy') code = [...d.querySelectorAll('body > textarea')].pop()?.value || ''; return true; };
+    wc.copyStudentDiagnosticCode(); d.execCommand = ex;
+    const saved = JSON.stringify(wc.eval('pieces').map(p => [p.archetype, p.method, p.qty, p.w]));
+    wc.eval('pieces.length = 1'); wc.refreshV4();
+    $('inp-restore-code').value = code; wc.loadStudentDiagnosticCode(); wc.closeValidationModal && wc.closeValidationModal();
+    const back = JSON.stringify(wc.eval('pieces').map(p => [p.archetype, p.method, p.qty, p.w]));
+    log(saved === back, 'Help Code restores the full pieces list', `${saved.length > 80 ? saved.slice(0, 80) + '…' : saved}`);
+    // TA verifies a NESTED sheet's stamp from the Help Code
+    wc.refreshV4(); const nest = wc.eval('v4Nest'); const target = nest.sheets[nest.sheets.length - 1];
+    wc.openShareSupportModal(); $('vf-help').value = code; wc.verifyFillFromHelp(); $('vf-stamp').value = target.stamp;
+    log(wc.verifySheet() === true && /sheet \d+ of \d+|MATCH/.test($('vf-result').textContent), 'Verify box: nested sheet stamp → ✔ (from the Help Code)', $('vf-result').textContent);
+    $('vf-scale').value = String(+$('vf-scale').value + 5);
+    log(wc.verifySheet() === false, 'Verify box: nested sheet with an edited scale → ✘');
+    wc.closeShareSupportModal();
+    // handout: 3 pages, 2 × 3 panels, EN + AR under every picture, do / don't row on page 3
+    wc.renderHandout();
+    const pages = [...$('handout-pages').querySelectorAll('.handout-page')];
+    const counts = pages.map(p => p.querySelectorAll('.handout-grid > figure').length).join('/');
+    const capsOk = pages.every(p => [...p.querySelectorAll('.handout-grid > figure')].every(f => f.querySelector('img[src^="data:image"]') && f.querySelector('.bi-en') && /[؀-ۿ]/.test(f.querySelector('.bi-ar').textContent)));
+    log(pages.length === 3 && counts === '6/6/4' && capsOk && pages[2].querySelectorAll('.handout-dodont > div').length === 6, 'Handout: 3 pages · 6/6/4 panels (H01–H16) + 6 do/don\'t · EN + AR under every picture', counts);
+    log(d.querySelector('#ai-prompt-a') && d.querySelector('#ai-prompt-b') && /Neufert/i.test($('step-G').textContent), 'Help · G keeps the Neufert table and Prompt A / B copy buttons');
+    log(!$('share-support-modal').open && $('share-support-modal').tagName === 'DETAILS', 'Instructor section collapsed by default');
+    const size = (await (await fetch(CAND.split('?')[0], { cache: 'no-store' })).blob()).size;
+    let alone = ''; wc.__standaloneProbe = h => { alone = h; }; wc.downloadStandaloneHTMLTool(); delete wc.__standaloneProbe;
+    const aSize = new Blob([alone]).size;
+    log(size < 4 * 1024 * 1024 && aSize > 0 && aSize < 4 * 1024 * 1024, 'Single file and the shared standalone copy both under 4 MB (pictures inline)', `file ${(size / 1048576).toFixed(2)} MB · standalone ${(aSize / 1048576).toFixed(2)} MB`);
+    const sd = new DOMParser().parseFromString(alone, 'text/html');
+    log(!sd.getElementById('share-support-modal').open && ![...sd.querySelectorAll('img[data-img]')].some(i => i.hasAttribute('src')) && sd.getElementById('tab-make'), 'Standalone copy: instructor section closed, no duplicate pictures');
+  }
+
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));
   window.REGRESS ={ pass: results.every(r => r.ok), results };
   out.insertAdjacentHTML('beforeend', `\n\n<b>${window.REGRESS.pass ? 'ALL PASS' : 'FAILURES'}</b> (${results.filter(r => r.ok).length}/${results.length})`);
