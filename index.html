@@ -307,6 +307,8 @@
     .v4-strip img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
     .v4-strip figcaption { font-size: 12px; margin-top: 4px; } .v4-strip .bi-ar { font-family: "Noto Naskh Arabic", "Segoe UI", Tahoma, Arial, sans-serif; font-size: 14px; text-align: right; }
     .v4-strip-title { font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+    .v4-adv { border: 1px dashed var(--v4-line); border-radius: 12px; padding: 6px 10px; } .v4-adv summary { cursor: pointer; font-weight: 800; font-size: 13px; } .v4-adv[open] { background: #fff; }
+    .v4-num { width: 72px; margin-left: 6px; padding: 2px 6px; border: 2px solid var(--v4-line); border-radius: 8px; font: 700 12px ui-monospace, Consolas, monospace; }
     .v4-instructor summary { cursor: pointer; font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .v4-instructor[open] summary { margin-bottom: 4px; }
     .v4-testbar #test-cases-bar { border-radius: 14px; }
@@ -496,8 +498,8 @@
             <label class="block text-[11px] font-bold uppercase tracking-wider text-paper-700 mb-1.5">Sheet Thickness (mm):</label>
             <div class="flex gap-1.5">
               <select id="select-thickness" onchange="updateThicknessSelect(this.value)" class="w-full p-2 rounded-xl border border-paper-300 bg-white text-xs font-bold text-paper-900">
-                <option value="0.5">0.5 mm — Bristol Card</option>
-                <option value="1.5" selected>1.5 mm — Maquette Carton</option>
+                <option value="0.5" selected>0.5 mm — Bristol Card</option>
+                <option value="1.5">1.5 mm — Maquette Carton</option>
                 <option value="2.0">2.0 mm — Greyboard</option>
                 <option value="3.0">3.0 mm — Foam / MDF</option>
                 <option value="custom">Custom Caliper (mm)...</option>
@@ -895,8 +897,10 @@
           <div class="v4-figs"><figure class="v4-fig" data-guide="M-waffle"></figure></div>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div class="space-y-3">
+              <details class="v4-adv"><summary>Advanced <span lang="ar" dir="rtl">متقدّم</span></summary>
               <label class="v4-field">Rib spacing <i lang="ar" dir="rtl">المسافة بين الأضلاع</i> <b id="wf-spacing-val">10 mm</b>
                 <input id="wf-spacing" type="range" min="6" max="15" step="0.5" value="10" oninput="setWaffleSpacing(this.value)"></label>
+              </details>
               <div class="v4-seg" role="radiogroup" aria-label="Cutting">
                 <button type="button" id="wf-kerf-laser" class="active" onclick="setWaffleKerf('laser')">Laser (slot = board) <i lang="ar" dir="rtl">ليزر</i></button>
                 <button type="button" id="wf-kerf-hand" onclick="setWaffleKerf('hand')">Hand-cut (+0.2 mm) <i lang="ar" dir="rtl">قص يدوي</i></button>
@@ -1005,6 +1009,7 @@
               <option value="bg" selected>Remove background (AI renders, product shots)</option>
               <option value="dark">Dark on light (sketches, silhouettes)</option>
             </select></label>
+          <details class="v4-adv"><summary>Advanced <span lang="ar" dir="rtl">متقدّم</span></summary>
           <label id="img-row-tol-bg" class="flex items-center justify-between text-[11px] gap-2">Background tolerance <span id="img-bgtol-val" class="font-mono">70</span>
             <input id="img-bgtol" type="range" min="8" max="160" value="70" class="w-1/2" oninput="document.getElementById('img-bgtol-val').textContent=this.value"></label>
           <div id="img-row-bgpick" class="flex items-center justify-between text-[11px] gap-2"><span>Background colour <span id="img-bg-swatch" class="inline-block w-4 h-3 align-middle border border-paper-300 rounded-sm"></span> <span id="img-bg-src" class="font-mono text-[10px]">auto (image edges)</span></span>
@@ -1016,6 +1021,7 @@
             <input id="img-clean" type="range" min="0" max="14" value="4" class="w-1/2" oninput="document.getElementById('img-clean-val').textContent=this.value"></label>
           <label class="flex items-center justify-between text-[11px] gap-2">Simplify (mm on paper) <span id="img-tol-val" class="font-mono">0.6</span>
             <input id="img-tol" type="range" min="0.2" max="3" step="0.1" value="0.6" class="w-1/2" oninput="document.getElementById('img-tol-val').textContent=this.value"></label>
+          </details>
           <label class="flex items-center gap-2 text-[11px]"><input id="img-fill" type="checkbox" checked> Fill closed outlines (for line sketches)</label>
           <label id="img-row-inv" class="hidden flex items-center gap-2 text-[11px]"><input id="img-invert" type="checkbox"> Light object on dark background</label>
           <label class="flex items-center gap-2 text-[11px]"><input id="img-largest" type="checkbox" checked> Keep only the largest shape</label>
@@ -1026,7 +1032,7 @@
               <span class="flex gap-1">
                 <button type="button" onclick="imgCopyPrompt('A')" class="px-2 py-0.5 rounded-lg bg-paper-900 text-white text-[10px] font-bold" title="Generate a new tool-ready elevation">Copy Prompt A · generate</button>
                 <button type="button" onclick="imgCopyPrompt('B')" class="px-2 py-0.5 rounded-lg bg-amber-500 text-paper-900 text-[10px] font-bold" title="Convert an image you already have">Copy Prompt B · convert my image</button>
-                <button type="button" onclick="switchMainTab('guide'); setTimeout(()=>document.getElementById('handout-page-3').scrollIntoView({behavior:'smooth'}),50)" class="px-2 py-0.5 rounded-lg bg-white border border-paper-300 text-[10px] font-bold">Read page 3</button>
+                <button type="button" onclick="switchMainTab('help'); setTimeout(()=>document.getElementById('step-G').scrollIntoView({behavior:'smooth'}),50)" class="px-2 py-0.5 rounded-lg bg-white border border-paper-300 text-[10px] font-bold">Read page 3</button>
               </span></div>
             <p class="text-[10px] text-paper-700">The tool needs a <strong>flat side/front elevation, no perspective, pure white background, no shadow, no floor</strong>. Prompt A makes one from scratch; Prompt B tells Gemini to convert an image you already have (room scene, ¾ view) into that format. Full text + checklist on handout page 3.</p>
           </div>
@@ -1039,9 +1045,10 @@
       <div id="image-sheet-settings" class="bg-white rounded-3xl border border-paper-200 p-4 space-y-3 shadow-xs">
         <h3 class="font-display font-bold text-sm">🗂 4. Sheet settings</h3>
         <div class="grid grid-cols-2 gap-2 text-[11px]">
-          <label class="flex flex-col gap-1">Scale 1 :
+          <div id="img-project-scale" class="col-span-2 font-mono font-bold text-xs bg-amber-100 border border-amber-300 rounded-lg px-2 py-1">Project scale — set in A</div>
+          <label class="hidden flex-col gap-1" aria-hidden="true">Scale 1 :
             <input id="img-scale" type="number" min="2" max="200" value="20" oninput="imgSetScale(this.value)" class="px-2 py-1 rounded-lg border border-paper-300 font-mono"></label>
-          <label class="flex flex-col gap-1">Sheet
+          <label class="hidden flex-col gap-1" aria-hidden="true">Sheet
             <select id="img-sheet" onchange="imgSetSheet(this.value)" class="px-2 py-1 rounded-lg border border-paper-300 font-mono"><option value="A4">A4 210×297</option><option value="A3">A3 297×420</option></select></label>
           <label class="flex flex-col gap-1">Copies of traced piece
             <input id="img-copies" type="number" min="1" max="20" value="2" oninput="imgSetCopies(this.value)" class="px-2 py-1 rounded-lg border border-paper-300 font-mono"></label>
@@ -1069,11 +1076,7 @@
 
       <div id="image-sheet-card" class="bg-paper-50 p-4 rounded-3xl border-2 border-paper-200 shadow-xs flex flex-col items-center">
         <div id="image-sheet-toolbar" class="no-print w-full flex flex-wrap items-center justify-between gap-2 mb-3 pb-3 border-b border-paper-200">
-          <span class="font-display font-bold text-xs">Sheet preview (true scale when printed at 100%)</span>
-          <div class="flex gap-2">
-            <button type="button" onclick="printImageSheet()" class="px-3 py-1.5 rounded-xl bg-paper-900 text-white font-bold text-xs hover:bg-paper-800">🖨️ Print 100%</button>
-            <button type="button" onclick="downloadImageSVG()" class="px-3 py-1.5 rounded-xl bg-white border border-paper-300 font-bold text-xs hover:bg-paper-100">⬇ Laser SVG</button>
-          </div>
+          <span class="font-display font-bold text-xs">Preview at the project scale · prints with your other pieces in 2 · PRINT &amp; BUILD <span lang="ar" dir="rtl">تُطبع مع باقي القطع في التبويب ٢</span></span>
         </div>
         <div id="image-sheet-wrapper" class="bg-white shadow-lg border border-paper-300 rounded-sm overflow-hidden w-full max-w-[580px]">
           <svg id="image-cut-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 297" class="w-full h-auto block select-none"></svg>
@@ -1245,7 +1248,8 @@ Strict requirements:
 - No text, labels, dimension lines or watermark. Square image, 2048 × 2048 px.
 
 If the reference shows a 3/4 view, infer the true side elevation from it; do not keep the angled view.</pre>
-        <p class="text-[10px] text-paper-700">Check the result against the ✅ checklist before you upload it to Tab 3. If Gemini keeps the shadow, reply: <em>"Remove the shadow under the legs completely; the background must be 100% white everywhere."</em></p>
+        <div class="v4-warn" style="background:#FFFBEB;border-color:#FCD34D;color:#78350F">An AI-inferred elevation is an interpretation: check every feature against your measured dimensions before tracing. <span lang="ar" dir="rtl" style="display:block;text-align:right">الواجهة التي يستنتجها الذكاء الاصطناعي مجرد تفسير: راجع كل تفصيل مقابل أبعادك المقاسة قبل التتبّع.</span></div>
+        <p class="text-[10px] text-paper-700">Check the result against the ✅ checklist, then bring it into the tool: MAKE → Add piece → From image. If Gemini keeps the shadow, reply: <em>"Remove the shadow under the legs completely; the background must be 100% white everywhere."</em></p>
       </div>
 
 
@@ -1574,7 +1578,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.0.1';
+    const TOOL_VERSION = '4.1';
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -1583,6 +1587,14 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     const PRINT_STROKE = { cut: 0.2, score: 0.15, scoreDash: '1.2,0.9' };
     const LASER_STROKE = 0.01;      // "hairline" convention (≈ 0.03 pt): the laser cuts on the line
     const LABEL_MAX_MM = 2;         // part labels on printed sheets
+
+    // v4.1 (audit B): every blue line on a Fold & Glue net is a mountain fold — printed side out
+    const FOLD_RULE = { en: 'FOLD RULE: printed side out · score on the print · all blue lines fold away from you',
+                        ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك' };
+    function foldRuleSvg(sheetW, y) {
+      return `<text class="fold-rule" x="12" y="${y}" font-size="1.8" font-weight="bold" fill="#0055FF">${FOLD_RULE.en}</text>` +
+        `<text class="fold-rule" x="${sheetW - 8}" y="${y}" text-anchor="end" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="2.1" font-weight="bold" fill="#0055FF">${FOLD_RULE.ar}</text>`;
+    }
 
     // Laser files: hairline cut + score, score as a continuous line (score = low laser power)
     function laserStrokes(svgEl) {
@@ -1700,7 +1712,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       subH: 45,       // Seat Height / Base Height in cm
       scale: 20,      // Supports 10, 15, 20, 25, 50, or any custom 1:X
       sheetSize: 'A4',// 'A4' (210x297mm) or 'A3' (297x420mm)
-      thicknessMm: 1.5,
+      thicknessMm: 0.5,      // v4.1: Fold & Glue default = 0.5 mm Bristol (waffle switches to 1.5 mm)
       joinery: 'fold', // 'fold' | 'slot'
       curveOffsets: [0, 0, 0, 0, 0],
       foldPercent: 85,
@@ -3376,6 +3388,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       // =======================================================================
       // 4. ARCHITECTURAL STUDENT TITLE BLOCK STAMP AT BOTTOM OF SHEET
       // =======================================================================
+      if (state.archetype !== 'shelf' && state.fitsOnPage) labelLayer += foldRuleSvg(sheetW, 28.8);
       const tbY = sheetH - 25;
       const tbW = sheetW - 12;
       state.stamp = computeStamp(sheetStampFields());
@@ -4006,7 +4019,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'B1', img: 'P03', en: 'Add every piece you need — they share the same sheets.', ar: 'أضف كل القطع التي تحتاجها — تُرصّ معًا على نفس اللوحات.' },
       { key: 'M-fold', img: 'P05', en: 'Fold & Glue: score blue, cut red, glue the tabs.', ar: 'طيّ ولصق: حزّز الأزرق، اقطع الأحمر، الصق الألسنة.' },
       { key: 'M-waffle', img: 'P06', en: 'Waffle: ribs cross at half-depth slots — no glue.', ar: 'تعشيق: أضلاع تتقاطع في شقوق بنصف العمق — بدون غراء.' },
-      { key: 'M-image', img: 'P07', en: 'From image: flat side view → calibrate → trace.', ar: 'من صورة: منظر جانبي مسطح ← معايرة ← تتبّع.' },
+      { key: 'M-image', img: 'P07', en: 'Prepare the image outside → upload → check the shape → enter a measured size → trace.', ar: 'جهّز الصورة خارج الأداة ← ارفعها ← راجع الشكل ← أدخل مقاسًا مقيسًا ← تتبّع.' },
       { key: 'C1', img: 'P05', en: 'Fix every red line before you print.', ar: 'أصلح كل سطر أحمر قبل الطباعة.' },
       // tab 2 · PRINT & BUILD
       { key: 'D1', img: 'P04', en: 'Print at 100 % — the check ruler must measure 5 cm.', ar: 'اطبع بنسبة ١٠٠٪ — يجب أن تقيس مسطرة التحقق ٥ سم.' },
@@ -4021,14 +4034,14 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'H05', img: 'H05', en: 'Too big? Use A3 or a smaller scale — never shrink.', ar: 'كبيرة جدًا؟ استخدم A3 أو مقياسًا أصغر — لا تُصغّر أبدًا.' },
       { key: 'H06', img: 'H06', en: 'Print at 100 % and check the 5 cm ruler.', ar: 'اطبع بنسبة ١٠٠٪ وتحقق من مسطرة ٥ سم.' },
       { key: 'H07', img: 'H07', en: 'Spray-mount the print on card.', ar: 'ألصق المطبوعة على الكرتون بالرذاذ.' },
-      { key: 'H08', img: 'H08', en: 'Score the blue lines first, with the back of the blade.', ar: 'حزّز الخطوط الزرقاء أولًا بظهر الشفرة.' },
+      { key: 'H08', img: 'H08', en: 'Printed side out · score on the print · all blue lines fold away from you.', ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك.' },
       { key: 'H09', img: 'H09', en: 'Then cut the red lines on a cutting mat.', ar: 'ثم اقطع الخطوط الحمراء على قاعدة القص.' },
       { key: 'H10', img: 'H10', en: 'A tiny bead of glue on each tab; hold 20 s.', ar: 'نقطة غراء صغيرة على كل لسان؛ اضغط ٢٠ ثانية.' },
       { key: 'H11', img: 'H11', en: 'Stand the X-ribs, drop the Y-ribs into the slots.', ar: 'ثبّت أضلاع X ثم أنزل أضلاع Y في الشقوق.' },
       { key: 'H12', img: 'H12', en: 'Place the finished pieces on your plan.', ar: 'ضع القطع الجاهزة على مسقطك.' },
       { key: 'H13', img: 'H13', en: 'Good: flat side view on pure white.', ar: 'صحيح: منظر جانبي مسطح على خلفية بيضاء.' },
       { key: 'H14', img: 'H14', en: 'Wrong: perspective, room and shadows.', ar: 'خطأ: منظور وغرفة وظلال.' },
-      { key: 'H15', img: 'H15', en: 'Click two points of a size you know.', ar: 'انقر نقطتين على بُعد تعرفه.' },
+      { key: 'H15', img: 'H15', en: 'A traced picture gives ONE flat profile (a rib or a panel) — not a complete model. Size comes from the Neufert table, never from the picture.', ar: 'الصورة المتتبَّعة تعطي مقطعاً مسطحاً واحداً فقط (ضلع أو لوح) وليس نموذجاً كاملاً. المقاس من جدول نويفرت وليس من الصورة.' },
       { key: 'H16', img: 'H16', en: 'Stuck? Send your Help Code to your TA.', ar: 'واجهت مشكلة؟ أرسل رمز المساعدة إلى فريق التدريس.' },
     ];
     // do / don't pairs (handout page 3): step icon + ✗ / ✓
@@ -4104,7 +4117,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     }
 
     // ---- the generator (same steps as waffle.py) ----
-    function waffle(side, front, W, D, t = 1.5, s = WAFFLE_SPACING_DEFAULT, k = 0, margin = null) {
+    function waffle(side, front, W, D, t = 1.5, s = WAFFLE_SPACING_DEFAULT, k = 0, margin = null, opts = {}) {
       const sw = t + k;
       if (margin == null) margin = Math.max(3 * t, 4);
       const positions = L => {
@@ -4122,25 +4135,50 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         }
         if (common.length) crossings.set(i + ',' + j, common);
       }));
-      const ribs = [];
+      // v4.1 (audit 20 Oct): a rib is a SECTION of the solid, not a copy of the whole silhouette.
+      //   X-rib_i = S_side ∩ band(z ∈ F(x_i)),  Y-rib_j = S_front ∩ band(z ∈ Sd(y_j))
+      // so material outside the shared z-range (legs below a seat, a back above it) no longer
+      // closes a slot into a window. opts.section = false keeps the waffle.py copies (reference test only).
+      const section = opts.section !== false;
+      const band = (mp, ivs) => {
+        if (!ivs.length) return [];
+        const b = wfBounds(mp);
+        return polygonClipping.intersection(mp, polygonClipping.union(...ivs.map(([lo, hi]) => wfBox(b.minU - 1, lo, b.maxU + 1, hi))));
+      };
+      const ribs = [], groups = { x: [], y: [] };
+      let fragmentsRemoved = 0;
+      const build = (dir, idx, pos, base, cuts, joints) => {
+        const poly = cuts.length ? polygonClipping.difference(base, ...cuts) : base;
+        const partsAll = poly.map(p => [p]);
+        // a part with no slot has nothing to hold it in the grid: drop it and count it
+        const parts = section ? partsAll.filter(pp => joints.some(([u, z]) => wfInside(pp, u, z))) : partsAll;
+        fragmentsRemoved += partsAll.length - parts.length;
+        parts.sort((a, b) => wfBounds(a).minU - wfBounds(b).minU || wfBounds(b).maxZ - wfBounds(a).maxZ);
+        const stem = dir.toUpperCase() + (idx + 1);
+        const list = (section ? parts : [poly]).map((pp, n, arr) => ({ name: arr.length > 1 ? stem + String.fromCharCode(97 + n) : stem, rib: stem, dir, idx, pos, poly: pp }));
+        groups[dir][idx] = list; ribs.push(...list);
+      };
       xs.forEach((x, i) => {
-        const cuts = [];
-        ys.forEach((y, j) => (crossings.get(i + ',' + j) || []).forEach(([lo, hi]) => cuts.push(wfBox(y - sw / 2, (lo + hi) / 2, y + sw / 2, hi + 1))));
-        ribs.push({ name: 'X' + (i + 1), dir: 'x', pos: x, poly: cuts.length ? polygonClipping.difference(side, ...cuts) : side });
+        const cuts = [], joints = [];
+        ys.forEach((y, j) => (crossings.get(i + ',' + j) || []).forEach(([lo, hi]) => { cuts.push(wfBox(y - sw / 2, (lo + hi) / 2, y + sw / 2, hi + 1)); joints.push([y, (lo + hi) / 2 - 0.05]); }));
+        build('x', i, x, section ? band(side, wfIntervals(front, x)) : side, cuts, joints);
       });
       ys.forEach((y, j) => {
-        const cuts = [];
-        xs.forEach((x, i) => (crossings.get(i + ',' + j) || []).forEach(([lo, hi]) => cuts.push(wfBox(x - sw / 2, lo - 1, x + sw / 2, (lo + hi) / 2))));
-        ribs.push({ name: 'Y' + (j + 1), dir: 'y', pos: y, poly: cuts.length ? polygonClipping.difference(front, ...cuts) : front });
+        const cuts = [], joints = [];
+        xs.forEach((x, i) => (crossings.get(i + ',' + j) || []).forEach(([lo, hi]) => { cuts.push(wfBox(x - sw / 2, lo - 1, x + sw / 2, (lo + hi) / 2)); joints.push([x, (lo + hi) / 2 + 0.05]); }));
+        build('y', j, y, section ? band(front, wfIntervals(side, y)) : front, cuts, joints);
       });
-      return { ribs, xs, ys, crossings, slotWidth: sw, t, k, W, D, margin };
+      return { ribs, groups, xs, ys, crossings, slotWidth: sw, t, k, W, D, margin, section, fragmentsRemoved };
     }
 
     // ---- validation (must pass before printing) ----
     function waffleValidate(res) {
       const errors = [], warnings = [];
       const { t, slotWidth: sw, xs, ys, W, D } = res;
-      const ribX = res.ribs.filter(r => r.dir === 'x'), ribY = res.ribs.filter(r => r.dir === 'y');
+      // all parts of rib i as one MultiPolygon (parts never overlap)
+      const groupPoly = (dir, idx) => (res.groups && res.groups[dir][idx] ? res.groups[dir][idx] : res.ribs.filter(r => r.dir === dir && (r.idx ?? -1) === idx)).flatMap(r => r.poly);
+      const ribX = xs.map((_, i) => ({ poly: groupPoly('x', i) })), ribY = ys.map((_, j) => ({ poly: groupPoly('y', j) }));
+      if (res.fragmentsRemoved) warnings.push(`${res.fragmentsRemoved} unsupported fragment${res.fragmentsRemoved > 1 ? 's' : ''} removed (no slot to hold ${res.fragmentsRemoved > 1 ? 'them' : 'it'} in the grid)`);
       if (!res.crossings.size) errors.push('No crossings: the two silhouettes never share material thicker than 3t, so the ribs cannot interlock.');
       // rib count × thickness must fit inside the piece
       if (xs.length * t > W) errors.push(`${xs.length} X-ribs × ${t} mm = ${(xs.length * t).toFixed(1)} mm is more than the width ${W.toFixed(1)} mm.`);
@@ -4163,6 +4201,10 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           if (!wfInside(X, y, mid - e)) errors.push(`${tag}: X-rib top slot does not stop at mid-height`);
           if (wfInside(Y, x, mid - e) || wfInside(Y, x, lo + e)) errors.push(`${tag}: Y-rib bottom slot missing`);
           if (!wfInside(Y, x, mid + e)) errors.push(`${tag}: Y-rib bottom slot does not stop at mid-height`);
+          // v4.1 audit rule: every slot must reach the rib's edge, or it is a closed window that cannot slide together
+          // (slots overcut the edge by 1 mm, so look just beyond the overcut)
+          if (wfInside(X, y, hi + 1 + e)) errors.push(`closed slot at X${i + 1}/Y${j + 1}: X-rib material above the slot`);
+          if (wfInside(Y, x, lo - 1 - e)) errors.push(`closed slot at X${i + 1}/Y${j + 1}: Y-rib material below the slot`);
           // measured slot width just above / below mid (the joint itself)
           [[X, y, mid + e], [Y, x, mid - e]].forEach(([poly, c, z], n) => {
             const runs = wfIntervals(poly, z, 1);
@@ -4230,12 +4272,12 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     }
 
     // The waffle.py reference case (lounge chair 70 × 80 × 80 mm at 1:10) — used by the tests
-    function waffleReferenceChair() {
+    function waffleReferenceChair(opts = {}) {   // opts.section = false → exact waffle.py copies (for the shapely area test)
       const W = 70, D = 80, H = 80, seatH = 42, backT = 10, armH = 60, seatT = 10;
       const side = wfPoly([[0, 0], [12, 0], [12, seatH - seatT], [D - backT - 6, seatH - seatT], [D - backT - 6, 0], [D - 6, 0],
         [D, H], [D - backT, H], [D - backT - 4, seatH], [12, seatH], [12, armH], [0, armH]]);
       const front = polygonClipping.difference(wfPoly([[0, 0], [W, 0], [W, H], [0, H]]), wfBox(8, seatH, W - 8, armH - 0.01), wfBox(8, 0, W - 8, seatH - seatT));
-      return waffle(side, front, W, D, 1.5, 10, 0);
+      return waffle(side, front, W, D, 1.5, 10, 0, null, opts);
     }
   </script>
   <!-- v4: everything that prints is copied here (one .print-page per sheet / handout page) -->
@@ -4349,7 +4391,14 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const res = waffle(sil.side, sil.front, sil.W, sil.D, t, p.spacing || WAFFLE_SPACING_DEFAULT, k);
       return { res, validation: waffleValidate(res) };
     }
-    function pieceParts(p, pieceNo, cfg) {
+    // v4.1 (audit F): every model gets a furniture id (CH1, CH2 … TB1) printed on each of its parts
+    const TYPE_CODE = { chair: 'CH', sofa: 'SF', table: 'TB', bed: 'BD', cabinet: 'CB', shelf: 'BK', image: 'IM' };
+    function withModelId(pt, id) {
+      let done = false;
+      const label = (pt.label || '').replace(/(<text\b[^>]*font-weight="bold"[^>]*>)([^<]+)(<\/text>)/, (m, a, txt, b) => { done = true; return a + escapeXml(id) + '-' + txt + b; });
+      return { ...pt, model: id, name: `${id}-${pt.name}`, label: done || pt.isDiagram ? label : label + `<text x="0.8" y="2.2" font-size="1.8" font-weight="bold">${escapeXml(id)}</text>` };
+    }
+    function pieceParts(p, pieceNo, cfg, ids) {
       const name = pieceDisplayName(p), qty = Math.max(1, Math.min(20, parseInt(p.qty) || 1));
       let one;
       if (isImgP(p) && pieceMethod(p) !== 'waffle') one = imageParts(p, cfg.scale, pieceNo, name);
@@ -4365,7 +4414,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         if (['bed', 'cabinet'].includes(p.archetype) && !one.every(fits)) one = build('strip');
       }
       const all = [];
-      for (let c = 0; c < qty; c++) one.forEach(pt => { if (c > 0 && pt.isDiagram) return; all.push({ ...pt, copy: c + 1, qty }); });
+      for (let c = 0; c < qty; c++) one.forEach(pt => { if (c > 0 && pt.isDiagram) return; const q = { ...pt, copy: c + 1, qty }; all.push(ids && !pt.isDiagram ? withModelId(q, ids[c]) : q); });
       return all;
     }
 
@@ -4432,10 +4481,19 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // ---- everything: pieces → parts → sheets → SVG strings ----
     function nestAll(pieces, cfg) {
       const [SW, SH] = sheetDims(cfg.sheetSize);
-      const parts = pieces.flatMap((p, i) => pieceParts(p, i + 1, cfg));
+      const seen = {};
+      const modelIds = pieces.map(p => {
+        const code = TYPE_CODE[isImgP(p) ? 'image' : p.archetype] || 'P', qty = Math.max(1, Math.min(20, parseInt(p.qty) || 1));
+        return Array.from({ length: qty }, () => code + (seen[code] = (seen[code] || 0) + 1));
+      });
+      const parts = pieces.flatMap((p, i) => pieceParts(p, i + 1, cfg, modelIds[i]));
       const reserve = Math.max(1, pieces.length) * PARTS_LINE_H + 3;
       const nest = nestParts(parts, cfg, reserve);
       const total = nest.sheets.length;
+      const cutParts = parts.filter(q => !q.isDiagram).length, models = modelIds.reduce((s, a) => s + a.length, 0);
+      const types = new Set(pieces.map(p => isImgP(p) ? 'image:' + (p.label || '') : p.archetype)).size;
+      const counts = { types, models, cutParts, sheets: total };
+      const countLine = countsLine(counts, cfg.sheetSize);
       const sheets = nest.sheets.map((sh, k) => {
         const idx = k + 1, used = sh.placed.reduce((s, it) => s + (it.p.area || 0), 0), usePct = 100 * used / (SW * SH);
         const stamp = computeStamp({ version: TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces),
@@ -4454,19 +4512,22 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         const maxChars = Math.floor((SW - 2 * NEST_MARGIN) / 1.05);
         const lines = Object.keys(byPiece).sort((a, b) => a - b).map(n => {
           const ps = byPiece[n], p = pieces[n - 1], names = {};
-          ps.filter(q => !q.isDiagram).forEach(q => { names[q.name] = (names[q.name] || 0) + 1; });
-          const txt = `#${n} ${ps[0].pieceName} · ${pieceMethod(p).toUpperCase()} · qty ${p.qty || 1} → ` + Object.entries(names).map(([nm, c]) => c > 1 ? `${nm} ×${c}` : nm).join(', ');
+          ps.filter(q => !q.isDiagram).forEach(q => { const nm = q.name.replace(/^[A-Z]{2}\d+-/, ''); names[nm] = (names[nm] || 0) + 1; });
+          const ids = modelIds[n - 1], idTxt = ids.length > 1 ? `${ids[0]}–${ids[ids.length - 1]}` : ids[0];
+          const txt = `${idTxt} ${ps[0].pieceName} · ${pieceMethod(p).toUpperCase()} · ${ids.length} model${ids.length > 1 ? 's' : ''} → ` + Object.entries(names).map(([nm, c]) => c > 1 ? `${nm} ×${c}` : nm).join(', ');
           return txt.length > maxChars ? txt.slice(0, maxChars - 1) + '…' : txt;
         });
         const listY = SH - TITLE_BLOCK_H - lines.length * PARTS_LINE_H;
         const header = `
           <text x="12" y="14" font-size="4" font-weight="bold">STUDIO FLAT-PACK SHEET ${idx} / ${total}</text>
-          <text x="12" y="19" font-size="2.5" fill="#5C5343">SCALE 1:${cfg.scale} · BOARD ${vNorm.num(cfg.thicknessMm)} mm · ${cfg.sheetSize} · ${sh.placed.filter(it => !it.p.isDiagram).length} PARTS · MATERIAL USE ${usePct.toFixed(0)} %</text>
+          <text x="12" y="19" font-size="2.5" fill="#5C5343">SCALE 1:${cfg.scale} · BOARD ${vNorm.num(cfg.thicknessMm)} mm · ${cfg.sheetSize} · ${sh.placed.filter(it => !it.p.isDiagram).length} CUT-OUT PARTS ON THIS SHEET · MATERIAL USE ≈ ${usePct.toFixed(0)} % (ESTIMATE: PARTS ÷ SHEET AREA)</text>
           <text x="12" y="24" font-size="2.3" fill="#DC2626" font-weight="bold">● SOLID RED = CUT THROUGH   <tspan fill="#0055FF">- - DASHED BLUE = SCORE &amp; FOLD</tspan></text>
           ${checkRulerSvg(SW)}
-          <text x="${NEST_MARGIN}" y="${P2(listY - 0.6)}" font-size="1.8" font-weight="bold">PARTS ON THIS SHEET</text>
+          ${sh.placed.some(it => pieceMethod(pieces[it.p.piece - 1]) === 'fold') ? foldRuleSvg(SW, 28.6) : ''}
+          <text x="${NEST_MARGIN}" y="${P2(listY - 0.6)}" font-size="1.8" font-weight="bold">PARTS ON THIS SHEET · PROJECT: ${escapeXml(countLine.toUpperCase())}</text>
           ${lines.map((l, i) => `<text x="${NEST_MARGIN}" y="${P2(listY + (i + 1) * PARTS_LINE_H - 0.4)}" font-size="1.8" fill="#3E372B">${escapeXml(l)}</text>`).join('')}`;
-        const middle = `${cfg.course || 'RIR2101'} // ${Object.keys(byPiece).length} PIECE${Object.keys(byPiece).length > 1 ? 'S' : ''}`;
+        const sheetModels = new Set(sh.placed.filter(it => it.p.model).map(it => it.p.model)).size;
+        const middle = `${cfg.course || 'RIR2101'} // ${sheetModels} MODEL${sheetModels === 1 ? '' : 'S'} · ${sh.placed.filter(it => !it.p.isDiagram).length} PARTS`;
         const tb = sheetTitleBlock(SW, SH, cfg, middle, `SCALE 1:${cfg.scale} ON ${cfg.sheetSize}`, `SHEET ${idx}/${total} · ${sh.placed.length} ITEMS`, stamp);
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SW} ${SH}" width="${SW}mm" height="${SH}mm" data-sheet="${idx}">` +
           `<rect class="no-export" x="0" y="0" width="${SW}" height="${SH}" fill="#FFFFFF"/>` +
@@ -4475,8 +4536,14 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           `<g id="03_LABELS_BLACK" fill="#1E1B18" font-family="'JetBrains Mono', ui-monospace, Consolas, monospace" font-size="2">${header}${label}${tb}</g></svg>`;
         return { idx, svg, stamp, usePct, parts: sh.placed.length, canon: sheetCanon(sh, idx, total, pieces) };
       });
-      return { sheets, oversize: nest.oversize, parts, total };
+      return { sheets, oversize: nest.oversize, parts, total, counts, countLine };
     }
+    // "2 furniture types · 5 models · 13 cut-out parts · 1 A4 sheet"
+    function countsLine(c, size) {
+      const pl = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+      return `${pl(c.types, 'furniture type', 'furniture types')} · ${pl(c.models, 'model', 'models')} · ${pl(c.cutParts, 'cut-out part', 'cut-out parts')} · ${pl(c.sheets, size + ' sheet', size + ' sheets')}`;
+    }
+
 
     // ---- print any list of sheet SVGs, one per page, at 100 % ----
     function printSheetSvgs(svgs, sheetSize) {
@@ -4557,7 +4624,15 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
     // the v3 renderers stay; v4 listens after each one
     const _v3RenderA4Sheet = renderA4Sheet;
-    renderA4Sheet = function () { _v3RenderA4Sheet(); if (v4Ready) { syncStateToPiece(); refreshV4Soon(); } };
+    // v4.1 (task E): one scale / one sheet for the whole project — the image tracer follows A
+    function syncImageToProject() {
+      if (typeof imgState === 'undefined') return;
+      if (imgState.scale !== state.scale) imgSetScale(state.scale);
+      if (imgState.sheet !== state.sheetSize) { document.getElementById('img-sheet').value = state.sheetSize; imgSetSheet(state.sheetSize); }
+      const lab = document.getElementById('img-project-scale');
+      if (lab) lab.textContent = `Project scale 1:${state.scale} on ${state.sheetSize} — set in A`;
+    }
+    renderA4Sheet = function () { _v3RenderA4Sheet(); if (v4Ready) { syncStateToPiece(); syncImageToProject(); refreshV4Soon(); } };
     const _v3RenderImageSheet = renderImageSheet;
     renderImageSheet = function () {
       _v3RenderImageSheet();
@@ -4594,6 +4669,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     function setPieceMethod(m) {
       const p = pieces[activePiece]; if (!p) return;
       p.method = m;
+      if ((m === 'waffle' || (m === 'image' && p.imageBuild === 'waffle')) && state.thicknessMm < 1.5) { document.getElementById('select-thickness').value = '1.5'; updateThicknessSelect('1.5'); showToast('Waffle (laser) uses 1.5 mm board / التعشيق يستخدم كرتون ١٫٥ مم'); }
       state.joinery = m === 'waffle' ? 'slot' : 'fold';
       document.getElementById('select-joinery').value = state.joinery;
       showMethodPanel(m);
@@ -4607,6 +4683,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         const b = document.getElementById('ed-m-' + k); b.classList.toggle('active', k === m); b.setAttribute('aria-checked', k === m);
       });
       document.getElementById('ed-shape').classList.toggle('hidden', m === 'image');
+      if (m === 'image') syncImageToProject();
       const p = pieces[activePiece];
       if (p && m === 'image') {
         document.getElementById('img-build-profile').classList.toggle('active', p.imageBuild !== 'waffle');
@@ -4624,7 +4701,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         document.getElementById('wf-kerf-hand').classList.toggle('active', p.kerf === 'hand');
       }
     }
-    function setImageBuild(b) { const p = pieces[activePiece]; if (!p) return; p.imageBuild = b; showMethodPanel('image'); refreshV4(); }
+    function setImageBuild(b) { const p = pieces[activePiece]; if (!p) return; p.imageBuild = b; if (b === 'waffle' && state.thicknessMm < 1.5) { document.getElementById('select-thickness').value = '1.5'; updateThicknessSelect('1.5'); } showMethodPanel('image'); refreshV4(); }
     function setImageWaffleWidth(v) { const p = pieces[activePiece]; if (!p) return; p.widthCm = Math.max(5, +v || 45); refreshV4Soon(); }
     function setWaffleSpacing(v) { const p = pieces[activePiece]; if (!p) return; p.spacing = +v; refreshV4Soon(); }
     function setWaffleKerf(k) { const p = pieces[activePiece]; if (!p) return; p.kerf = k; showMethodPanel('waffle'); refreshV4(); }
@@ -4660,8 +4737,8 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const wf = waffleForPiece(p, cfg);
       if (!wf) { counts.textContent = ''; checks.innerHTML = '<li class="err">Trace the image first (From image).</li>'; return; }
       const { res, validation: v } = wf, one = nestAll([{ ...p, qty: 1 }], cfg);
-      counts.textContent = `X-ribs ${res.xs.length} · Y-ribs ${res.ys.length} · crossings ${res.crossings.size} · slot ${res.slotWidth.toFixed(2)} mm · ${one.total} ${cfg.sheetSize} sheet${one.total > 1 ? 's' : ''}`;
-      const ok = [`Slot width = board + kerf = ${res.slotWidth.toFixed(2)} mm (${v.checked} joints measured)`, 'Every crossing: X-rib slot from the top meets Y-rib slot from the bottom at mid-height', `Web between slots ≥ 2 × board (${(2 * res.t).toFixed(1)} mm)`];
+      counts.textContent = `X-ribs ${res.xs.length} · Y-ribs ${res.ys.length} · ${res.ribs.length} parts · crossings ${res.crossings.size} · slot ${res.slotWidth.toFixed(2)} mm · ${one.total} ${cfg.sheetSize} sheet${one.total > 1 ? 's' : ''}`;
+      const ok = [`Slot width = board + kerf = ${res.slotWidth.toFixed(2)} mm (${v.checked} joints measured)`, 'Every crossing: X-rib slot from the top meets Y-rib slot from the bottom at mid-height', 'Every slot reaches the rib edge (no closed slots)', `Web between slots ≥ 2 × board (${(2 * res.t).toFixed(1)} mm)`];
       checks.innerHTML = v.errors.length ? v.errors.slice(0, 6).map(e => `<li class="err">${escapeXml(e)}</li>`).join('') + (v.errors.length > 6 ? `<li class="err">… ${v.errors.length - 6} more</li>` : '')
         : ok.map(t => `<li class="ok">${escapeXml(t)}</li>`).join('');
       checks.innerHTML += v.warnings.slice(0, 3).map(w => `<li class="warn">${escapeXml(w)}</li>`).join('');
@@ -4689,7 +4766,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         collectWorkflowIssues().filter(is => !/Student Name|Student ID|name|Overflow|does not fit/i.test(is.title)).forEach(is => items.push({ cls: 'warn',   // v3 single-piece checks: advice only; fit is decided by the nesting
            en: is.title, ar: '', act: is.fixFn ? `${is.fixFn}(); refreshV4()` : '', actLabel: is.fixLabel ? 'Fix' : '' }));
       } catch (e) { /* v3 checks need the editor state */ }
-      if (!items.some(it => it.cls === 'err')) items.unshift({ cls: 'ok', en: `Ready: ${nest.total} ${cfg.sheetSize} sheet${nest.total === 1 ? '' : 's'} for ${pieces.length} piece${pieces.length === 1 ? '' : 's'}`, ar: 'جاهز للطباعة' });
+      if (!items.some(it => it.cls === 'err')) items.unshift({ cls: 'ok', en: `Ready: ${nest.countLine}`, ar: 'جاهز للطباعة' });
       return items;
     }
     function renderChecks(items) {
@@ -4703,7 +4780,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const sh = nest.sheets[sheetPage];
       view.innerHTML = sh ? sh.svg.replace(/width="\d+mm" height="\d+mm"/, '') : '<p class="v4-note">Add a piece first.</p>';
       document.getElementById('sheet-pager').textContent = nest.total ? `Sheet ${sheetPage + 1} of ${nest.total}` : 'No sheets';
-      document.getElementById('sheet-use').textContent = sh ? `Material use ${sh.usePct.toFixed(0)} % · ${sh.parts} items` : '';
+      document.getElementById('sheet-use').textContent = sh ? `Material use ≈ ${sh.usePct.toFixed(0)} % (estimate: parts ÷ sheet area) · ${sh.parts} items packed` : '';
       const blocking = items.filter(it => it.cls === 'err' && !/name and student ID/.test(it.en));
       warn.classList.toggle('hidden', !items.some(it => it.cls === 'err'));
       warn.innerHTML = items.filter(it => it.cls === 'err').map(it => `✘ ${escapeXml(it.en)}`).join('<br>') + (blocking.length ? '<br>Fix these in tab 1 · C before printing. / أصلحها في التبويب ١ قبل الطباعة.' : '');
@@ -4800,6 +4877,21 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       document.querySelectorAll('#v4-dots li').forEach(li => { li.classList.toggle('done', done[li.dataset.step]); li.classList.toggle('current', li.dataset.step === cur); });
     }
 
+    // ---------- numeric box next to each slider (exact entry; v4.1 task I) ----------
+    const NUM_SLIDERS = ['slider-w', 'slider-d', 'slider-h', 'slider-sub', 'wf-spacing', 'img-bgtol', 'img-thr', 'img-clean', 'img-tol'];
+    function installNumberBoxes() {
+      NUM_SLIDERS.forEach(id => {
+        const sl = document.getElementById(id); if (!sl || document.getElementById(id + '-num')) return;
+        const nb = document.createElement('input');
+        Object.assign(nb, { type: 'number', id: id + '-num', className: 'v4-num', min: sl.min, max: sl.max, step: sl.step || 1, value: sl.value });
+        nb.setAttribute('aria-label', (sl.closest('label, div')?.textContent || id).trim().split('\n')[0] + ' (number)');
+        nb.addEventListener('input', () => { if (nb.value === '' || isNaN(+nb.value)) return; sl.value = nb.value; sl.dispatchEvent(new Event('input', { bubbles: true })); });
+        sl.addEventListener('input', () => { nb.value = sl.value; });
+        sl.insertAdjacentElement('afterend', nb);
+      });
+    }
+    function syncNumberBoxes() { NUM_SLIDERS.forEach(id => { const sl = document.getElementById(id), nb = document.getElementById(id + '-num'); if (sl && nb && document.activeElement !== nb) { nb.min = sl.min; nb.max = sl.max; nb.value = sl.value; } }); }
+
     // ---------- one refresh for everything ----------
     let v4Timer = null;
     function refreshV4Soon() { clearTimeout(v4Timer); v4Timer = setTimeout(refreshV4, 120); }
@@ -4810,16 +4902,17 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       v4Nest = nestAll(pieces, cfg);
       const items = collectV4Checks(cfg, v4Nest);
       renderPiecesList();
-      document.getElementById('pieces-sheet-count').textContent = `${pieces.length} piece${pieces.length === 1 ? '' : 's'} → fits on ${v4Nest.total} ${cfg.sheetSize} sheet${v4Nest.total === 1 ? '' : 's'}` + (v4Nest.oversize.length ? ` · ${v4Nest.oversize.length} part(s) too big` : '');
+      document.getElementById('pieces-sheet-count').textContent = v4Nest.countLine + (v4Nest.oversize.length ? ` · ${v4Nest.oversize.length} part(s) too big` : '');
       const p = pieces[activePiece];
       if (p) {
         document.getElementById('ed-title').textContent = `#${activePiece + 1} ${pieceDisplayName(p)}`;
         const one = nestAll([p], cfg);
-        document.getElementById('ed-fit').textContent = one.oversize.length ? `${one.oversize.length} part(s) do not fit ${cfg.sheetSize} — use A3 or a smaller scale` : `This piece fits on ${one.total} ${cfg.sheetSize} sheet${one.total === 1 ? '' : 's'}`;
+        document.getElementById('ed-fit').textContent = one.oversize.length ? `${one.oversize.length} part(s) do not fit ${cfg.sheetSize} — use A3 or a smaller scale` : `This piece: ${one.countLine}`;
         if (!document.getElementById('ed-waffle').classList.contains('hidden')) renderWafflePanel(p, cfg);
       }
       renderChecks(items);
       if (!document.getElementById('tab-print').classList.contains('hidden')) { renderSheetsTab(cfg, v4Nest, items); renderBuildStrips(); }
+      syncNumberBoxes();
       renderDots(items);
     }
 
@@ -4865,6 +4958,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         document.getElementById('piece-editor').classList.remove('hidden');
         showMethodPanel('fold');
         const iv = document.getElementById('instructor-version'); if (iv) iv.textContent = 'v' + TOOL_VERSION;
+        installNumberBoxes(); syncImageToProject();
         v4Ready = true;
         renderHandout();
         refreshV4();

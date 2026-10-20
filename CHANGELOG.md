@@ -1,5 +1,21 @@
 # Changelog
 
+## v4.1 — 2026-10-20 (audit of fold lines and waffle slots + teaching review; see docs/v4_1_AUDIT.md)
+- **A · Waffle ribs are sections of the solid.**
+  - X-rib_i = S_side ∩ band(z ∈ F(x_i)), and the same for Y-ribs. Before this, legs below a seat or a backrest above it closed the slot into a window. For example, at 1:10 the sofa had 112 of 144 X-slots closed. Now 0 slots are closed in 5 archetypes × 1:10/1:20 × laser/hand-cut.
+  - A rib that splits becomes parts X3a, X3b …. Parts with no slot are dropped and reported as "N unsupported fragments removed".
+  - `waffleValidate` adds the rule "every slot must reach the rib edge" (error: "closed slot at Xi/Yj").
+- **B · Fold rule** in English and Arabic on every Fold & Glue sheet and in the H08 caption: printed side out · score on the print · all blue lines fold away from you.
+- **C · No change.** The only grey line on the bed and cabinet nets marks where the headboard is glued to the back wall. It is not a fold, and the real folds were already blue. Making it blue would tell students to fold the headboard.
+- **D · Tests.** No score line lies outside material (with a negative case). No closed slot in any archetype × scale × kerf. The checker also reproduces the audit's closed slots in the old copy-ribs.
+- **E · One scale, one sheet, one output path.** The image tracer follows the project scale and sheet from A, and its separate Print and Laser SVG buttons are removed. Traced pieces print only through PRINT & BUILD.
+- **F · Counts.** For example "2 furniture types · 5 models · 13 cut-out parts · 1 A4 sheet", shown in the pieces list, on each sheet and in the parts list. Every part carries its furniture id: CH1-A1 BACK, TB1-…, CH1-X3a.
+- **G · Image limits.** H15 says that a traced picture gives one flat profile, not a complete model, and that size comes from the Neufert table. The Prompt B note says that AI-inferred elevations are interpretations to check against measured dimensions. The From-image caption now describes the steps.
+- **H.** The help text no longer says "upload to Tab 3"; it says MAKE → Add piece → From image. The broken "prompts" button in the tracer now opens Help · G.
+- **I · Defaults.** Fold & Glue starts on 0.5 mm Bristol, so no warning appears on first open. Waffle switches the board to 1.5 mm. The tolerance, simplify and rib-spacing sliders are under "Advanced", and every slider has a numeric box next to it.
+- **J · Wording.** Material use is labelled "≈ … % (estimate: parts ÷ sheet area)", and parts are described as "packed", not as an optimal layout.
+- The handout PDF `RIR2101_FlatPack_Student_Handout_v4_0_1.pdf` was regenerated from v4.1 under the same filename.
+
 ## v4.0.1 — 2026-10-20
 - Credits are English only. The Arabic credit line is removed: in `COURSE_TEAM`, `instructorAr` and `tasAr` are empty and `teamLineAr()` returns an empty string, and no empty row is left where it was. The English credits are unchanged.
 - Revised Arabic captions:
