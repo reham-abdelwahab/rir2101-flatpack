@@ -244,6 +244,44 @@ function overlapCheck(w, svgId) {
     wc.closeShareSupportModal();
   }
 
+  // ---------------- v4 · C1 waffle (port of docs/waffle_reference.py) ----------------
+  if (typeof wc.waffle === 'function') {
+    const ref = wc.waffleReferenceChair();
+    const rv = wc.waffleValidate(ref);
+    log(ref.xs.length === 7 && ref.ys.length === 8 && ref.crossings.size === 56, 'Waffle reference chair: 7 X-ribs + 8 Y-ribs, 56 crossings (as waffle.py)', `${ref.xs.length} + ${ref.ys.length}, ${ref.crossings.size}`);
+    log(rv.errors.length === 0, 'Waffle reference chair: 0 validation errors', rv.errors.slice(0, 3).join('; '));
+    // rib areas against the shapely output (tests/fixtures/chair_waffle_sheet.svg, coordinates rounded to 0.01 mm)
+    try {
+      const svg = await (await fetch('fixtures/chair_waffle_sheet.svg')).text();
+      const doc = new DOMParser().parseFromString(svg, 'image/svg+xml');
+      const refAreas = [...doc.querySelectorAll('[id="01_CUT_RED"] path')].map(p => {
+        const rings = p.getAttribute('d').split('Z').map(s => s.trim()).filter(Boolean).map(s => s.replace('M', '').split('L').map(q => q.trim().split(',').map(Number)));
+        return wc.wfArea(wc.polygonClipping.xor(...rings.map(r => [[r]])));
+      });
+      const diffs = ref.ribs.map((r, i) => Math.abs(wc.wfArea(r.poly) - refAreas[i]));
+      log(refAreas.length === 15 && Math.max(...diffs) < 0.25, 'Waffle rib areas match shapely reference (all 15 ribs, ≤ 0.25 mm²)', `max diff ${Math.max(...diffs).toFixed(3)} mm²`);
+    } catch (e) { log(false, 'Waffle reference fixture readable', String(e)); }
+    // every archetype validates at 1:10 and 1:20 on 1.5 mm board
+    const bad = [];
+    for (const a of ['chair', 'sofa', 'bed', 'table', 'cabinet']) for (const sc of [10, 20]) {
+      const p = { archetype: a, ...wc.eval('archetypes')[a] };
+      const s = wc.waffleSilhouettes(p, 10 / sc, 1.5);
+      const v = wc.waffleValidate(wc.waffle(s.side, s.front, s.W, s.D, 1.5, 10, 0));
+      if (!v.ok) bad.push(`${a} 1:${sc}: ${v.errors[0]}`);
+    }
+    log(bad.length === 0, 'Waffle: all 5 archetypes validate at 1:10 and 1:20 (1.5 mm)', bad.join('; '));
+    // hand-cut kerf widens every slot to t + 0.2
+    const s10 = wc.waffleSilhouettes({ archetype: 'table', ...wc.eval('archetypes').table }, 1, 1.5, 0.2);
+    const hk = wc.waffle(s10.side, s10.front, s10.W, s10.D, 1.5, 10, 0.2), hv = wc.waffleValidate(hk);
+    log(hv.ok && Math.abs(hk.slotWidth - 1.7) < 1e-9, 'Waffle: hand-cut kerf → measured slot width 1.7 mm everywhere', `${hv.checked} joints, ${hv.errors.length} errors`);
+    // the validator must catch broken geometry
+    const s0 = wc.waffleSilhouettes({ archetype: 'chair', ...wc.eval('archetypes').chair }, 1, 1.5);
+    const noSlots = wc.waffle(s0.side, s0.front, s0.W, s0.D, 1.5, 10, 0); noSlots.ribs[0].poly = s0.side;
+    log(wc.waffleValidate(noSlots).errors.some(e => /top slot missing/.test(e)), 'Waffle validator catches a rib without slots');
+    const tight = wc.waffle(s0.side, s0.front, s0.W, s0.D, 3, 6, 0);
+    log(wc.waffleValidate(tight).errors.some(e => /web between slots/.test(e)), 'Waffle validator catches webs thinner than 2t');
+  }
+
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));
   window.REGRESS = { pass: results.every(r => r.ok), results };
   out.insertAdjacentHTML('beforeend', `\n\n<b>${window.REGRESS.pass ? 'ALL PASS' : 'FAILURES'}</b> (${results.filter(r => r.ok).length}/${results.length})`);
