@@ -253,7 +253,11 @@ function overlapCheck(w, svgId) {
     const refCopy = wc.waffleReferenceChair({ section: false }); // exact waffle.py geometry
     const rv = wc.waffleValidate(ref);
     log(ref.xs.length === 7 && ref.ys.length === 8 && ref.crossings.size === 56, 'Waffle reference chair: 7 X-ribs + 8 Y-ribs, 56 crossings (as waffle.py)', `${ref.xs.length} + ${ref.ys.length}, ${ref.crossings.size}`);
-    log(rv.errors.length === 0, 'Waffle reference chair: 0 validation errors', rv.errors.slice(0, 3).join('; '));
+    // the waffle.py lounge chair has an arm recess in its front silhouette (like the v4.1 sofa): its classic slot checks pass,
+    // and since v4.2 the drop-assembly rule correctly reports the back-rest collisions of that side × front solid
+    const classic = rv.errors.filter(e => !/collide when the Y-rib is lowered|window at|does not stand on the floor|not connected/.test(e));
+    log(classic.length === 0 && rv.errors.some(e => /collide/.test(e)), 'Waffle reference chair: classic slot checks pass; drop-assembly collisions of its side × front solid reported', classic.slice(0, 3).join('; ') || `${rv.errors.length} drop-assembly findings`);
+
     // rib areas against the shapely output (tests/fixtures/chair_waffle_sheet.svg, coordinates rounded to 0.01 mm)
     try {
       const svg = await (await fetch('fixtures/chair_waffle_sheet.svg')).text();
@@ -270,7 +274,7 @@ function overlapCheck(w, svgId) {
     for (const a of ['chair', 'sofa', 'bed', 'table', 'cabinet']) for (const sc of [10, 20]) {
       const p = { archetype: a, ...wc.eval('archetypes')[a] };
       const s = wc.waffleSilhouettes(p, 10 / sc, 1.5);
-      const v = wc.waffleValidate(wc.waffle(s.side, s.front, s.W, s.D, 1.5, 10, 0));
+      const v = wc.waffleValidate(wc.waffle(s.side, s.front, s.W, s.D, 1.5, 10, 0, null, { xSection: s.xSection, ySection: s.ySection }));
       if (!v.ok) bad.push(`${a} 1:${sc}: ${v.errors[0]}`);
     }
     log(bad.length === 0, 'Waffle: all 5 archetypes validate at 1:10 and 1:20 (1.5 mm)', bad.join('; '));
@@ -431,7 +435,7 @@ function overlapCheck(w, svgId) {
     let caught = 0;
     for (const a of ['chair', 'sofa', 'table', 'bed', 'cabinet']) for (const sc of [10, 20]) for (const k of [0, 0.2]) {
       const s = wc.waffleSilhouettes({ archetype: a, ...A[a] }, 10 / sc, 1.5, k);
-      const nw = wc.waffle(s.side, s.front, s.W, s.D, 1.5, 10, k), vn = wc.waffleValidate(nw);
+      const nw = wc.waffle(s.side, s.front, s.W, s.D, 1.5, 10, k, null, { xSection: s.xSection, ySection: s.ySection }), vn = wc.waffleValidate(nw);
       const c = vn.errors.filter(e => /closed slot/.test(e)).length;
       if (c || !vn.ok) closedNew.push(`${a} 1:${sc} k${k}: ${c} closed, ${vn.errors[0] || ''}`);
       if (nw.fragmentsRemoved) fragments.push(`${a} 1:${sc}: ${nw.fragmentsRemoved}`);
@@ -506,6 +510,63 @@ function overlapCheck(w, svgId) {
     const boxes = ['slider-w', 'slider-d', 'slider-h', 'slider-sub', 'wf-spacing', 'img-bgtol', 'img-thr', 'img-clean', 'img-tol'].filter(id => !fresh.document.getElementById(id + '-num'));
     const nb = fresh.document.getElementById('slider-w-num'); nb.value = '61'; nb.dispatchEvent(new Event('input'));
     log(boxes.length === 0 && fresh.eval('state.w') === 61 && fresh.document.getElementById('wf-spacing').closest('details.v4-adv') && fresh.document.getElementById('img-tol').closest('details.v4-adv'), 'I Numeric box next to every slider (typing 61 sets W = 61 cm); tolerance / simplify / rib spacing under Advanced', boxes.join(','));
+  }
+
+  // ---------------- v4.2 · independent DROP-ASSEMBLY check (task M d) ----------------
+  // X-parts stand on the table; each Y-rib is lowered from above. Computed here from the rib polygons with
+  // polygon-clipping only (not the tool's waffleValidate): in the t-wide column of every rib pair all X material
+  // must lie below all Y material; no part has a hole; the parts form one connected grid; an X-part that is
+  // off the floor must not have Y material reaching the floor under its board.
+  if (typeof wc.waffle === 'function' && wc.waffleSilhouettes({ archetype: 'sofa', ...wc.eval('archetypes').sofa }, 1, 1.5, 0).xSection) {
+    const A = wc.eval('archetypes'), PC = wc.polygonClipping;
+    const bounds = mp => { const p = mp.flat(2); return p.length ? { minU: Math.min(...p.map(q => q[0])), maxU: Math.max(...p.map(q => q[0])), minZ: Math.min(...p.map(q => q[1])), maxZ: Math.max(...p.map(q => q[1])) } : null; };
+    const col = (poly, c, half) => { const b = bounds(poly); return PC.intersection(poly, [[[c - half, b.minZ - 1], [c + half, b.minZ - 1], [c + half, b.maxZ + 1], [c - half, b.maxZ + 1]]]); };
+    function dropCheck(res) {
+      const t = res.t, half = t / 2 - 0.02;
+      const X = res.ribs.filter(r => r.dir === 'x'), Y = res.ribs.filter(r => r.dir === 'y');
+      let interference = 0, joints = 0, offFloor = 0;
+      const holes = res.ribs.filter(r => r.poly.some(pg => pg.length > 1)).length;
+      const parent = new Map(res.ribs.map(r => [r, r])), find = r => { while (parent.get(r) !== r) r = parent.get(r); return r; };
+      X.forEach(xp => Y.forEach(yp => {
+        const xc = col(xp.poly, yp.pos, half), yc = col(yp.poly, xp.pos, half);
+        if (!xc.length || !yc.length) return;
+        joints++;
+        if (bounds(xc).maxZ > bounds(yc).minZ + 1e-6) interference++;
+        parent.set(find(xp), find(yp));
+      }));
+      const comps = new Set(res.ribs.map(find)).size;
+      X.forEach(xp => {
+        const b = bounds(xp.poly); if (b.minZ <= 1e-6) return;
+        // Y material within this X board's column, touching the floor, inside the X-part's depth range → the X-part should stand there too
+        if (Y.some(yp => yp.pos > b.minU && yp.pos < b.maxU && col(yp.poly, xp.pos, half).some(pg => pg[0].some(q => q[1] <= 0.5)))) offFloor++;
+      });
+      return { parts: res.ribs.length, joints, interference, holes, comps, offFloor, ok: interference === 0 && holes === 0 && comps === 1 && offFloor === 0 };
+    }
+    const fails = [], rows = [];
+    for (const a of ['chair', 'sofa', 'table', 'bed', 'cabinet']) for (const sc of [10, 20]) for (const k of [0, 0.2]) {
+      const s = wc.waffleSilhouettes({ archetype: a, ...A[a] }, 10 / sc, 1.5, k);
+      const r = dropCheck(wc.waffle(s.side, s.front, s.W, s.D, 1.5, 10, k, null, { xSection: s.xSection, ySection: s.ySection }));
+      rows.push(`${a} 1:${sc}${k ? ' hand' : ''}: ${r.parts} parts, ${r.joints} joints`);
+      if (!r.ok) fails.push(`${a} 1:${sc} k${k}: interference ${r.interference}, holes ${r.holes}, groups ${r.comps}, off floor ${r.offFloor}`);
+    }
+    log(fails.length === 0, 'M(d) Drop assembly (independent): 0 interference, 0 holes, one connected grid, X-parts on the floor — 5 archetypes × 1:10/1:20 × laser/hand', fails.slice(0, 3).join('; ') || rows.filter(r => /sofa|cabinet 1:10/.test(r)).join(' · '));
+    // negative cases: the v4.1 sofa (side × front band method) and the v4.1 cabinet recess (5.0 mm under the outer ribs) must FAIL
+    const sofa = wc.waffleSilhouettes({ archetype: 'sofa', ...A.sofa }, 1, 1.5, 0);
+    const nSofa = dropCheck(wc.waffle(sofa.side, sofa.front, sofa.W, sofa.D, 1.5, 10, 0, null, { sections: false }));
+    const wfPoly = wc.eval('wfPoly'), Wc = 120, Dc = 50, Hc = 80, pl = 15, r5 = 5;
+    const nCab = dropCheck(wc.waffle(wfPoly([[r5, 0], [Dc, 0], [Dc, Hc], [0, Hc], [0, pl], [r5, pl]]), wfPoly([[r5, 0], [Wc - r5, 0], [Wc - r5, pl], [Wc, pl], [Wc, Hc], [0, Hc], [0, pl], [r5, pl]]), Wc, Dc, 1.5, 10, 0));
+    log(!nSofa.ok && nSofa.interference > 0 && !nCab.ok && nCab.offFloor > 0, 'M(d) Negative cases fail: v4.1 sofa (band method) and v4.1 cabinet recess', `sofa: interference ${nSofa.interference}, holes ${nSofa.holes}, off floor ${nSofa.offFloor} · cabinet: off floor ${nCab.offFloor}, interference ${nCab.interference}`);
+    // the tool's own validator agrees on both
+    const vS = wc.waffleValidate(wc.waffle(sofa.side, sofa.front, sofa.W, sofa.D, 1.5, 10, 0, null, { sections: false }));
+    log(vS.errors.some(e => /closed slot at X\d+\/Y\d+/.test(e)) && vS.errors.some(e => /window at X\d+\/Y\d+/.test(e)) && vS.errors.some(e => /does not stand on the floor/.test(e)), 'M(a–c) waffleValidate reports "closed slot at Xi/Yj", "window at Xi/Yj" and "does not stand on the floor" on the v4.1 sofa');
+    const sNew = wc.waffleSilhouettes({ archetype: 'sofa', ...A.sofa }, 1, 1.5, 0), rNew = wc.waffle(sNew.side, sNew.front, sNew.W, sNew.D, 1.5, 10, 0, null, { xSection: sNew.xSection, ySection: sNew.ySection });
+    log(rNew.ribs.length === 26 && wc.waffleValidate(rNew).checked === 144, 'K Sofa 1:10 = exact box sections: 26 parts, 144 joints (as the Cowork Python proof)', `${rNew.ribs.length} parts, ${wc.waffleValidate(rNew).checked} joints`);
+    const cab = wc.waffleSilhouettes({ archetype: 'cabinet', ...A.cabinet }, 1, 1.5, 0), cabB = bounds(cab.front);
+    const recess = wc.wfIntervals(cab.front, 0.01, 1)[0][0];
+    log(Math.abs(recess - 3.25) < 1e-9 && wc.waffleValidate(wc.waffle(cab.side, cab.front, cab.W, cab.D, 1.5, 10, 0)).ok, 'L Cabinet 1:10 toe recess 3.25 mm (clear of the outer rib boards), all 60 joints valid', `recess ${recess.toFixed(2)} mm`);
+    // O — TA dropdown wording (values unchanged so old stamps still verify)
+    const opts = [...wc.document.getElementById('vf-type').options].map(o => `${o.value}=${o.textContent}`).join(' | ');
+    log(/cut=Furniture sheet/.test(opts) && /image=Image trace sheet/.test(opts) && !/Tab [13]/.test(opts), 'O TA verify dropdown: "Furniture sheet" / "Image trace sheet" (values cut / image kept)', opts);
   }
 
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));

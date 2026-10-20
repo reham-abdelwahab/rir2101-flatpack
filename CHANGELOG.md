@@ -1,8 +1,22 @@
 # Changelog
 
+## v4.2 — 2026-10-20 (waffle sofa + cabinet; see docs/v4_2_HANDOVER.md)
+- **K · Sofa.** The ribs are now exact sections of a union of boxes: seat block, two arms and back. Previously, side × front left a void under the back: the boards collided at 28 crossings at 1:10 and 7 at 1:20, there were windows, and parts hung free. Now 1:10 gives 26 parts and 144 joints, and 1:20 gives 13 parts and 36 joints. `waffleSilhouettes` can return `xSection(x)` / `ySection(y)`, and `waffle()` uses them for the ribs and the crossing table.
+- **L · Cabinet.** The toe recess now stops (t + k)/2 + 0.5 mm short of the outer rib positions. At 1:10 it is 3.25 mm (3.15 mm hand-cut), so X1 and X12 stand on the floor and all 60 joints assemble.
+- **M · Validation.** `waffleValidate` now checks for drop assembly:
+  - it probes the centre and both faces of every slot;
+  - in every rib pair, all X material must lie below all Y material ("closed slot at Xi/Yj");
+  - a hole that a slot touches is an error ("window at Xi/Yj");
+  - an X-part must stand on the floor wherever the solid under its board does ("X3b does not stand on the floor");
+  - every part must connect to the rest ("N parts not connected to the rest").
+- **M · Tests.** `tests/regress.html` has an independent drop-assembly check, computed from the rib polygons rather than by the tool's own validator, for 5 archetypes × 1:10/1:20 × laser/hand. Its negative cases, the v4.1 sofa and the v4.1 cabinet recess, must fail; they reproduce the audit's 28 / 2 holes and 8 / 2 off the floor. 86 checks.
+- **O.** The TA verify dropdown options now read "Furniture sheet" and "Image trace sheet". The values `cut` / `image` are unchanged, so older stamps still verify.
+- **P.** Corrected the v4.1 line below (112 of 172 crossings).
+- Fold & Glue, From-image, nets, score lines, fold rule, counts and stamps are unchanged. The handout PDF was regenerated under the same filename.
+
 ## v4.1 — 2026-10-20 (audit of fold lines and waffle slots + teaching review; see docs/v4_1_AUDIT.md)
 - **A · Waffle ribs are sections of the solid.**
-  - X-rib_i = S_side ∩ band(z ∈ F(x_i)), and the same for Y-ribs. Before this, legs below a seat or a backrest above it closed the slot into a window. For example, at 1:10 the sofa had 112 of 144 X-slots closed. Now 0 slots are closed in 5 archetypes × 1:10/1:20 × laser/hand-cut.
+  - X-rib_i = S_side ∩ band(z ∈ F(x_i)), and the same for Y-ribs. Before this, legs below a seat or a backrest above it closed the slot into a window. For example, at 1:10 the sofa had 112 of 172 crossings closed. Now 0 slots are closed in 5 archetypes × 1:10/1:20 × laser/hand-cut.
   - A rib that splits becomes parts X3a, X3b …. Parts with no slot are dropped and reported as "N unsupported fragments removed".
   - `waffleValidate` adds the rule "every slot must reach the rib edge" (error: "closed slot at Xi/Yj").
 - **B · Fold rule** in English and Arabic on every Fold & Glue sheet and in the H08 caption: printed side out · score on the print · all blue lines fold away from you.

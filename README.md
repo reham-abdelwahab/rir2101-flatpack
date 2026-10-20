@@ -26,6 +26,7 @@ There are three tabs, each with an English and an Arabic label. Every step shows
 **Waffle (laser):** this is a JavaScript port of [`docs/waffle_reference.py`](docs/waffle_reference.py).
 - The model is a grid of side-elevation ribs (X-ribs) and front-elevation ribs (Y-ribs). Where they cross, the X-rib is slotted half-depth from the top and the Y-rib from the bottom.
 - Since v4.1 each rib is a *section* of the solid: X-rib_i = S_side ∩ band(z ∈ F(x_i)), and the same for Y. Material outside the shared height range can no longer turn a slot into a closed window. A rib that splits becomes parts X3a, X3b …, and parts with no slot are dropped and counted. The audit is in [docs/v4_1_AUDIT.md](docs/v4_1_AUDIT.md).
+- Since v4.2 the sofa uses the exact sections of its boxes (seat, arms, back). Validation also checks drop assembly: every Y-rib can be lowered onto the standing X-ribs, there are no windows, the X-ribs stand on the floor, and the grid is one connected piece.
 - Validation must pass before printing. It checks that every slot is board + kerf wide, that the web between slots is at least 2 × board, that every crossing has its top/bottom slot pair meeting at mid-height, that every slot reaches the rib edge (no closed slots), and that rib count × board fits inside the piece.
 - The bookcase keeps its notched shelves.
 
@@ -33,7 +34,7 @@ There are three tabs, each with an English and an Arabic label. Every step shows
 
 **Counts:** for example "2 furniture types · 5 models · 13 cut-out parts · 1 A4 sheet". Every part carries its model's id (CH1-A1, TB1-…).
 
-$1are set in `PRINT_STROKE` and `LASER_STROKE`. Printed sheets use a 0.2 mm cut line, a 0.15 mm dashed score line, labels of 2 mm or smaller, and no grid. Laser SVG files use a 0.01 mm hairline.
+**Line weights** are set in `PRINT_STROKE` and `LASER_STROKE`. Printed sheets use a 0.2 mm cut line, a 0.15 mm dashed score line, labels of 2 mm or smaller, and no grid. Laser SVG files use a 0.01 mm hairline.
 
 **Pictures:** the `IMG` map is inlined as base64, about 2.6 MB from `images/web` of the v4 image set. The file stays under 4 MB, so no external image folder is needed.
 

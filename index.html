@@ -1364,7 +1364,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
               <button type="button" onclick="verifyFillFromHelp()" class="px-3.5 py-1.5 rounded-xl bg-paper-200 hover:bg-paper-300 text-paper-900 font-bold text-xs transition shrink-0">Fill</button>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px;" class="text-[10px] text-paper-700">
-              <label>Sheet type<select id="vf-type" onchange="verifyTypeUI()" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"><option value="cut">Tab 1 cut sheet</option><option value="image">Tab 3 image trace</option></select></label>
+              <label>Sheet type<select id="vf-type" onchange="verifyTypeUI()" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"><option value="cut">Furniture sheet</option><option value="image">Image trace sheet</option></select></label>
               <label>Student name<input id="vf-name" type="text" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
               <label>Student ID<input id="vf-id" type="text" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"></label>
               <label class="vf-cut">Piece<select id="vf-arch" class="w-full px-2 py-1 rounded-lg border border-paper-300 text-xs bg-paper-50"><option>chair</option><option>sofa</option><option>table</option><option>bed</option><option>cabinet</option><option>shelf</option></select></label>
@@ -1578,7 +1578,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.1';
+    const TOOL_VERSION = '4.2';
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -4126,10 +4126,15 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         return Array.from({ length: n }, (_, i) => margin + i * step);
       };
       const xs = positions(W), ys = positions(D);
+      // v4.2 (task K): exact sections of the solid when the archetype provides them
+      // (xSection(x) in (y, z), ySection(y) in (x, z)); otherwise the v4.1 band method.
+      // opts.sections = false forces the band method (negative test of the v4.1 sofa).
+      const useSec = opts.sections !== false && typeof opts.xSection === 'function' && typeof opts.ySection === 'function';
+      const XS = useSec ? xs.map(x => opts.xSection(x)) : null, YS = useSec ? ys.map(y => opts.ySection(y)) : null;
       const crossings = new Map();   // "i,j" → [[lo, hi], …]
       xs.forEach((x, i) => ys.forEach((y, j) => {
         const common = [];
-        for (const a of wfIntervals(side, y)) for (const b of wfIntervals(front, x)) {
+        for (const a of (useSec ? wfIntervals(XS[i], y) : wfIntervals(side, y))) for (const b of (useSec ? wfIntervals(YS[j], x) : wfIntervals(front, x))) {
           const lo = Math.max(a[0], b[0]), hi = Math.min(a[1], b[1]);
           if (hi - lo > 3 * t) common.push([lo, hi]);
         }
@@ -4161,14 +4166,16 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       xs.forEach((x, i) => {
         const cuts = [], joints = [];
         ys.forEach((y, j) => (crossings.get(i + ',' + j) || []).forEach(([lo, hi]) => { cuts.push(wfBox(y - sw / 2, (lo + hi) / 2, y + sw / 2, hi + 1)); joints.push([y, (lo + hi) / 2 - 0.05]); }));
-        build('x', i, x, section ? band(side, wfIntervals(front, x)) : side, cuts, joints);
+        build('x', i, x, useSec ? XS[i] : section ? band(side, wfIntervals(front, x)) : side, cuts, joints);
       });
       ys.forEach((y, j) => {
         const cuts = [], joints = [];
         xs.forEach((x, i) => (crossings.get(i + ',' + j) || []).forEach(([lo, hi]) => { cuts.push(wfBox(x - sw / 2, lo - 1, x + sw / 2, (lo + hi) / 2)); joints.push([x, (lo + hi) / 2 + 0.05]); }));
-        build('y', j, y, section ? band(front, wfIntervals(side, y)) : front, cuts, joints);
+        build('y', j, y, useSec ? YS[j] : section ? band(front, wfIntervals(side, y)) : front, cuts, joints);
       });
-      return { ribs, groups, xs, ys, crossings, slotWidth: sw, t, k, W, D, margin, section, fragmentsRemoved };
+      const xBase = x => useSec ? opts.xSection(x) : section ? band(side, wfIntervals(front, x)) : side;   // unslotted X section at any x
+      return { ribs, groups, xs, ys, crossings, slotWidth: sw, t, k, W, D, margin, section, sections: useSec, fragmentsRemoved, xBase };
+
     }
 
     // ---- validation (must pass before printing) ----
@@ -4203,8 +4210,10 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           if (!wfInside(Y, x, mid + e)) errors.push(`${tag}: Y-rib bottom slot does not stop at mid-height`);
           // v4.1 audit rule: every slot must reach the rib's edge, or it is a closed window that cannot slide together
           // (slots overcut the edge by 1 mm, so look just beyond the overcut)
-          if (wfInside(X, y, hi + 1 + e)) errors.push(`closed slot at X${i + 1}/Y${j + 1}: X-rib material above the slot`);
-          if (wfInside(Y, x, lo - 1 - e)) errors.push(`closed slot at X${i + 1}/Y${j + 1}: Y-rib material below the slot`);
+          // v4.2 (task M a): probe the centre AND both faces of the slot, not only the centre line
+          const offs = [-(sw / 2 - 0.02), 0, sw / 2 - 0.02];
+          if (offs.some(d => wfInside(X, y + d, hi + 1 + e))) errors.push(`closed slot at X${i + 1}/Y${j + 1}: X-rib material above the slot`);
+          if (offs.some(d => wfInside(Y, x + d, lo - 1 - e))) errors.push(`closed slot at X${i + 1}/Y${j + 1}: Y-rib material below the slot`);
           // measured slot width just above / below mid (the joint itself)
           [[X, y, mid + e], [Y, x, mid - e]].forEach(([poly, c, z], n) => {
             const runs = wfIntervals(poly, z, 1);
@@ -4214,7 +4223,57 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           });
         });
       });
+
+      // ---- v4.2 (task M): drop-assembly checks ----
+      // (a) X-ribs stand on the table and every Y-rib is lowered from above. In the board-wide column of EVERY
+      //     rib pair, all X material must lie below all Y material (else the boards collide = a closed slot).
+      const offs = [-(sw / 2 - 0.02), 0, sw / 2 - 0.02];
+      const colZ = (poly, c) => offs.flatMap(d => wfIntervals(poly, c + d));
+      xs.forEach((x, i) => ys.forEach((y, j) => {
+        const xz = colZ(ribX[i].poly, y), yz = colZ(ribY[j].poly, x);
+        if (!xz.length || !yz.length) return;
+        const xTop = Math.max(...xz.map(v => v[1])), yBot = Math.min(...yz.map(v => v[0]));
+        if (xTop > yBot + 1e-6) errors.push(`closed slot at X${i + 1}/Y${j + 1}: the boards collide when the Y-rib is lowered (X material up to ${xTop.toFixed(1)} mm, Y from ${yBot.toFixed(1)} mm)`);
+      }));
+      // (b) a hole in a rib part that a slot touches is a window, not a slot
+      res.crossings.forEach((ivs, key) => {
+        const [i, j] = key.split(',').map(Number);
+        ivs.forEach(([lo, hi]) => {
+          const mid = (lo + hi) / 2;
+          [['x', i, ys[j], mid, hi + 1], ['y', j, xs[i], lo - 1, mid]].forEach(([dir, idx, c, z0, z1]) => {
+            ((res.groups && res.groups[dir][idx]) || []).forEach(r => r.poly.forEach(pg => pg.slice(1).forEach(hole => {
+              const us = hole.map(q => q[0]), zs = hole.map(q => q[1]);
+              if (Math.min(...us) < c + sw / 2 + 0.05 && Math.max(...us) > c - sw / 2 - 0.05 && Math.min(...zs) < z1 + 0.05 && Math.max(...zs) > z0 - 0.05)
+                errors.push(`window at X${i + 1}/Y${j + 1}: ${r.name} has a hole where its slot should open`);
+            })));
+          });
+        });
+      });
+      // (c1) an X-part must stand on the floor wherever the solid under its board does
+      if (res.xBase && res.groups) res.groups.x.forEach((list, i) => (list || []).forEach(r => {
+        const b = wfBounds(r.poly);
+        if (b.minZ <= 1e-6) return;
+        const floorUnder = offs.some(d => wfIntervals(res.xBase(xs[i] + d), 0.01, 1).some(([u0, u1]) => u0 < b.maxU - 1e-6 && u1 > b.minU + 1e-6));
+        if (floorUnder) errors.push(`${r.name} does not stand on the floor (starts at z = ${b.minZ.toFixed(1)} mm)`);
+      }));
+      // (c2) every part must be connected to the rest through slot joints
+      if (res.groups) {
+        const all = [...res.groups.x.flat(), ...res.groups.y.flat()].filter(Boolean);
+        const parent = new Map(all.map(r => [r, r]));
+        const find = r => { while (parent.get(r) !== r) r = parent.get(r); return r; };
+        res.crossings.forEach((ivs, key) => {
+          const [i, j] = key.split(',').map(Number);
+          ivs.forEach(([lo, hi]) => {
+            const mid = (lo + hi) / 2;
+            const a = (res.groups.x[i] || []).find(r => wfInside(r.poly, ys[j], mid - e)), b2 = (res.groups.y[j] || []).find(r => wfInside(r.poly, xs[i], mid + e));
+            if (a && b2) parent.set(find(a), find(b2));
+          });
+        });
+        const comp = new Map(); all.forEach(r => { const k = find(r); comp.set(k, (comp.get(k) || 0) + 1); });
+        if (comp.size > 1) { const n = all.length - Math.max(...comp.values()); errors.push(`${n} part${n > 1 ? 's' : ''} not connected to the rest`); }
+      }
       return { ok: errors.length === 0, errors, warnings, checked };
+
     }
 
     // ---- isometric assembly diagram from the same data (drawn back to front) ----
@@ -4244,7 +4303,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const m = Math.max(3 * t, 4), sw = t + k;
       const memb = cm => Math.max(cm * factor, m + sw + 1);     // legs / posts / backs
       const slab = cm => Math.max(cm * factor, 3 * t + 1);       // seats, tops, rails
-      let side, front;
+      let side, front, xSection = null, ySection = null;
       if (p.archetype === 'chair') {
         const leg = memb(4), seatT = slab(4), backT = memb(5), seatZ = Math.max(S, seatT + 1);
         side = wfPoly([[0, 0], [leg, 0], [leg, seatZ - seatT], [D - leg, seatZ - seatT], [D - leg, 0], [D, 0], [D, H], [D - backT, H], [D - backT, seatZ], [0, seatZ]]);
@@ -4253,6 +4312,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         const backT = memb(20), armW = memb(15), armZ = Math.min(H - slab(4), S + (H - S) * 0.45);
         side = wfPoly([[0, 0], [D, 0], [D, H], [D - backT, H], [D - backT, armZ], [0, armZ]]);
         front = polygonClipping.difference(wfPoly([[0, 0], [W, 0], [W, H], [0, H]]), wfBox(armW, S, W - armW, armZ));
+        // v4.2 (task K): the sofa is a union of boxes — seat block, two arms, back — and its ribs are the
+        // exact sections of that solid. (side × front left a void under the back: hanging parts, windows.)
+        const isArm = x => x <= armW || x >= W - armW;
+        xSection = x => polygonClipping.union(wfBox(0, 0, D, S), wfBox(D - backT, 0, D, H), ...(isArm(x) ? [wfBox(0, 0, D, armZ)] : []));
+        ySection = y => polygonClipping.union(wfBox(0, 0, W, S), wfBox(0, 0, armW, armZ), wfBox(W - armW, 0, W, armZ), ...(y >= D - backT ? [wfBox(0, 0, W, H)] : []));
       } else if (p.archetype === 'bed') {
         const hbT = memb(6), baseZ = Math.max(S, slab(4));
         side = wfPoly([[0, 0], [D, 0], [D, H], [D - hbT, H], [D - hbT, baseZ], [0, baseZ]]);
@@ -4262,13 +4326,15 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         side = wfPoly([[0, 0], [legD, 0], [legD, H - apron], [D - legD, H - apron], [D - legD, 0], [D, 0], [D, H], [0, H]]);
         front = wfPoly([[0, 0], [legW, 0], [legW, H - apron], [W - legW, H - apron], [W - legW, 0], [W, 0], [W, H], [0, H]]);
       } else if (p.archetype === 'cabinet') {
-        const plinth = Math.min(H / 3, Math.max(S, slab(2))), rD = Math.min(D * 0.15, 5 * factor), rW = Math.min(W * 0.1, 5 * factor);
+        // v4.2 (task L): the toe recess must stop short of the outer rib boards, or a lip sits under their slots
+        const lim = m - sw / 2 - 0.5;
+        const plinth = Math.min(H / 3, Math.max(S, slab(2))), rD = Math.min(D * 0.15, 5 * factor, lim), rW = Math.min(W * 0.1, 5 * factor, lim);
         side = wfPoly([[rD, 0], [D, 0], [D, H], [0, H], [0, plinth], [rD, plinth]]);
         front = wfPoly([[rW, 0], [W - rW, 0], [W - rW, plinth], [W, plinth], [W, H], [0, H], [0, plinth], [rW, plinth]]);
       } else {
         return null;   // bookcase keeps the shelf-notch design
       }
-      return { side, front, W, D, H };
+      return { side, front, W, D, H, xSection, ySection };
     }
 
     // The waffle.py reference case (lounge chair 70 × 80 × 80 mm at 1:10) — used by the tests
@@ -4388,7 +4454,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         sil = { side: wfPoly(outline.pts.map(q => [q[0] * kk, H - q[1] * kk])), front: wfPoly([[0, 0], [W, 0], [W, H], [0, H]]), W, D, H };
       } else sil = waffleSilhouettes(p, f, t, k);
       if (!sil) return null;
-      const res = waffle(sil.side, sil.front, sil.W, sil.D, t, p.spacing || WAFFLE_SPACING_DEFAULT, k);
+      const res = waffle(sil.side, sil.front, sil.W, sil.D, t, p.spacing || WAFFLE_SPACING_DEFAULT, k, null, { xSection: sil.xSection, ySection: sil.ySection });
       return { res, validation: waffleValidate(res) };
     }
     // v4.1 (audit F): every model gets a furniture id (CH1, CH2 … TB1) printed on each of its parts
