@@ -1,9 +1,58 @@
 # Studio Flat-Pack Maker — RIR2101 Interior Design 1
 
-A single, self-contained HTML tool (no CDN, works offline) that first-year interior-design students at AASTMT use to print true-scale 1:10 / 1:20 maquette cut sheets on A4/A3, or to export layered laser SVGs (`01_CUT_RED`, `02_SCORE_BLUE`, `03_LABELS_BLACK`). It has three tabs: **Make & Test Cut Sheet**, **Student Handout**, and **Image → Cut Sheet**. Open it online at **https://reham-abdelwahab.github.io/rir2101-flatpack/** (open it in its own tab, not in an iframe, because print and download are blocked in iframes), or download `index.html` and open it locally. The printed handout is [`RIR2101_FlatPack_Student_Handout_v3_4.pdf`](RIR2101_FlatPack_Student_Handout_v3_4.pdf). Background, test status and the task list are in the [handover](docs/HANDOVER.md), and the version history is in [CHANGELOG.md](CHANGELOG.md).
+A single, self-contained HTML tool that works offline. First-year interior-design students at AASTMT use it to make true-scale maquette sheets: they list their furniture pieces, nest all the parts on as few A4/A3 sheets as possible, and print them at 100 % or export layered laser SVGs (`01_CUT_RED`, `02_SCORE_BLUE`, `03_LABELS_BLACK`).
+
+Open it online at **https://reham-abdelwahab.github.io/rir2101-flatpack/**. Open it in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md).
 
 Course team: Dr. Reham Ahmed Abdelwahab (Instructor) · Eng. Mariam Thamarat, MSc. · Eng. Mariam Emad, BSc. (TAs).
 
-**Verification stamp (from v3.5):** every printed sheet carries `VERIFY: XXXX-XXXX · vX.Y` in its title block. Next to the stamp is the short line of values it was computed from: piece, W×D×H, SUB, board thickness and joinery. On Tab 3 sheets, the printed piece sizes are used instead. To check a sheet, a TA opens **Share & Troubleshoot → Verify a Printed Sheet** and either pastes the student's Help Code or types the values from the paper. A ✔ means the printed values were not edited after the sheet left the tool. **This deters tampering; it is not cryptographic proof.** The salt is in the HTML file, so anyone who reads the source could compute a valid stamp for values of their choice. The salt is `VERIFY_SALT`, near the top of the `<script>` block in `index.html`, next to `TOOL_VERSION`. Change it to any new text each semester. Sheets stamped with an earlier salt will then show ✘, so verify them with the copy of the tool they were made with (each release is a git tag). There is no QR code, because the tool is kept free of libraries.
+## How it is organised (v4)
 
-**Regression checks:** serve the repo folder over HTTP (for example, run `python -m http.server`) and open `tests/regress.html?cand=../index.html&base=../_baseline.html`. Here `_baseline.html` is a local, untracked copy of the last verified release. The page compares the two builds across 72 archetype × scale × sheet combinations, runs the image-tab trace and a Help Code round-trip, and checks the title-block text for overlap. Without `base=`, only the self-checks run.
+There are three tabs, each with an English and an Arabic label. Every step shows a picture with one line of English and one line of Arabic under it.
+
+1. **MAKE / اصنع**
+   - **A · Who & scale:** name, ID, scale, A4/A3 and board.
+   - **B · Pieces:** the pieces list. Each piece opens a piece editor for its type, real size in cm, quantity, and build method: **Fold & Glue**, **Waffle (laser)** or **From image**.
+   - **C · Check:** warnings, Auto-fix, and the button to go to the sheets.
+2. **PRINT & BUILD / اطبع وابنِ**
+   - **D · Sheets:** every part of every piece, nested on numbered sheets. Each sheet has a parts list, a VERIFY stamp, the 50 mm ruler and thin lines. From here students print at 100 % or download the laser SVG.
+   - **E · Build:** picture strips, shown only for the build methods the student's pieces use.
+3. **HELP / مساعدة**
+   - **F:** the 3-page picture handout (prints as exactly 3 A4 pages).
+   - **G:** AI image help, Prompt A/B copy buttons and the Neufert table.
+   - **H:** Help Code.
+   - **I:** the instructor section, collapsed by default. It holds sheet verification, test cases 1–5, the pilot protocol, sharing, credits and the version.
+
+**Waffle (laser):** this is a JavaScript port of [`docs/waffle_reference.py`](docs/waffle_reference.py).
+- The model is a grid of side-elevation ribs (X-ribs) and front-elevation ribs (Y-ribs). Where they cross, the X-rib is slotted half-depth from the top and the Y-rib from the bottom.
+- Validation must pass before printing. It checks that every slot is board + kerf wide, that the web between slots is at least 2 × board, that every crossing has its top/bottom slot pair meeting at mid-height, and that rib count × board fits inside the piece.
+- The bookcase keeps its notched shelves.
+
+**Line weights** are set in `PRINT_STROKE` and `LASER_STROKE`. Printed sheets use a 0.2 mm cut line, a 0.15 mm dashed score line, labels of 2 mm or smaller, and no grid. Laser SVG files use a 0.01 mm hairline.
+
+**Pictures:** the `IMG` map is inlined as base64, about 2.6 MB from `images/web` of the v4 image set. The file stays under 4 MB, so no external image folder is needed.
+
+## Verification stamp
+
+Every printed sheet carries `VERIFY: XXXX-XXXX · vX.Y` in its title block.
+- **Single-piece and image sheets:** the stamp hashes the values printed next to it.
+- **v4 nested sheets:** the stamp hashes the sheet's number and its contents.
+
+To check a sheet, a TA opens **Help → I · Instructor → Verify a Printed Sheet**. They either paste the student's Help Code, which carries every piece, or type the values from the paper. A ✔ means the printed values were not edited after the sheet left the tool.
+
+**This deters tampering; it is not cryptographic proof.** The salt is inside the HTML file. It is `VERIFY_SALT`, next to `TOOL_VERSION` near the top of the main script. Change it to any new text each semester. Sheets stamped with an earlier salt then show ✘, so verify those with the tagged release they were made with.
+
+## Regression checks
+
+The laptop has no Python or Node, so the tests run in a browser.
+1. Start the server: `pwsh -NoProfile -File tests/serve.ps1`. It serves this folder on port 8765, or on `$env:PORT` if that is set.
+2. Open `tests/regress.html?cand=../index.html&base=../_baseline.html`. Here `_baseline.html` is a local, untracked copy of the v3.4 master.
+
+The page runs these checks:
+- **v3 behaviour:** the 72-combination archetype × scale × sheet sweep must match the baseline exactly. It also covers fit, ruler, stamp, Help Code and verify box, the image trace, offline loading and the icons.
+- **C1 waffle:** the reference chair must come out as 7 + 8 ribs with 56 crossings and 0 errors, with rib areas matching shapely within 0.09 mm², plus negative tests.
+- **C2 nesting:** acceptance test E2 (bed + 2 bedside tables + wardrobe at 1:20 on 2 A4 sheets), no overlaps, nothing scaled, and a stamp on every sheet.
+- **C3 line weights:** the cut line is rasterised at 600 dpi and must measure ≤ 0.25 mm.
+- **B/F interface:** tabs, steps, piece editor, Help Code with pieces, nested-sheet verification, the handout, and file size.
+
+To check page counts, use headless Edge: `msedge --headless=new --virtual-time-budget=10000 --print-to-pdf=out.pdf "http://localhost:8765/#print-test=e2"`. That should give 2 A4 pages; `#print-test=handout` should give 3.

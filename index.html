@@ -312,7 +312,10 @@
     .v4-testbar #test-cases-bar { border-radius: 14px; }
     /* handout pages (screen + print) */
     .handout-page { background: #fff; border: 1px solid var(--v4-line); border-radius: 12px; padding: 7mm 8mm; width: 100%; max-width: 210mm; margin: 0 auto; display: flex; flex-direction: column; gap: 3mm; }
-    .handout-page.hidden { display: none; }
+    /* my display rules must not beat Tailwind's .hidden */
+    .v4-editor.hidden, .v4-method-panel.hidden, .handout-page.hidden, .v4-field.hidden, .v4-warn.hidden { display: none !important; }
+    /* tabs 1–2 are picture-led: the v3 explanation paragraphs give way to the step pictures + one-line captions */
+    #tracer-column p, #test-lab-panel p:not([id]), #image-controls p, #image-sheet-settings p, #inline-info-step-1 { display: none !important; }
     .handout-page header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--v4-ink); padding-bottom: 1.5mm; position: static; }
     .handout-page header b { font-size: 15px; } .handout-page header i { font-style: normal; font-family: "Noto Naskh Arabic", "Segoe UI", Tahoma, Arial, sans-serif; font-weight: 700; font-size: 16px; }
     .handout-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; min-height: 0; }
@@ -1570,7 +1573,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '3.6';
+    const TOOL_VERSION = '4.0';
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -4610,7 +4613,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         document.getElementById('img-waffle-width-wrap').classList.toggle('hidden', p.imageBuild !== 'waffle');
         document.getElementById('img-waffle-width').value = p.widthCm || 45;
       }
-      if (p && m === 'waffle') {
+      // a traced image built as a waffle uses the same spacing / kerf / checks panel
+      if (p && m === 'image' && p.imageBuild === 'waffle') document.getElementById('ed-waffle').classList.remove('hidden');
+      if (p && (m === 'waffle' || (m === 'image' && p.imageBuild === 'waffle'))) {
         const t = state.thicknessMm, sl = document.getElementById('wf-spacing');
         sl.min = Math.max(WAFFLE_SPACING_RANGE[0], Math.ceil(3 * t * 2) / 2); sl.max = WAFFLE_SPACING_RANGE[1];
         sl.value = Math.max(+sl.min, p.spacing || WAFFLE_SPACING_DEFAULT);
@@ -4863,6 +4868,19 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         renderHandout();
         refreshV4();
         v4LoadImages();
+        // tests only: #print-test=e2 | handout builds the print pages without a dialog (headless print-to-PDF)
+        const pt = (location.hash.match(/print-test=(\w+)/) || [])[1];
+        if (pt) {
+          window.__noRealPrint = true;
+          if (pt === 'handout') printStudentGuide();
+          else {
+            closeEditor();
+            pieces = [newPiece('bed'), { ...newPiece('cabinet'), w: 45, d: 40, h: 50, subH: 10, qty: 2 }, { ...newPiece('cabinet'), w: 100, d: 60, h: 200, subH: 10 }];
+            document.getElementById('select-thickness').value = '0.5'; updateThicknessSelect('0.5');
+            refreshV4(); printAllSheets();
+          }
+          document.body.classList.add('print-test-ready');
+        }
       }, 0);
     });
   </script>

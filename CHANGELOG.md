@@ -1,5 +1,24 @@
 # Changelog
 
+## v4.0 — 2026-10-20 (redesign after Reham's v3.6 print test)
+- **C1 Waffle (laser):** replaces the old table leg-frame slots, which did not work.
+  - JavaScript port of `waffle.py`: a grid of X-ribs (side elevation) and Y-ribs (front elevation). Where they cross, the X-rib is slotted half-depth from the top and the Y-rib from the bottom.
+  - Rib spacing slider (6–15 mm), laser or hand-cut (+0.2 mm) kerf, an isometric assembly drawing on the sheet, and a ▲ marking the top edge of every rib.
+  - Validation must pass before printing: slot = board + kerf, web ≥ 2 × board, top/bottom slots meet at mid-height, rib count × board fits the piece.
+  - Silhouettes for chair, sofa, bed, table and cabinet. The bookcase keeps its notches. A traced image can also be built as a waffle.
+- **C3 Thin lines:** printed sheets use a 0.2 mm cut line, a 0.15 mm dashed score line, labels of 2 mm or smaller, and no grid. Laser SVGs use the `LASER_STROKE` 0.01 mm hairline with a continuous score line. Measured at 600 dpi: 0.19 mm.
+- **C2 Nesting:** all parts of all pieces are packed on as few A4/A3 sheets as possible.
+  - The packer places the tallest parts first, with a 3 mm gap. Parts stay upright and turn 90° only when that makes them fit.
+  - Every sheet has its number ("Sheet n / N"), a parts list, material use, the 50 mm ruler, a title block and its own stamp.
+  - A bed base or cabinet whose cross-shaped net is bigger than the sheet becomes a wall strip plus a separate top, at the same true scale.
+  - Acceptance test E2 (bed + 2 bedside tables + wardrobe at 1:20) fits on 2 A4 sheets.
+- **B Three tabs:** MAKE / اصنع, PRINT & BUILD / اطبع وابنِ and HELP / مساعدة, with icons T1/T6/T7 and progress dots A–E.
+  - Pieces list with a piece editor: type, real cm, quantity, and Fold & Glue / Waffle / From image.
+  - The instructor tools are collapsed in Help · I.
+  - The Help Code now carries every piece, and the TA verify box checks the stamps of nested sheets.
+- **F Picture-led help:** steps show pictures P01–P08 and step icons. Build strips appear only for the methods used. The 3-page picture handout has panels H01–H16 and 6 do/don't pairs, prints as exactly 3 A4 pages, and has one line of English and one of Arabic under every picture. The Neufert table, Prompt A/B and the team credits stay.
+- The pictures are inline (the file is 2.9 MB). The shared standalone copy no longer duplicates the pictures (2.95 MB).
+
 ## v3.6 — 2026-10-18
 - Fully offline: the Font Awesome and Google Fonts links are removed.
   - The 37 icons the tool uses are now inline SVG masks (Font Awesome Free 6.4.0, CC BY 4.0). The `<i class="fa-…">` markup is kept, so the JavaScript did not change.
