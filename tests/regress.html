@@ -282,8 +282,66 @@ function overlapCheck(w, svgId) {
     log(wc.waffleValidate(tight).errors.some(e => /web between slots/.test(e)), 'Waffle validator catches webs thinner than 2t');
   }
 
+  // ---------------- v4 · C2 nesting ----------------
+  if (typeof wc.nestAll === 'function') {
+    const A = wc.eval('archetypes');
+    const mk = (a, qty, method = 'fold', o = {}) => ({ archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty, method, curveOffsets: [0, 0, 0, 0, 0], ...o });
+    const cfg = { scale: 20, sheetSize: 'A4', thicknessMm: 0.5, name: 'Test Student', id: '231045', course: 'RIR2101' };
+    const e2 = wc.nestAll([mk('bed', 1), mk('cabinet', 2, 'fold', { w: 45, d: 40, h: 50, subH: 10 }), mk('cabinet', 1, 'fold', { w: 100, d: 60, h: 200, subH: 10 })], cfg);
+    log(e2.total <= 2 && e2.oversize.length === 0, 'E2: bed + 2 bedside tables + wardrobe at 1:20 nest on ≤ 2 A4 sheets', `${e2.total} sheets, ${e2.oversize.length} oversize`);
+    const wf = wc.nestAll([mk('chair', 1, 'waffle'), mk('sofa', 2, 'fold')], { ...cfg, scale: 10, thicknessMm: 1.5, sheetSize: 'A3' });
+    // geometry checks on the rendered sheets: inside the printable area, no overlaps, never scaled
+    const host = document.createElement('div'); host.style.cssText = 'position:absolute;left:-99999px;width:800px'; document.body.appendChild(host);
+    const probs = [];
+    for (const [label, res, size] of [['E2', e2, 'A4'], ['mixed', wf, 'A3']]) {
+      for (const sh of res.sheets) {
+        host.innerHTML = sh.svg; const svg = host.firstElementChild;
+        const [SW, SH] = size === 'A3' ? [297, 420] : [210, 297];
+        if (/scale\(/.test(svg.querySelector('[id="01_CUT_RED"]').innerHTML)) probs.push(`${label} sheet ${sh.idx}: a part is scaled`);
+        const boxes = [...svg.querySelectorAll('[id="01_CUT_RED"] > g')].map(g => { const b = g.getBBox(), m = g.getCTM(), r = svg.getCTM().inverse().multiply(m);
+          const pts = [[b.x, b.y], [b.x + b.width, b.y], [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]].map(([x, y]) => [r.a * x + r.c * y + r.e, r.b * x + r.d * y + r.f]);
+          return { x0: Math.min(...pts.map(p => p[0])), y0: Math.min(...pts.map(p => p[1])), x1: Math.max(...pts.map(p => p[0])), y1: Math.max(...pts.map(p => p[1])) }; });
+        boxes.forEach((b, i) => {
+          if (b.x0 < 7.9 || b.x1 > SW - 7.9 || b.y0 < 30.9 || b.y1 > SH - 26.9) probs.push(`${label} sheet ${sh.idx}: part ${i + 1} outside the printable area`);
+          boxes.slice(i + 1).forEach((c, j) => { if (b.x0 < c.x1 - 0.5 && c.x0 < b.x1 - 0.5 && b.y0 < c.y1 - 0.5 && c.y0 < b.y1 - 0.5) probs.push(`${label} sheet ${sh.idx}: parts ${i + 1} and ${i + j + 2} overlap`); });
+        });
+        const txt = svg.textContent;
+        if (!/5 cm CHECK RULER/.test(txt) || !/PARTS ON THIS SHEET/.test(txt) || !txt.includes(`VERIFY: ${sh.stamp}`) || !txt.includes(`SHEET ${sh.idx} / ${res.total}`)) probs.push(`${label} sheet ${sh.idx}: ruler / parts list / stamp / page number missing`);
+      }
+    }
+    host.remove();
+    log(probs.length === 0, 'Nested sheets: parts inside printable area, no overlaps, never scaled; ruler + parts list + stamp + "Sheet n / N" on every sheet', probs.slice(0, 4).join('; '));
+    const stamps = [...e2.sheets, ...wf.sheets].map(s => s.stamp);
+    log(new Set(stamps).size === stamps.length, 'Every nested sheet has its own stamp', stamps.join(' '));
+    // true scale is kept: the nested mattress top equals the single-sheet geometry
+    const bedTop = e2.parts.find(p => /MATTRESS TOP/.test(p.name));
+    log(bedTop && Math.abs(bedTop.w - (160 * 10 / 20 + 2 * 38 * 10 / 20)) < 0.01, 'Nested parts keep true scale (bed net width = W + 2 × base height)', bedTop ? bedTop.w.toFixed(2) + ' mm' : 'missing');
+
+    // ---------------- v4 · C3 line weights ----------------
+    const s1 = e2.sheets[0].svg;
+    log(/id="01_CUT_RED"[^>]*stroke-width="0\.2"/.test(s1) && /id="02_SCORE_BLUE"[^>]*stroke-width="0\.15"/.test(s1), 'Printed sheets: cut 0.2 mm, score 0.15 mm');
+    // rasterise a 4 × 4 mm window of a horizontal cut edge at 600 dpi and measure the line
+    const px = 600 / 25.4;
+    host.innerHTML = s1; document.body.appendChild(host); const svgEl = host.firstElementChild;
+    const g0 = svgEl.querySelector('[id="01_CUT_RED"] > g'); const bb = g0.getBBox(); const m0 = g0.getCTM(), rr = svgEl.getCTM().inverse().multiply(m0);
+    const cx = rr.a * (bb.x + bb.width / 2) + rr.e, top = rr.d * bb.y + rr.f;
+    host.remove();
+    const win = s1.replace(/viewBox="[^"]*" width="[^"]*" height="[^"]*"/, `viewBox="${cx - 2} ${top - 2} 4 4" width="${4 * px}" height="${4 * px}"`);
+    const img = new Image(); img.src = URL.createObjectURL(new Blob([win], { type: 'image/svg+xml' })); await img.decode();
+    const cv = document.createElement('canvas'); cv.width = cv.height = Math.round(4 * px); const ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); ctx.drawImage(img, 0, 0, cv.width, cv.height);
+    const col = ctx.getImageData(Math.round(2 * px), 0, 1, cv.height).data; let cov = 0;
+    for (let i = 0; i < col.length; i += 4) cov += Math.max(0, (255 - col[i + 1]) / (255 - 38));
+    const mm = cov / px;
+    log(mm > 0.1 && mm <= 0.25, 'Cut line rasterised at 600 dpi measures ≤ 0.25 mm', `${mm.toFixed(3)} mm (${cov.toFixed(1)} px)`);
+    // print CSS for the single-piece sheets, and the laser hairline
+    const rules = [...wc.document.getElementById('v4-print-lines').sheet.cssRules].filter(r => r.media && r.media.mediaText === 'print').flatMap(r => [...r.cssRules]).map(r => r.cssText).join(' ');
+    log(/01_CUT_RED[^}]*stroke-width: 0\.2px/.test(rules) && /02_SCORE_BLUE[^}]*stroke-width: 0\.15px/.test(rules) && /00_BACKGROUND_GRID[^}]*display: none/.test(rules), 'Print CSS: cut 0.2 mm, score 0.15 mm, grid hidden');
+    const lz = wc.document.createElement('div'); lz.innerHTML = s1; wc.laserStrokes(lz.firstElementChild);
+    log(lz.querySelector('[id="01_CUT_RED"]').getAttribute('stroke-width') === String(wc.eval('LASER_STROKE')) && !lz.querySelector('[id="02_SCORE_BLUE"]').hasAttribute('stroke-dasharray'), 'Laser SVG: hairline strokes (LASER_STROKE), continuous score');
+  }
+
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));
-  window.REGRESS = { pass: results.every(r => r.ok), results };
+  window.REGRESS ={ pass: results.every(r => r.ok), results };
   out.insertAdjacentHTML('beforeend', `\n\n<b>${window.REGRESS.pass ? 'ALL PASS' : 'FAILURES'}</b> (${results.filter(r => r.ok).length}/${results.length})`);
 })().catch(e => { log(false, 'Harness crashed', e.stack); window.REGRESS = { pass: false, results }; });
 </script>

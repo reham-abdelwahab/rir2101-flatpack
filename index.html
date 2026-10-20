@@ -210,6 +210,23 @@
     ***************************************************************************** */function t(t,e){var n,r,i,o,s={label:0,sent:function(){if(1&i[0])throw i[1];return i[1]},trys:[],ops:[]};return o={next:l(0),throw:l(1),return:l(2)},"function"==typeof Symbol&&(o[Symbol.iterator]=function(){return this}),o;function l(o){return function(l){return function(o){if(n)throw new TypeError("Generator is already executing.");for(;s;)try{if(n=1,r&&(i=2&o[0]?r.return:o[0]?r.throw||((i=r.return)&&i.call(r),0):r.next)&&!(i=i.call(r,o[1])).done)return i;switch(r=0,i&&(o=[2&o[0],i.value]),o[0]){case 0:case 1:i=o;break;case 4:return s.label++,{value:o[1],done:!1};case 5:s.label++,r=o[1],o=[0];continue;case 7:o=s.ops.pop(),s.trys.pop();continue;default:if(!(i=s.trys,(i=i.length>0&&i[i.length-1])||6!==o[0]&&2!==o[0])){s=0;continue}if(3===o[0]&&(!i||o[1]>i[0]&&o[1]<i[3])){s.label=o[1];break}if(6===o[0]&&s.label<i[1]){s.label=i[1],i=o;break}if(i&&s.label<i[2]){s.label=i[2],s.ops.push(o);break}i[2]&&s.ops.pop(),s.trys.pop();continue}o=e.call(t,s)}catch(t){o=[6,t],r=0}finally{n=i=0}if(5&o[0])throw o[1];return{value:o[0]?o[1]:void 0,done:!0}}([o,l])}}}var e=function(t,e){this.next=null,this.key=t,this.data=e,this.left=null,this.right=null};function n(t,e){return t>e?1:t<e?-1:0}function r(t,n,r){for(var i=new e(null,null),o=i,s=i;;){var l=r(t,n.key);if(l<0){if(null===n.left)break;if(r(t,n.left.key)<0){var h=n.left;if(n.left=h.right,h.right=n,null===(n=h).left)break}s.left=n,s=n,n=n.left}else{if(!(l>0))break;if(null===n.right)break;if(r(t,n.right.key)>0){h=n.right;if(n.right=h.left,h.left=n,null===(n=h).right)break}o.right=n,o=n,n=n.right}}return o.right=n.left,s.left=n.right,n.left=i.right,n.right=i.left,n}function i(t,n,i,o){var s=new e(t,n);if(null===i)return s.left=s.right=null,s;var l=o(t,(i=r(t,i,o)).key);return l<0?(s.left=i.left,s.right=i,i.left=null):l>=0&&(s.right=i.right,s.left=i,i.right=null),s}function o(t,e,n){var i=null,o=null;if(e){var s=n((e=r(t,e,n)).key,t);0===s?(i=e.left,o=e.right):s<0?(o=e.right,e.right=null,i=e):(i=e.left,e.left=null,o=e)}return{left:i,right:o}}function s(t,e,n,r,i){if(t){r(e+(n?"└── ":"├── ")+i(t)+"\n");var o=e+(n?"    ":"│   ");t.left&&s(t.left,o,!1,r,i),t.right&&s(t.right,o,!0,r,i)}}var l=function(){function l(t){void 0===t&&(t=n),this._root=null,this._size=0,this._comparator=t}return l.prototype.insert=function(t,e){return this._size++,this._root=i(t,e,this._root,this._comparator)},l.prototype.add=function(t,n){var i=new e(t,n);null===this._root&&(i.left=i.right=null,this._size++,this._root=i);var o=this._comparator,s=r(t,this._root,o),l=o(t,s.key);return 0===l?this._root=s:(l<0?(i.left=s.left,i.right=s,s.left=null):l>0&&(i.right=s.right,i.left=s,s.right=null),this._size++,this._root=i),this._root},l.prototype.remove=function(t){this._root=this._remove(t,this._root,this._comparator)},l.prototype._remove=function(t,e,n){var i;return null===e?null:0===n(t,(e=r(t,e,n)).key)?(null===e.left?i=e.right:(i=r(t,e.left,n)).right=e.right,this._size--,i):e},l.prototype.pop=function(){var t=this._root;if(t){for(;t.left;)t=t.left;return this._root=r(t.key,this._root,this._comparator),this._root=this._remove(t.key,this._root,this._comparator),{key:t.key,data:t.data}}return null},l.prototype.findStatic=function(t){for(var e=this._root,n=this._comparator;e;){var r=n(t,e.key);if(0===r)return e;e=r<0?e.left:e.right}return null},l.prototype.find=function(t){return this._root&&(this._root=r(t,this._root,this._comparator),0!==this._comparator(t,this._root.key))?null:this._root},l.prototype.contains=function(t){for(var e=this._root,n=this._comparator;e;){var r=n(t,e.key);if(0===r)return!0;e=r<0?e.left:e.right}return!1},l.prototype.forEach=function(t,e){for(var n=this._root,r=[],i=!1;!i;)null!==n?(r.push(n),n=n.left):0!==r.length?(n=r.pop(),t.call(e,n),n=n.right):i=!0;return this},l.prototype.range=function(t,e,n,r){for(var i=[],o=this._comparator,s=this._root;0!==i.length||s;)if(s)i.push(s),s=s.left;else{if(o((s=i.pop()).key,e)>0)break;if(o(s.key,t)>=0&&n.call(r,s))return this;s=s.right}return this},l.prototype.keys=function(){var t=[];return this.forEach((function(e){var n=e.key;return t.push(n)})),t},l.prototype.values=function(){var t=[];return this.forEach((function(e){var n=e.data;return t.push(n)})),t},l.prototype.min=function(){return this._root?this.minNode(this._root).key:null},l.prototype.max=function(){return this._root?this.maxNode(this._root).key:null},l.prototype.minNode=function(t){if(void 0===t&&(t=this._root),t)for(;t.left;)t=t.left;return t},l.prototype.maxNode=function(t){if(void 0===t&&(t=this._root),t)for(;t.right;)t=t.right;return t},l.prototype.at=function(t){for(var e=this._root,n=!1,r=0,i=[];!n;)if(e)i.push(e),e=e.left;else if(i.length>0){if(e=i.pop(),r===t)return e;r++,e=e.right}else n=!0;return null},l.prototype.next=function(t){var e=this._root,n=null;if(t.right){for(n=t.right;n.left;)n=n.left;return n}for(var r=this._comparator;e;){var i=r(t.key,e.key);if(0===i)break;i<0?(n=e,e=e.left):e=e.right}return n},l.prototype.prev=function(t){var e=this._root,n=null;if(null!==t.left){for(n=t.left;n.right;)n=n.right;return n}for(var r=this._comparator;e;){var i=r(t.key,e.key);if(0===i)break;i<0?e=e.left:(n=e,e=e.right)}return n},l.prototype.clear=function(){return this._root=null,this._size=0,this},l.prototype.toList=function(){return function(t){var n=t,r=[],i=!1,o=new e(null,null),s=o;for(;!i;)n?(r.push(n),n=n.left):r.length>0?n=(n=s=s.next=r.pop()).right:i=!0;return s.next=null,o.next}(this._root)},l.prototype.load=function(t,n,r){void 0===n&&(n=[]),void 0===r&&(r=!1);var i=t.length,o=this._comparator;if(r&&f(t,n,0,i-1,o),null===this._root)this._root=h(t,n,0,i),this._size=i;else{var s=function(t,n,r){var i=new e(null,null),o=i,s=t,l=n;for(;null!==s&&null!==l;)r(s.key,l.key)<0?(o.next=s,s=s.next):(o.next=l,l=l.next),o=o.next;null!==s?o.next=s:null!==l&&(o.next=l);return i.next}(this.toList(),function(t,n){for(var r=new e(null,null),i=r,o=0;o<t.length;o++)i=i.next=new e(t[o],n[o]);return i.next=null,r.next}(t,n),o);i=this._size+i,this._root=u({head:s},0,i)}return this},l.prototype.isEmpty=function(){return null===this._root},Object.defineProperty(l.prototype,"size",{get:function(){return this._size},enumerable:!0,configurable:!0}),Object.defineProperty(l.prototype,"root",{get:function(){return this._root},enumerable:!0,configurable:!0}),l.prototype.toString=function(t){void 0===t&&(t=function(t){return String(t.key)});var e=[];return s(this._root,"",!0,(function(t){return e.push(t)}),t),e.join("")},l.prototype.update=function(t,e,n){var s=this._comparator,l=o(t,this._root,s),h=l.left,u=l.right;s(t,e)<0?u=i(e,n,u,s):h=i(e,n,h,s),this._root=function(t,e,n){return null===e?t:(null===t||((e=r(t.key,e,n)).left=t),e)}(h,u,s)},l.prototype.split=function(t){return o(t,this._root,this._comparator)},l.prototype[Symbol.iterator]=function(){var e,n,r;return t(this,(function(t){switch(t.label){case 0:e=this._root,n=[],r=!1,t.label=1;case 1:return r?[3,6]:null===e?[3,2]:(n.push(e),e=e.left,[3,5]);case 2:return 0===n.length?[3,4]:[4,e=n.pop()];case 3:return t.sent(),e=e.right,[3,5];case 4:r=!0,t.label=5;case 5:return[3,1];case 6:return[2]}}))},l}();function h(t,n,r,i){var o=i-r;if(o>0){var s=r+Math.floor(o/2),l=t[s],u=n[s],f=new e(l,u);return f.left=h(t,n,r,s),f.right=h(t,n,s+1,i),f}return null}function u(t,e,n){var r=n-e;if(r>0){var i=e+Math.floor(r/2),o=u(t,e,i),s=t.head;return s.left=o,t.head=t.head.next,s.right=u(t,i+1,n),s}return null}function f(t,e,n,r,i){if(!(n>=r)){for(var o=t[n+r>>1],s=n-1,l=r+1;;){do{s++}while(i(t[s],o)<0);do{l--}while(i(t[l],o)>0);if(s>=l)break;var h=t[s];t[s]=t[l],t[l]=h,h=e[s],e[s]=e[l],e[l]=h}f(t,e,n,l,i),f(t,e,l+1,r,i)}}const c=(t,e)=>t.ll.x<=e.x&&e.x<=t.ur.x&&t.ll.y<=e.y&&e.y<=t.ur.y,p=(t,e)=>{if(e.ur.x<t.ll.x||t.ur.x<e.ll.x||e.ur.y<t.ll.y||t.ur.y<e.ll.y)return null;const n=t.ll.x<e.ll.x?e.ll.x:t.ll.x,r=t.ur.x<e.ur.x?t.ur.x:e.ur.x;return{ll:{x:n,y:t.ll.y<e.ll.y?e.ll.y:t.ll.y},ur:{x:r,y:t.ur.y<e.ur.y?t.ur.y:e.ur.y}}};let g=Number.EPSILON;void 0===g&&(g=Math.pow(2,-52));const a=g*g,y=(t,e)=>{if(-g<t&&t<g&&-g<e&&e<g)return 0;const n=t-e;return n*n<a*t*e?0:t<e?-1:1};class x{constructor(){this.tree=new l,this.round(0)}round(t){const e=this.tree.add(t),n=this.tree.prev(e);if(null!==n&&0===y(e.key,n.key))return this.tree.remove(t),n.key;const r=this.tree.next(e);return null!==r&&0===y(e.key,r.key)?(this.tree.remove(t),r.key):t}}const b=new class{constructor(){this.reset()}reset(){this.xRounder=new x,this.yRounder=new x}round(t,e){return{x:this.xRounder.round(t),y:this.yRounder.round(e)}}},v=11102230246251565e-32,d=134217729,m=(3+8*v)*v;function E(t,e,n,r,i){let o,s,l,h,u=e[0],f=r[0],c=0,p=0;f>u==f>-u?(o=u,u=e[++c]):(o=f,f=r[++p]);let g=0;if(c<t&&p<n)for(f>u==f>-u?(s=u+o,l=o-(s-u),u=e[++c]):(s=f+o,l=o-(s-f),f=r[++p]),o=s,0!==l&&(i[g++]=l);c<t&&p<n;)f>u==f>-u?(s=o+u,h=s-o,l=o-(s-h)+(u-h),u=e[++c]):(s=o+f,h=s-o,l=o-(s-h)+(f-h),f=r[++p]),o=s,0!==l&&(i[g++]=l);for(;c<t;)s=o+u,h=s-o,l=o-(s-h)+(u-h),u=e[++c],o=s,0!==l&&(i[g++]=l);for(;p<n;)s=o+f,h=s-o,l=o-(s-h)+(f-h),f=r[++p],o=s,0!==l&&(i[g++]=l);return 0===o&&0!==g||(i[g++]=o),g}function S(t){return new Float64Array(t)}const _=22204460492503146e-32,w=11093356479670487e-47,k=S(4),R=S(8),I=S(12),P=S(16),N=S(4);function A(t,e,n,r,i,o){const s=(e-o)*(n-i),l=(t-i)*(r-o),h=s-l,u=Math.abs(s+l);return Math.abs(h)>=33306690738754716e-32*u?h:-function(t,e,n,r,i,o,s){let l,h,u,f,c,p,g,a,y,x,b,v,S,A,O,L,$,M;const z=t-i,B=n-i,G=e-o,T=r-o;A=z*T,p=d*z,g=p-(p-z),a=z-g,p=d*T,y=p-(p-T),x=T-y,O=a*x-(A-g*y-a*y-g*x),L=G*B,p=d*G,g=p-(p-G),a=G-g,p=d*B,y=p-(p-B),x=B-y,$=a*x-(L-g*y-a*y-g*x),b=O-$,c=O-b,k[0]=O-(b+c)+(c-$),v=A+b,c=v-A,S=A-(v-c)+(b-c),b=S-L,c=S-b,k[1]=S-(b+c)+(c-L),M=v+b,c=M-v,k[2]=v-(M-c)+(b-c),k[3]=M;let q=function(t,e){let n=e[0];for(let r=1;r<t;r++)n+=e[r];return n}(4,k),C=_*s;if(q>=C||-q>=C)return q;if(c=t-z,l=t-(z+c)+(c-i),c=n-B,u=n-(B+c)+(c-i),c=e-G,h=e-(G+c)+(c-o),c=r-T,f=r-(T+c)+(c-o),0===l&&0===h&&0===u&&0===f)return q;if(C=w*s+m*Math.abs(q),q+=z*f+T*l-(G*u+B*h),q>=C||-q>=C)return q;A=l*T,p=d*l,g=p-(p-l),a=l-g,p=d*T,y=p-(p-T),x=T-y,O=a*x-(A-g*y-a*y-g*x),L=h*B,p=d*h,g=p-(p-h),a=h-g,p=d*B,y=p-(p-B),x=B-y,$=a*x-(L-g*y-a*y-g*x),b=O-$,c=O-b,N[0]=O-(b+c)+(c-$),v=A+b,c=v-A,S=A-(v-c)+(b-c),b=S-L,c=S-b,N[1]=S-(b+c)+(c-L),M=v+b,c=M-v,N[2]=v-(M-c)+(b-c),N[3]=M;const F=E(4,k,4,N,R);A=z*f,p=d*z,g=p-(p-z),a=z-g,p=d*f,y=p-(p-f),x=f-y,O=a*x-(A-g*y-a*y-g*x),L=G*u,p=d*G,g=p-(p-G),a=G-g,p=d*u,y=p-(p-u),x=u-y,$=a*x-(L-g*y-a*y-g*x),b=O-$,c=O-b,N[0]=O-(b+c)+(c-$),v=A+b,c=v-A,S=A-(v-c)+(b-c),b=S-L,c=S-b,N[1]=S-(b+c)+(c-L),M=v+b,c=M-v,N[2]=v-(M-c)+(b-c),N[3]=M;const j=E(F,R,4,N,I);A=l*f,p=d*l,g=p-(p-l),a=l-g,p=d*f,y=p-(p-f),x=f-y,O=a*x-(A-g*y-a*y-g*x),L=h*u,p=d*h,g=p-(p-h),a=h-g,p=d*u,y=p-(p-u),x=u-y,$=a*x-(L-g*y-a*y-g*x),b=O-$,c=O-b,N[0]=O-(b+c)+(c-$),v=A+b,c=v-A,S=A-(v-c)+(b-c),b=S-L,c=S-b,N[1]=S-(b+c)+(c-L),M=v+b,c=M-v,N[2]=v-(M-c)+(b-c),N[3]=M;const U=E(j,I,4,N,P);return P[U-1]}(t,e,n,r,i,o,u)}const O=(t,e)=>t.x*e.y-t.y*e.x,L=(t,e)=>t.x*e.x+t.y*e.y,$=(t,e,n)=>{const r=A(t.x,t.y,e.x,e.y,n.x,n.y);return r>0?-1:r<0?1:0},M=t=>Math.sqrt(L(t,t)),z=(t,e,n)=>{const r={x:e.x-t.x,y:e.y-t.y},i={x:n.x-t.x,y:n.y-t.y};return O(i,r)/M(i)/M(r)},B=(t,e,n)=>{const r={x:e.x-t.x,y:e.y-t.y},i={x:n.x-t.x,y:n.y-t.y};return L(i,r)/M(i)/M(r)},G=(t,e,n)=>0===e.y?null:{x:t.x+e.x/e.y*(n-t.y),y:n},T=(t,e,n)=>0===e.x?null:{x:n,y:t.y+e.y/e.x*(n-t.x)};class q{static compare(t,e){const n=q.comparePoints(t.point,e.point);return 0!==n?n:(t.point!==e.point&&t.link(e),t.isLeft!==e.isLeft?t.isLeft?1:-1:F.compare(t.segment,e.segment))}static comparePoints(t,e){return t.x<e.x?-1:t.x>e.x?1:t.y<e.y?-1:t.y>e.y?1:0}constructor(t,e){void 0===t.events?t.events=[this]:t.events.push(this),this.point=t,this.isLeft=e}link(t){if(t.point===this.point)throw new Error("Tried to link already linked events");const e=t.point.events;for(let t=0,n=e.length;t<n;t++){const n=e[t];this.point.events.push(n),n.point=this.point}this.checkForConsuming()}checkForConsuming(){const t=this.point.events.length;for(let e=0;e<t;e++){const n=this.point.events[e];if(void 0===n.segment.consumedBy)for(let r=e+1;r<t;r++){const t=this.point.events[r];void 0===t.consumedBy&&(n.otherSE.point.events===t.otherSE.point.events&&n.segment.consume(t.segment))}}}getAvailableLinkedEvents(){const t=[];for(let e=0,n=this.point.events.length;e<n;e++){const n=this.point.events[e];n!==this&&!n.segment.ringOut&&n.segment.isInResult()&&t.push(n)}return t}getLeftmostComparator(t){const e=new Map,n=n=>{const r=n.otherSE;e.set(n,{sine:z(this.point,t.point,r.point),cosine:B(this.point,t.point,r.point)})};return(t,r)=>{e.has(t)||n(t),e.has(r)||n(r);const{sine:i,cosine:o}=e.get(t),{sine:s,cosine:l}=e.get(r);return i>=0&&s>=0?o<l?1:o>l?-1:0:i<0&&s<0?o<l?-1:o>l?1:0:s<i?-1:s>i?1:0}}}let C=0;class F{static compare(t,e){const n=t.leftSE.point.x,r=e.leftSE.point.x,i=t.rightSE.point.x,o=e.rightSE.point.x;if(o<n)return 1;if(i<r)return-1;const s=t.leftSE.point.y,l=e.leftSE.point.y,h=t.rightSE.point.y,u=e.rightSE.point.y;if(n<r){if(l<s&&l<h)return 1;if(l>s&&l>h)return-1;const n=t.comparePoint(e.leftSE.point);if(n<0)return 1;if(n>0)return-1;const r=e.comparePoint(t.rightSE.point);return 0!==r?r:-1}if(n>r){if(s<l&&s<u)return-1;if(s>l&&s>u)return 1;const n=e.comparePoint(t.leftSE.point);if(0!==n)return n;const r=t.comparePoint(e.rightSE.point);return r<0?1:r>0?-1:1}if(s<l)return-1;if(s>l)return 1;if(i<o){const n=e.comparePoint(t.rightSE.point);if(0!==n)return n}if(i>o){const n=t.comparePoint(e.rightSE.point);if(n<0)return 1;if(n>0)return-1}if(i!==o){const t=h-s,e=i-n,f=u-l,c=o-r;if(t>e&&f<c)return 1;if(t<e&&f>c)return-1}return i>o?1:i<o||h<u?-1:h>u?1:t.id<e.id?-1:t.id>e.id?1:0}constructor(t,e,n,r){this.id=++C,this.leftSE=t,t.segment=this,t.otherSE=e,this.rightSE=e,e.segment=this,e.otherSE=t,this.rings=n,this.windings=r}static fromRing(t,e,n){let r,i,o;const s=q.comparePoints(t,e);if(s<0)r=t,i=e,o=1;else{if(!(s>0))throw new Error(`Tried to create degenerate segment at [${t.x}, ${t.y}]`);r=e,i=t,o=-1}const l=new q(r,!0),h=new q(i,!1);return new F(l,h,[n],[o])}replaceRightSE(t){this.rightSE=t,this.rightSE.segment=this,this.rightSE.otherSE=this.leftSE,this.leftSE.otherSE=this.rightSE}bbox(){const t=this.leftSE.point.y,e=this.rightSE.point.y;return{ll:{x:this.leftSE.point.x,y:t<e?t:e},ur:{x:this.rightSE.point.x,y:t>e?t:e}}}vector(){return{x:this.rightSE.point.x-this.leftSE.point.x,y:this.rightSE.point.y-this.leftSE.point.y}}isAnEndpoint(t){return t.x===this.leftSE.point.x&&t.y===this.leftSE.point.y||t.x===this.rightSE.point.x&&t.y===this.rightSE.point.y}comparePoint(t){if(this.isAnEndpoint(t))return 0;const e=this.leftSE.point,n=this.rightSE.point,r=this.vector();if(e.x===n.x)return t.x===e.x?0:t.x<e.x?1:-1;const i=(t.y-e.y)/r.y,o=e.x+i*r.x;if(t.x===o)return 0;const s=(t.x-e.x)/r.x,l=e.y+s*r.y;return t.y===l?0:t.y<l?-1:1}getIntersection(t){const e=this.bbox(),n=t.bbox(),r=p(e,n);if(null===r)return null;const i=this.leftSE.point,o=this.rightSE.point,s=t.leftSE.point,l=t.rightSE.point,h=c(e,s)&&0===this.comparePoint(s),u=c(n,i)&&0===t.comparePoint(i),f=c(e,l)&&0===this.comparePoint(l),g=c(n,o)&&0===t.comparePoint(o);if(u&&h)return g&&!f?o:!g&&f?l:null;if(u)return f&&i.x===l.x&&i.y===l.y?null:i;if(h)return g&&o.x===s.x&&o.y===s.y?null:s;if(g&&f)return null;if(g)return o;if(f)return l;const a=((t,e,n,r)=>{if(0===e.x)return T(n,r,t.x);if(0===r.x)return T(t,e,n.x);if(0===e.y)return G(n,r,t.y);if(0===r.y)return G(t,e,n.y);const i=O(e,r);if(0==i)return null;const o={x:n.x-t.x,y:n.y-t.y},s=O(o,e)/i,l=O(o,r)/i;return{x:(t.x+l*e.x+(n.x+s*r.x))/2,y:(t.y+l*e.y+(n.y+s*r.y))/2}})(i,this.vector(),s,t.vector());return null===a?null:c(r,a)?b.round(a.x,a.y):null}split(t){const e=[],n=void 0!==t.events,r=new q(t,!0),i=new q(t,!1),o=this.rightSE;this.replaceRightSE(i),e.push(i),e.push(r);const s=new F(r,o,this.rings.slice(),this.windings.slice());return q.comparePoints(s.leftSE.point,s.rightSE.point)>0&&s.swapEvents(),q.comparePoints(this.leftSE.point,this.rightSE.point)>0&&this.swapEvents(),n&&(r.checkForConsuming(),i.checkForConsuming()),e}swapEvents(){const t=this.rightSE;this.rightSE=this.leftSE,this.leftSE=t,this.leftSE.isLeft=!0,this.rightSE.isLeft=!1;for(let t=0,e=this.windings.length;t<e;t++)this.windings[t]*=-1}consume(t){let e=this,n=t;for(;e.consumedBy;)e=e.consumedBy;for(;n.consumedBy;)n=n.consumedBy;const r=F.compare(e,n);if(0!==r){if(r>0){const t=e;e=n,n=t}if(e.prev===n){const t=e;e=n,n=t}for(let t=0,r=n.rings.length;t<r;t++){const r=n.rings[t],i=n.windings[t],o=e.rings.indexOf(r);-1===o?(e.rings.push(r),e.windings.push(i)):e.windings[o]+=i}n.rings=null,n.windings=null,n.consumedBy=e,n.leftSE.consumedBy=e.leftSE,n.rightSE.consumedBy=e.rightSE}}prevInResult(){return void 0!==this._prevInResult||(this.prev?this.prev.isInResult()?this._prevInResult=this.prev:this._prevInResult=this.prev.prevInResult():this._prevInResult=null),this._prevInResult}beforeState(){if(void 0!==this._beforeState)return this._beforeState;if(this.prev){const t=this.prev.consumedBy||this.prev;this._beforeState=t.afterState()}else this._beforeState={rings:[],windings:[],multiPolys:[]};return this._beforeState}afterState(){if(void 0!==this._afterState)return this._afterState;const t=this.beforeState();this._afterState={rings:t.rings.slice(0),windings:t.windings.slice(0),multiPolys:[]};const e=this._afterState.rings,n=this._afterState.windings,r=this._afterState.multiPolys;for(let t=0,r=this.rings.length;t<r;t++){const r=this.rings[t],i=this.windings[t],o=e.indexOf(r);-1===o?(e.push(r),n.push(i)):n[o]+=i}const i=[],o=[];for(let t=0,r=e.length;t<r;t++){if(0===n[t])continue;const r=e[t],s=r.poly;if(-1===o.indexOf(s))if(r.isExterior)i.push(s);else{-1===o.indexOf(s)&&o.push(s);const t=i.indexOf(r.poly);-1!==t&&i.splice(t,1)}}for(let t=0,e=i.length;t<e;t++){const e=i[t].multiPoly;-1===r.indexOf(e)&&r.push(e)}return this._afterState}isInResult(){if(this.consumedBy)return!1;if(void 0!==this._isInResult)return this._isInResult;const t=this.beforeState().multiPolys,e=this.afterState().multiPolys;switch(H.type){case"union":{const n=0===t.length,r=0===e.length;this._isInResult=n!==r;break}case"intersection":{let n,r;t.length<e.length?(n=t.length,r=e.length):(n=e.length,r=t.length),this._isInResult=r===H.numMultiPolys&&n<r;break}case"xor":{const n=Math.abs(t.length-e.length);this._isInResult=n%2==1;break}case"difference":{const n=t=>1===t.length&&t[0].isSubject;this._isInResult=n(t)!==n(e);break}default:throw new Error(`Unrecognized operation type found ${H.type}`)}return this._isInResult}}class j{constructor(t,e,n){if(!Array.isArray(t)||0===t.length)throw new Error("Input geometry is not a valid Polygon or MultiPolygon");if(this.poly=e,this.isExterior=n,this.segments=[],"number"!=typeof t[0][0]||"number"!=typeof t[0][1])throw new Error("Input geometry is not a valid Polygon or MultiPolygon");const r=b.round(t[0][0],t[0][1]);this.bbox={ll:{x:r.x,y:r.y},ur:{x:r.x,y:r.y}};let i=r;for(let e=1,n=t.length;e<n;e++){if("number"!=typeof t[e][0]||"number"!=typeof t[e][1])throw new Error("Input geometry is not a valid Polygon or MultiPolygon");let n=b.round(t[e][0],t[e][1]);n.x===i.x&&n.y===i.y||(this.segments.push(F.fromRing(i,n,this)),n.x<this.bbox.ll.x&&(this.bbox.ll.x=n.x),n.y<this.bbox.ll.y&&(this.bbox.ll.y=n.y),n.x>this.bbox.ur.x&&(this.bbox.ur.x=n.x),n.y>this.bbox.ur.y&&(this.bbox.ur.y=n.y),i=n)}r.x===i.x&&r.y===i.y||this.segments.push(F.fromRing(i,r,this))}getSweepEvents(){const t=[];for(let e=0,n=this.segments.length;e<n;e++){const n=this.segments[e];t.push(n.leftSE),t.push(n.rightSE)}return t}}class U{constructor(t,e){if(!Array.isArray(t))throw new Error("Input geometry is not a valid Polygon or MultiPolygon");this.exteriorRing=new j(t[0],this,!0),this.bbox={ll:{x:this.exteriorRing.bbox.ll.x,y:this.exteriorRing.bbox.ll.y},ur:{x:this.exteriorRing.bbox.ur.x,y:this.exteriorRing.bbox.ur.y}},this.interiorRings=[];for(let e=1,n=t.length;e<n;e++){const n=new j(t[e],this,!1);n.bbox.ll.x<this.bbox.ll.x&&(this.bbox.ll.x=n.bbox.ll.x),n.bbox.ll.y<this.bbox.ll.y&&(this.bbox.ll.y=n.bbox.ll.y),n.bbox.ur.x>this.bbox.ur.x&&(this.bbox.ur.x=n.bbox.ur.x),n.bbox.ur.y>this.bbox.ur.y&&(this.bbox.ur.y=n.bbox.ur.y),this.interiorRings.push(n)}this.multiPoly=e}getSweepEvents(){const t=this.exteriorRing.getSweepEvents();for(let e=0,n=this.interiorRings.length;e<n;e++){const n=this.interiorRings[e].getSweepEvents();for(let e=0,r=n.length;e<r;e++)t.push(n[e])}return t}}class Y{constructor(t,e){if(!Array.isArray(t))throw new Error("Input geometry is not a valid Polygon or MultiPolygon");try{"number"==typeof t[0][0][0]&&(t=[t])}catch(t){}this.polys=[],this.bbox={ll:{x:Number.POSITIVE_INFINITY,y:Number.POSITIVE_INFINITY},ur:{x:Number.NEGATIVE_INFINITY,y:Number.NEGATIVE_INFINITY}};for(let e=0,n=t.length;e<n;e++){const n=new U(t[e],this);n.bbox.ll.x<this.bbox.ll.x&&(this.bbox.ll.x=n.bbox.ll.x),n.bbox.ll.y<this.bbox.ll.y&&(this.bbox.ll.y=n.bbox.ll.y),n.bbox.ur.x>this.bbox.ur.x&&(this.bbox.ur.x=n.bbox.ur.x),n.bbox.ur.y>this.bbox.ur.y&&(this.bbox.ur.y=n.bbox.ur.y),this.polys.push(n)}this.isSubject=e}getSweepEvents(){const t=[];for(let e=0,n=this.polys.length;e<n;e++){const n=this.polys[e].getSweepEvents();for(let e=0,r=n.length;e<r;e++)t.push(n[e])}return t}}class V{static factory(t){const e=[];for(let n=0,r=t.length;n<r;n++){const r=t[n];if(!r.isInResult()||r.ringOut)continue;let i=null,o=r.leftSE,s=r.rightSE;const l=[o],h=o.point,u=[];for(;i=o,o=s,l.push(o),o.point!==h;)for(;;){const t=o.getAvailableLinkedEvents();if(0===t.length){const t=l[0].point,e=l[l.length-1].point;throw new Error(`Unable to complete output ring starting at [${t.x}, ${t.y}]. Last matching segment found ends at [${e.x}, ${e.y}].`)}if(1===t.length){s=t[0].otherSE;break}let n=null;for(let t=0,e=u.length;t<e;t++)if(u[t].point===o.point){n=t;break}if(null!==n){const t=u.splice(n)[0],r=l.splice(t.index);r.unshift(r[0].otherSE),e.push(new V(r.reverse()));continue}u.push({index:l.length,point:o.point});const r=o.getLeftmostComparator(i);s=t.sort(r)[0].otherSE;break}e.push(new V(l))}return e}constructor(t){this.events=t;for(let e=0,n=t.length;e<n;e++)t[e].segment.ringOut=this;this.poly=null}getGeom(){let t=this.events[0].point;const e=[t];for(let n=1,r=this.events.length-1;n<r;n++){const r=this.events[n].point,i=this.events[n+1].point;0!==$(r,t,i)&&(e.push(r),t=r)}if(1===e.length)return null;const n=e[0],r=e[1];0===$(n,t,r)&&e.shift(),e.push(e[0]);const i=this.isExteriorRing()?1:-1,o=this.isExteriorRing()?0:e.length-1,s=this.isExteriorRing()?e.length:-1,l=[];for(let t=o;t!=s;t+=i)l.push([e[t].x,e[t].y]);return l}isExteriorRing(){if(void 0===this._isExteriorRing){const t=this.enclosingRing();this._isExteriorRing=!t||!t.isExteriorRing()}return this._isExteriorRing}enclosingRing(){return void 0===this._enclosingRing&&(this._enclosingRing=this._calcEnclosingRing()),this._enclosingRing}_calcEnclosingRing(){let t=this.events[0];for(let e=1,n=this.events.length;e<n;e++){const n=this.events[e];q.compare(t,n)>0&&(t=n)}let e=t.segment.prevInResult(),n=e?e.prevInResult():null;for(;;){if(!e)return null;if(!n)return e.ringOut;if(n.ringOut!==e.ringOut)return n.ringOut.enclosingRing()!==e.ringOut?e.ringOut:e.ringOut.enclosingRing();e=n.prevInResult(),n=e?e.prevInResult():null}}}class X{constructor(t){this.exteriorRing=t,t.poly=this,this.interiorRings=[]}addInterior(t){this.interiorRings.push(t),t.poly=this}getGeom(){const t=[this.exteriorRing.getGeom()];if(null===t[0])return null;for(let e=0,n=this.interiorRings.length;e<n;e++){const n=this.interiorRings[e].getGeom();null!==n&&t.push(n)}return t}}class Q{constructor(t){this.rings=t,this.polys=this._composePolys(t)}getGeom(){const t=[];for(let e=0,n=this.polys.length;e<n;e++){const n=this.polys[e].getGeom();null!==n&&t.push(n)}return t}_composePolys(t){const e=[];for(let n=0,r=t.length;n<r;n++){const r=t[n];if(!r.poly)if(r.isExteriorRing())e.push(new X(r));else{const t=r.enclosingRing();t.poly||e.push(new X(t)),t.poly.addInterior(r)}}return e}}class W{constructor(t){let e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:F.compare;this.queue=t,this.tree=new l(e),this.segments=[]}process(t){const e=t.segment,n=[];if(t.consumedBy)return t.isLeft?this.queue.remove(t.otherSE):this.tree.remove(e),n;const r=t.isLeft?this.tree.add(e):this.tree.find(e);if(!r)throw new Error(`Unable to find segment #${e.id} [${e.leftSE.point.x}, ${e.leftSE.point.y}] -> [${e.rightSE.point.x}, ${e.rightSE.point.y}] in SweepLine tree.`);let i,o,s=r,l=r;for(;void 0===i;)s=this.tree.prev(s),null===s?i=null:void 0===s.key.consumedBy&&(i=s.key);for(;void 0===o;)l=this.tree.next(l),null===l?o=null:void 0===l.key.consumedBy&&(o=l.key);if(t.isLeft){let r=null;if(i){const t=i.getIntersection(e);if(null!==t&&(e.isAnEndpoint(t)||(r=t),!i.isAnEndpoint(t))){const e=this._splitSafely(i,t);for(let t=0,r=e.length;t<r;t++)n.push(e[t])}}let s=null;if(o){const t=o.getIntersection(e);if(null!==t&&(e.isAnEndpoint(t)||(s=t),!o.isAnEndpoint(t))){const e=this._splitSafely(o,t);for(let t=0,r=e.length;t<r;t++)n.push(e[t])}}if(null!==r||null!==s){let t=null;if(null===r)t=s;else if(null===s)t=r;else{t=q.comparePoints(r,s)<=0?r:s}this.queue.remove(e.rightSE),n.push(e.rightSE);const i=e.split(t);for(let t=0,e=i.length;t<e;t++)n.push(i[t])}n.length>0?(this.tree.remove(e),n.push(t)):(this.segments.push(e),e.prev=i)}else{if(i&&o){const t=i.getIntersection(o);if(null!==t){if(!i.isAnEndpoint(t)){const e=this._splitSafely(i,t);for(let t=0,r=e.length;t<r;t++)n.push(e[t])}if(!o.isAnEndpoint(t)){const e=this._splitSafely(o,t);for(let t=0,r=e.length;t<r;t++)n.push(e[t])}}}this.tree.remove(e)}return n}_splitSafely(t,e){this.tree.remove(t);const n=t.rightSE;this.queue.remove(n);const r=t.split(e);return r.push(n),void 0===t.consumedBy&&this.tree.add(t),r}}const Z="undefined"!=typeof process&&process.env.POLYGON_CLIPPING_MAX_QUEUE_SIZE||1e6,D="undefined"!=typeof process&&process.env.POLYGON_CLIPPING_MAX_SWEEPLINE_SEGMENTS||1e6;const H=new class{run(t,e,n){H.type=t,b.reset();const r=[new Y(e,!0)];for(let t=0,e=n.length;t<e;t++)r.push(new Y(n[t],!1));if(H.numMultiPolys=r.length,"difference"===H.type){const t=r[0];let e=1;for(;e<r.length;)null!==p(r[e].bbox,t.bbox)?e++:r.splice(e,1)}if("intersection"===H.type)for(let t=0,e=r.length;t<e;t++){const e=r[t];for(let n=t+1,i=r.length;n<i;n++)if(null===p(e.bbox,r[n].bbox))return[]}const i=new l(q.compare);for(let t=0,e=r.length;t<e;t++){const e=r[t].getSweepEvents();for(let t=0,n=e.length;t<n;t++)if(i.insert(e[t]),i.size>Z)throw new Error("Infinite loop when putting segment endpoints in a priority queue (queue size too big).")}const o=new W(i);let s=i.size,h=i.pop();for(;h;){const t=h.key;if(i.size===s){const e=t.segment;throw new Error(`Unable to pop() ${t.isLeft?"left":"right"} SweepEvent [${t.point.x}, ${t.point.y}] from segment #${e.id} [${e.leftSE.point.x}, ${e.leftSE.point.y}] -> [${e.rightSE.point.x}, ${e.rightSE.point.y}] from queue.`)}if(i.size>Z)throw new Error("Infinite loop when passing sweep line over endpoints (queue size too big).");if(o.segments.length>D)throw new Error("Infinite loop when passing sweep line over endpoints (too many sweep line segments).");const e=o.process(t);for(let t=0,n=e.length;t<n;t++){const n=e[t];void 0===n.consumedBy&&i.insert(n)}s=i.size,h=i.pop()}b.reset();const u=V.factory(o.segments);return new Q(u).getGeom()}};var J={union:function(t){for(var e=arguments.length,n=new Array(e>1?e-1:0),r=1;r<e;r++)n[r-1]=arguments[r];return H.run("union",t,n)},intersection:function(t){for(var e=arguments.length,n=new Array(e>1?e-1:0),r=1;r<e;r++)n[r-1]=arguments[r];return H.run("intersection",t,n)},xor:function(t){for(var e=arguments.length,n=new Array(e>1?e-1:0),r=1;r<e;r++)n[r-1]=arguments[r];return H.run("xor",t,n)},difference:function(t){for(var e=arguments.length,n=new Array(e>1?e-1:0),r=1;r<e;r++)n[r-1]=arguments[r];return H.run("difference",t,n)}};return J}));
 //# sourceMappingURL=polygon-clipping.umd.min.js.map
 </script>
+  <!-- v4 · C3: thin printed lines (values = PRINT_STROKE in the script; 1px = 1 mm inside the sheet viewBox) -->
+  <style id="v4-print-lines">
+    @media screen { #print-root { display: none; } }
+    @media print {
+      body.print-root-mode > *:not(#print-root) { display: none !important; }
+      body.print-root-mode { display: block !important; height: auto !important; overflow: visible !important; background: #FFF !important; }
+      body.print-root-mode #print-root { display: block !important; }
+      .print-page { overflow: hidden; break-after: page; page-break-after: always; }
+      .print-page:last-child { break-after: auto; page-break-after: auto; }
+      .print-page.print-A4 { width: 210mm; height: 297mm; }
+      .print-page.print-A3 { width: 297mm; height: 420mm; }
+      .print-page > svg { display: block; width: 100%; height: 100%; }
+      svg [id="00_BACKGROUND_GRID"] { display: none !important; }
+      svg [id="01_CUT_RED"] { stroke-width: 0.2px !important; }
+      svg [id="02_SCORE_BLUE"] { stroke-width: 0.15px !important; stroke-dasharray: 1.2px 0.9px !important; }
+    }
+  </style>
   <style id="dynamic-page-print-style">
     @page { size: A4 portrait; margin: 0; }
   </style>
@@ -1573,6 +1590,25 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     const TOOL_VERSION = '3.6';
 
     // =========================================================================
+    // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
+    // printed sheets use PRINT_STROKE, laser SVG files use the LASER_STROKE hairline.
+    // =========================================================================
+    const PRINT_STROKE = { cut: 0.2, score: 0.15, scoreDash: '1.2,0.9' };
+    const LASER_STROKE = 0.01;      // "hairline" convention (≈ 0.03 pt): the laser cuts on the line
+    const LABEL_MAX_MM = 2;         // part labels on printed sheets
+
+    // Laser files: hairline cut + score, score as a continuous line (score = low laser power)
+    function laserStrokes(svgEl) {
+      svgEl.querySelectorAll('[id="01_CUT_RED"], [id="02_SCORE_BLUE"]').forEach(g => {
+        g.setAttribute('stroke-width', LASER_STROKE);
+        g.removeAttribute('stroke-dasharray');
+        g.querySelectorAll('[stroke-width]').forEach(n => n.setAttribute('stroke-width', LASER_STROKE));
+        g.querySelectorAll('[stroke-dasharray]').forEach(n => n.removeAttribute('stroke-dasharray'));
+      });
+      return svgEl;
+    }
+
+    // =========================================================================
     // VERIFICATION STAMP (VERIFY: XXXX-XXXX · v<TOOL_VERSION> in every title block)
     // Deters editing a sheet after printing; it is NOT cryptographic proof, because the
     // salt ships inside this file. Change VERIFY_SALT each semester (any text): sheets
@@ -1640,8 +1676,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // f = { version, name, id, archetype, w, d, h, subH, scale, sheet, thickness, joinery, pieces }
     // archetype 'image' (Tab 3) hashes the printed piece sizes instead of w/d/h/subH.
     function computeStamp(f) {
-      const dims = f.archetype === 'image'
-        ? vNorm.pieces(f.pieces)
+      // 'image' = Tab 3 sheet (printed piece sizes) · 'sheet' = v4 nested sheet (its canonical contents line)
+      const dims = f.archetype === 'image' ? vNorm.pieces(f.pieces)
+        : f.archetype === 'sheet' ? vNorm.name(f.pieces)
         : [f.w, f.d, f.h, f.subH].map(vNorm.num).join('x');
       const parts = [vNorm.version(f.version), vNorm.name(f.name), vNorm.id(f.id), f.archetype, dims,
         vNorm.num(f.scale), String(f.sheet || '').toUpperCase(),
@@ -3206,7 +3243,24 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         const isBed = state.archetype === 'bed';
         const baseH = isBed ? subH : H;          // wall height (true scale)
         const bW = W, bD = D;
-        const bx = ox + baseH + tabD, by = oy + baseH + 2;
+        let bx = ox + baseH + tabD, by = oy + baseH + 2, headY = by + bD + baseH + 10;
+        if (state.netStyle === 'strip') {
+          // v4: same box as a wall strip (front · side · back · side, closing tab) + a separate top
+          // with glue tabs on all four edges — used when the cross-shaped net is larger than the sheet
+          bx = ox; by = oy;
+          const L = 2 * (bW + bD);
+          const wall = outlineWithTabs([[bx, by], [bx + L, by], [bx + L, by + baseH], [bx, by + baseH]], [1], bx + L / 2, by + baseH / 2);
+          cutLayer += `<path d="${wall.d}" fill="#FFFFFF"/>`;
+          scoreLayer += wall.folds + line(bx + bW, by, bx + bW, by + baseH) + line(bx + bW + bD, by, bx + bW + bD, by + baseH) + line(bx + 2 * bW + bD, by, bx + 2 * bW + bD, by + baseH);
+          labelLayer += `<text x="${P(bx + L / 2)}" y="${P(by + baseH / 2 + 1)}" text-anchor="middle" font-weight="bold" font-size="${fs(bW)}">A2: WALL STRIP (${L.toFixed(1)}×${baseH.toFixed(1)} mm)</text>` +
+            [['FRONT', 0, bW], ['SIDE', bW, bD], ['BACK', bW + bD, bW], ['SIDE', 2 * bW + bD, bD]].map(([lb, x0, w0]) => `<text x="${P(bx + x0 + w0 / 2)}" y="${P(by + Math.min(baseH - 1, 3.5))}" text-anchor="middle" font-size="${fs(w0) * 0.7}">${lb}</text>`).join('');
+          const ty = by + baseH + 6 + tabD;
+          const top = outlineWithTabs([[bx + tabD, ty], [bx + tabD + bW, ty], [bx + tabD + bW, ty + bD], [bx + tabD, ty + bD]], [0, 1, 2, 3], bx + tabD + bW / 2, ty + bD / 2);
+          cutLayer += `<path d="${top.d}" fill="#FFFFFF"/>`;
+          scoreLayer += top.folds;
+          labelLayer += `<text x="${P(bx + tabD + bW / 2)}" y="${P(ty + bD / 2)}" text-anchor="middle" font-weight="bold" font-size="${fs(bW)}">A1: ${isBed ? 'MATTRESS TOP' : 'CABINET TOP'} (${W.toFixed(1)}×${D.toFixed(1)} mm)</text>`;
+          headY = ty + bD + tabD + 8;
+        } else {
         const pts = [
           [bx, by - baseH], [bx + bW, by - baseH], [bx + bW, by], [bx + bW + baseH, by],
           [bx + bW + baseH, by + bD], [bx + bW, by + bD], [bx + bW, by + bD + baseH], [bx, by + bD + baseH],
@@ -3220,8 +3274,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           <text x="${P(bx + bW/2)}" y="${P(by - baseH/2 + 1)}" text-anchor="middle" font-size="${fs(bW)}">BACK WALL</text>
           <text x="${P(bx + bW/2)}" y="${P(by + bD + baseH/2 + 1)}" text-anchor="middle" font-size="${fs(bW)}">FRONT WALL</text>
         `;
+        }
         if (isBed) {
-          const hx = bx, hy = by + bD + baseH + 10 - minOff;
+          const hx = bx, hy = headY - minOff;
           cutLayer += `<path d="${buildCurvedTopRectPath(hx, hy, bW, H, state.curveOffsets)}" fill="#FFFFFF"/>`;
           labelLayer += guide(hx, hy + H - baseH, hx + bW, hy + H - baseH);
           labelLayer += `
@@ -3383,7 +3438,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const svgEl = document.getElementById('a4-cut-svg');
       const clone = svgEl.cloneNode(true);
       // Strip the on-screen grid so a laser cutter never cuts/engraves it
-      clone.querySelectorAll('.no-export').forEach(n => n.remove());
+      clone.querySelectorAll('.no-export').forEach(n => n.remove()); laserStrokes(clone);
       const sheetW = state.sheetSize === 'A3' ? 297 : 210;
       const sheetH = state.sheetSize === 'A3' ? 420 : 297;
 
@@ -3920,7 +3975,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     function downloadImageSVG() {
       if (!imgExportGuard()) return;
       const clone = document.getElementById('image-cut-svg').cloneNode(true);
-      clone.querySelectorAll('.no-export').forEach(n => n.remove());
+      clone.querySelectorAll('.no-export').forEach(n => n.remove()); laserStrokes(clone);
       const sheetW = imgState.sheet === 'A3' ? 297 : 210, sheetH = imgState.sheet === 'A3' ? 420 : 297;
       clone.setAttribute('width', `${sheetW}mm`); clone.setAttribute('height', `${sheetH}mm`); clone.setAttribute('viewBox', `0 0 ${sheetW} ${sheetH}`);
       const xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Studio Flat-Pack Maker: image-traced 1:' + imgState.scale + ' cut sheet (' + imgState.sheet + ') -->\n' + new XMLSerializer().serializeToString(clone);
@@ -4239,6 +4294,265 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         [D, H], [D - backT, H], [D - backT - 4, seatH], [12, seatH], [12, armH], [0, armH]]);
       const front = polygonClipping.difference(wfPoly([[0, 0], [W, 0], [W, H], [0, H]]), wfBox(8, seatH, W - 8, armH - 0.01), wfBox(8, 0, W - 8, seatH - seatT));
       return waffle(side, front, W, D, 1.5, 10, 0);
+    }
+  </script>
+  <!-- v4: everything that prints is copied here (one .print-page per sheet / handout page) -->
+  <div id="print-root" aria-hidden="true"></div>
+
+  <script id="v4-sheets">
+    // =========================================================================
+    // v4 · C2 NESTING — every part of every piece packed on as few A4/A3 sheets as possible
+    // A part = { name, piece (1-based), pieceName, w, h, cut, score, label, area } in its own
+    // local mm frame (0..w, 0..h). The packer places parts; buildSheetSvg draws one sheet.
+    // =========================================================================
+    const NEST_GAP = 3;                       // mm between parts
+    const NEST_MARGIN = 8;                    // mm from the paper edge
+    const NEST_TOP = 31;                      // below header + ruler
+    const TITLE_BLOCK_H = 27;                 // title block + gap at the bottom
+    const PARTS_LINE_H = 2.4;                 // parts-list line height (mm)
+
+    const sheetDims = size => size === 'A3' ? [297, 420] : [210, 297];
+    const P2 = n => (+n).toFixed(2);
+    const capFont = s => s.replace(/font-size="([\d.]+)"/g, (m, v) => `font-size="${Math.min(+v, LABEL_MAX_MM)}"`);
+
+    // ---- geometry helpers for SVG element strings ----
+    function svgElems(str) {
+      const doc = new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg">${str}</svg>`, 'image/svg+xml');
+      return [...doc.documentElement.children];
+    }
+    function elemPoints(el) {
+      const n = el.tagName, a = k => +el.getAttribute(k);
+      if (n === 'path') return [...el.getAttribute('d').matchAll(/(-?\d*\.?\d+),(-?\d*\.?\d+)/g)].map(m => [+m[1], +m[2]]);
+      if (n === 'rect') return [[a('x'), a('y')], [a('x') + a('width'), a('y') + a('height')]];
+      if (n === 'line') return [[a('x1'), a('y1')], [a('x2'), a('y2')]];
+      if (n === 'text') return [[a('x'), a('y')]];
+      return [];
+    }
+    const bboxOf = pts => ({ x0: Math.min(...pts.map(p => p[0])), y0: Math.min(...pts.map(p => p[1])), x1: Math.max(...pts.map(p => p[0])), y1: Math.max(...pts.map(p => p[1])) });
+    function ringArea(pts) { let s = 0; for (let i = 0; i < pts.length; i++) { const p = pts[i], q = pts[(i + 1) % pts.length]; s += p[0] * q[1] - q[0] * p[1]; } return Math.abs(s) / 2; }
+    const ser = el => new XMLSerializer().serializeToString(el).replace(/ xmlns="http:\/\/www\.w3\.org\/2000\/svg"/g, '');
+
+    // ---- fold nets → separate parts (each cut outline with the folds and labels that sit on it) ----
+    function splitFoldParts(g, pieceNo, pieceName) {
+      const parts = svgElems(g.cut).map(el => {
+        const pts = elemPoints(el), bb = bboxOf(pts);
+        return { el, bb, cut: [ser(el)], score: [], label: [], area: el.tagName === 'rect' ? (bb.x1 - bb.x0) * (bb.y1 - bb.y0) : ringArea(pts) };
+      });
+      const owner = (x, y) => parts.filter(p => x >= p.bb.x0 - 0.5 && x <= p.bb.x1 + 0.5 && y >= p.bb.y0 - 0.5 && y <= p.bb.y1 + 0.5)
+        .sort((a, b) => (a.bb.x1 - a.bb.x0) * (a.bb.y1 - a.bb.y0) - (b.bb.x1 - b.bb.x0) * (b.bb.y1 - b.bb.y0))[0];
+      const centre = el => { const b = bboxOf(elemPoints(el)); return [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2]; };
+      svgElems(g.score).forEach(el => { const o = owner(...centre(el)); if (o) o.score.push(ser(el)); });
+      svgElems(g.label).forEach(el => { const pt = el.tagName === 'text' ? elemPoints(el)[0] : centre(el); const o = owner(...pt); if (o) o.label.push(ser(el)); });
+      return parts.map((p, k) => {
+        const bold = p.label.map(s => (s.match(/font-weight="bold"[^>]*>([^<]+)</) || [])[1]).find(Boolean);
+        const name = (bold || `PART ${k + 1}`).replace(/\s*\(.*$/, '').replace(/^[A-Z]\d:\s*/, m => m.trim().replace(':', '') + ' ').trim();
+        const tr = `translate(${P2(-p.bb.x0)},${P2(-p.bb.y0)})`;
+        return { name, piece: pieceNo, pieceName, w: p.bb.x1 - p.bb.x0, h: p.bb.y1 - p.bb.y0, area: p.area,
+          cut: `<g transform="${tr}">${p.cut.join('')}</g>`, score: `<g transform="${tr}">${p.score.join('')}</g>`, label: `<g transform="${tr}">${capFont(p.label.join(''))}</g>` };
+      });
+    }
+
+    // ---- waffle ribs → parts (+ one isometric assembly diagram per piece) ----
+    function waffleParts(res, pieceNo, pieceName) {
+      const parts = res.ribs.map(r => {
+        const b = wfBounds(r.poly), w = b.maxU - b.minU, h = b.maxZ - b.minZ;
+        const d = wfRings(r.poly).map(ring => 'M ' + ring.slice(0, -1).map(([u, z]) => `${P2(u - b.minU)},${P2(b.maxZ - z)}`).join(' L ') + ' Z').join(' ');
+        const fs = Math.min(LABEL_MAX_MM, Math.max(1.2, w / 8));
+        return { name: r.name, piece: pieceNo, pieceName, w, h, area: wfArea(r.poly), rotateFree: true,
+          cut: `<path d="${d}" fill="#FFFFFF" fill-rule="evenodd"/>`, score: '',
+          label: `<text x="${P2(w / 2)}" y="${P2(Math.max(fs + 0.5, h * 0.55))}" text-anchor="middle" font-weight="bold" font-size="${fs.toFixed(2)}">${r.name}</text>` +
+            `<path d="M ${P2(Math.min(2, w / 4))},0.35 l 1.1,1.9 l -2.2,0 z" fill="#1E1B18"/>` };
+      });
+      const iso = waffleIsoSvg(res, 46, 34);
+      const notes = [`${pieceName} — ASSEMBLY`, '▲ = TOP edge of every rib', 'X-ribs: slots from the TOP', `Y-ribs: slots from the BOTTOM · slot ${res.slotWidth.toFixed(2)} mm`];
+      parts.push({ name: 'ASSEMBLY', piece: pieceNo, pieceName, w: Math.max(iso.w, 46), h: iso.h + 2 + notes.length * 2.2, area: 0, isDiagram: true, cut: '', score: '',
+        label: `<g>${iso.svg}</g>` + notes.map((n, i) => `<text x="0" y="${P2(iso.h + 2.4 + i * 2.2)}" font-size="${i ? 1.5 : 1.7}"${i ? ' fill="#5C5343"' : ' font-weight="bold"'}>${escapeXml(n)}</text>`).join('') });
+      return parts;
+    }
+
+    // ---- traced image pieces (Tab 5) → parts; geometry was captured in mm at captureScale ----
+    function imageParts(p, scale, pieceNo, pieceName) {
+      const k = (p.captureScale || scale) / scale;
+      return (p.parts || []).map(pc => {
+        const w = pc.w * k, h = pc.h * k;
+        let cut = '', score = '', area = 0;
+        pc.shapes.forEach(s => {
+          const pts = s.pts.map(q => [q[0] * k, q[1] * k]);
+          const d = pts.map((q, i) => (i ? 'L ' : 'M ') + P2(q[0]) + ',' + P2(q[1])).join(' ') + (s.closed ? ' Z' : '');
+          if (s.kind === 'cut') { cut += `<path d="${d}" fill="#FFFFFF"/>`; area += s.closed ? ringArea(pts) : 0; } else score += `<path d="${d}"/>`;
+        });
+        const fs = Math.max(1.2, Math.min(LABEL_MAX_MM, w / 14));
+        return { name: pc.label, piece: pieceNo, pieceName, w, h, area, cut, score,
+          label: `<text x="${P2(w / 2)}" y="${P2(h / 2)}" text-anchor="middle" font-weight="bold" font-size="${fs.toFixed(2)}">${escapeXml(pc.label)}</text>` };
+      });
+    }
+
+    // ---- one piece → its parts (qty copies) ----
+    function pieceDisplayName(p) {
+      if (p.archetype === 'image') return (p.label || 'IMAGE PIECE').toUpperCase();
+      return `${p.archetype.toUpperCase()} ${vNorm.num(p.w)}×${vNorm.num(p.d)}×${vNorm.num(p.h)}`;
+    }
+    function pieceMethod(p) { return p.archetype === 'shelf' ? 'notch' : (p.method || 'fold'); }
+    function waffleForPiece(p, cfg) {
+      const k = p.kerf === 'hand' ? WAFFLE_HANDCUT_KERF : 0, t = cfg.thicknessMm, f = 10 / cfg.scale;
+      let sil;
+      if (p.archetype === 'image') {
+        const pc = (p.parts || [])[0]; if (!pc) return null;
+        const kk = (p.captureScale || cfg.scale) / cfg.scale, outline = pc.shapes.find(s => s.kind === 'cut' && s.closed); if (!outline) return null;
+        const H = pc.h * kk, D = pc.w * kk, W = (p.widthCm || 45) * f;
+        sil = { side: wfPoly(outline.pts.map(q => [q[0] * kk, H - q[1] * kk])), front: wfPoly([[0, 0], [W, 0], [W, H], [0, H]]), W, D, H };
+      } else sil = waffleSilhouettes(p, f, t, k);
+      if (!sil) return null;
+      const res = waffle(sil.side, sil.front, sil.W, sil.D, t, p.spacing || WAFFLE_SPACING_DEFAULT, k);
+      return { res, validation: waffleValidate(res) };
+    }
+    function pieceParts(p, pieceNo, cfg) {
+      const name = pieceDisplayName(p), qty = Math.max(1, Math.min(20, parseInt(p.qty) || 1));
+      let one;
+      if (p.archetype === 'image' && pieceMethod(p) !== 'waffle') one = imageParts(p, cfg.scale, pieceNo, name);
+      else if (pieceMethod(p) === 'waffle') { const wf = waffleForPiece(p, cfg); one = wf ? waffleParts(wf.res, pieceNo, name) : []; }
+      else {
+        const [sw, sh] = sheetDims(cfg.sheetSize);
+        const AW = sw - 2 * NEST_MARGIN, AH = sh - NEST_TOP - TITLE_BLOCK_H - 3 * PARTS_LINE_H - 3;
+        const fits = pt => (pt.w <= AW && pt.h <= AH) || (pt.h <= AW && pt.w <= AH);
+        const build = netStyle => splitFoldParts(foldGeometry({ archetype: p.archetype, w: p.w, d: p.d, h: p.h, subH: p.subH, scale: cfg.scale,
+          thicknessMm: cfg.thicknessMm, curveOffsets: p.curveOffsets || [0, 0, 0, 0, 0], joinery: p.archetype === 'shelf' ? 'slot' : 'fold', netStyle }, sw), pieceNo, name);
+        one = build('cross');
+        // a box whose cross-shaped net is larger than the sheet is drawn as wall strip + top instead (same true scale)
+        if (['bed', 'cabinet'].includes(p.archetype) && !one.every(fits)) one = build('strip');
+      }
+      const all = [];
+      for (let c = 0; c < qty; c++) one.forEach(pt => { if (c > 0 && pt.isDiagram) return; all.push({ ...pt, copy: c + 1, qty }); });
+      return all;
+    }
+
+    // ---- shelf packer: tallest first, 0/90° rotation, NEST_GAP between parts ----
+    function nestParts(parts, cfg, reserve) {
+      const [SW, SH] = sheetDims(cfg.sheetSize);
+      const AW = SW - 2 * NEST_MARGIN, AH = SH - NEST_TOP - TITLE_BLOCK_H - reserve;
+      const items = parts.map((p, i) => {
+        let rot = false, w = p.w, h = p.h;
+        // parts stay upright so their labels read normally; waffle ribs (short labels) may lie flat
+        if (p.rotateFree && h > w && h <= AW && w <= AH) { rot = true; [w, h] = [h, w]; }
+        if ((w > AW || h > AH) && h <= AW && w <= AH) { rot = !rot; [w, h] = [h, w]; }   // turn 90° only when that makes it fit
+        return { i, p, rot, w, h };
+      });
+      const oversize = items.filter(it => it.w > AW + 1e-6 || it.h > AH + 1e-6);
+      const sheets = [];
+      items.filter(it => !oversize.includes(it)).sort((a, b) => b.h - a.h || b.w - a.w).forEach(it => {
+        for (const sh of sheets) for (const row of sh.rows)
+          if (row.x + it.w <= AW + 1e-6 && it.h <= row.h + 1e-6) { sh.placed.push({ ...it, x: row.x, y: row.y }); row.x += it.w + NEST_GAP; return; }
+        for (const sh of sheets) if (sh.usedH + it.h <= AH + 1e-6) {
+          const row = { y: sh.usedH, h: it.h, x: it.w + NEST_GAP }; sh.rows.push(row); sh.usedH += it.h + NEST_GAP;
+          sh.placed.push({ ...it, x: 0, y: row.y }); return;
+        }
+        sheets.push({ rows: [{ y: 0, h: it.h, x: it.w + NEST_GAP }], usedH: it.h + NEST_GAP, placed: [{ ...it, x: 0, y: 0 }] });
+      });
+      return { sheets, oversize: oversize.map(it => it.p), area: { x0: NEST_MARGIN, y0: NEST_TOP, w: AW, h: AH } };
+    }
+
+    // ---- title block (same design as the single-piece sheet) ----
+    function sheetTitleBlock(SW, SH, cfg, middle, scaleText, spec, stamp) {
+      const tbY = SH - 25, tbW = SW - 12, who = `${cfg.name || ''} (${cfg.id || ''})`;
+      return `
+        <rect x="6" y="${tbY}" width="${tbW}" height="19" fill="#F6F3EC" stroke="#1E1B18" stroke-width="0.3"/>
+        <line x1="${6 + tbW * 0.36}" y1="${tbY}" x2="${6 + tbW * 0.36}" y2="${tbY + 14.5}" stroke="#1E1B18" stroke-width="0.25"/>
+        <line x1="${6 + tbW * 0.72}" y1="${tbY}" x2="${6 + tbW * 0.72}" y2="${tbY + 14.5}" stroke="#1E1B18" stroke-width="0.25"/>
+        <line x1="6" y1="${tbY + 14.5}" x2="${6 + tbW}" y2="${tbY + 14.5}" stroke="#1E1B18" stroke-width="0.2"/>
+        <text x="10" y="${tbY + 16.6}" font-size="1.8" fill="#3E372B">${escapeXml(COURSE_TEAM.course)} · ${escapeXml(COURSE_TEAM.institution)}</text>
+        <text x="${2 + tbW}" y="${tbY + 16.6}" font-size="1.8" fill="#3E372B" text-anchor="end">Studio Flat-Pack Maker v${TOOL_VERSION}</text>
+        ${verifyLineSvg(2 + tbW, tbY + 18.6, spec, stamp)}
+        <text x="10" y="${tbY + 18.6}" font-size="1.8" fill="#3E372B" font-weight="bold">${escapeXml(teamLine())}</text>
+        <text x="10" y="${tbY + 5.5}" font-size="2.6" fill="#5C5343">STUDENT NAME &amp; ID:</text>
+        <text x="10" y="${tbY + 11.5}" font-size="${Math.min(3.4, (tbW * 0.36 - 6) / (Math.max(1, who.length) * 0.62)).toFixed(2)}" font-weight="bold">${escapeXml(who)}</text>
+        <text x="${10 + tbW * 0.36}" y="${tbY + 5.5}" font-size="2.6" fill="#5C5343">COURSE &amp; CONTENTS:</text>
+        <text x="${10 + tbW * 0.36}" y="${tbY + 11.5}" font-size="${Math.min(3.2, (tbW * 0.36 - 6) / (Math.max(1, middle.length) * 0.62)).toFixed(2)}" font-weight="bold">${escapeXml(middle)}</text>
+        <text x="${10 + tbW * 0.72}" y="${tbY + 5.5}" font-size="2.6" fill="#5C5343">SCALE &amp; CALIBRATION:</text>
+        <text x="${10 + tbW * 0.72}" y="${tbY + 11.5}" font-size="3.4" font-weight="bold" fill="#DC2626">${escapeXml(scaleText)}</text>`;
+    }
+    function checkRulerSvg(SW) {
+      const rx = SW - 62, ry = 11;
+      return `<rect x="${rx}" y="${ry}" width="50" height="5" fill="#F6F3EC" stroke="#1E1B18" stroke-width="0.25"/>` +
+        [10, 20, 30, 40].map(k => `<line x1="${rx + k}" y1="${ry}" x2="${rx + k}" y2="${ry + 3}" stroke="#1E1B18" stroke-width="0.2"/>`).join('') +
+        `<text x="${rx + 25}" y="${ry + 4}" text-anchor="middle" font-size="2.2" font-weight="bold">5 cm CHECK RULER (50 mm)</text>`;
+    }
+
+    // Canonical text of what is on one sheet — hashed into that sheet's VERIFY stamp
+    function sheetCanon(sh, idx, total, pieces) {
+      const per = {};
+      sh.placed.forEach(it => { const p = pieces[it.p.piece - 1]; const key = p.archetype === 'image'
+        ? `image ${vNorm.name(p.label)} ${pieceMethod(p)}` : `${p.archetype} ${[p.w, p.d, p.h, p.subH].map(vNorm.num).join('x')} ${pieceMethod(p)}`;
+        per[key] = (per[key] || 0) + 1; });
+      return `${idx}/${total}|` + Object.keys(per).sort().map(k => `${k}:${per[k]}`).join(';');
+    }
+
+    // ---- everything: pieces → parts → sheets → SVG strings ----
+    function nestAll(pieces, cfg) {
+      const [SW, SH] = sheetDims(cfg.sheetSize);
+      const parts = pieces.flatMap((p, i) => pieceParts(p, i + 1, cfg));
+      const reserve = Math.max(1, pieces.length) * PARTS_LINE_H + 3;
+      const nest = nestParts(parts, cfg, reserve);
+      const total = nest.sheets.length;
+      const sheets = nest.sheets.map((sh, k) => {
+        const idx = k + 1, used = sh.placed.reduce((s, it) => s + (it.p.area || 0), 0), usePct = 100 * used / (SW * SH);
+        const stamp = computeStamp({ version: TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces),
+          scale: cfg.scale, sheet: cfg.sheetSize, thickness: cfg.thicknessMm, joinery: '' });
+        let cut = '', score = '', label = '';
+        sh.placed.forEach(it => {
+          const x = nest.area.x0 + it.x, y = nest.area.y0 + it.y;
+          const tr = it.rot ? `translate(${P2(x + it.p.h)},${P2(y)}) rotate(90)` : `translate(${P2(x)},${P2(y)})`;
+          if (it.p.cut) cut += `<g transform="${tr}">${it.p.cut}</g>`;
+          if (it.p.score) score += `<g transform="${tr}">${it.p.score}</g>`;
+          if (it.p.label) label += `<g transform="${tr}">${it.p.label}</g>`;
+        });
+        // parts list: one line per piece present on this sheet
+        const byPiece = {};
+        sh.placed.forEach(it => { (byPiece[it.p.piece] = byPiece[it.p.piece] || []).push(it.p); });
+        const maxChars = Math.floor((SW - 2 * NEST_MARGIN) / 1.05);
+        const lines = Object.keys(byPiece).sort((a, b) => a - b).map(n => {
+          const ps = byPiece[n], p = pieces[n - 1], names = {};
+          ps.filter(q => !q.isDiagram).forEach(q => { names[q.name] = (names[q.name] || 0) + 1; });
+          const txt = `#${n} ${ps[0].pieceName} · ${pieceMethod(p).toUpperCase()} · qty ${p.qty || 1} → ` + Object.entries(names).map(([nm, c]) => c > 1 ? `${nm} ×${c}` : nm).join(', ');
+          return txt.length > maxChars ? txt.slice(0, maxChars - 1) + '…' : txt;
+        });
+        const listY = SH - TITLE_BLOCK_H - lines.length * PARTS_LINE_H;
+        const header = `
+          <text x="12" y="14" font-size="4" font-weight="bold">STUDIO FLAT-PACK SHEET ${idx} / ${total}</text>
+          <text x="12" y="19" font-size="2.5" fill="#5C5343">SCALE 1:${cfg.scale} · BOARD ${vNorm.num(cfg.thicknessMm)} mm · ${cfg.sheetSize} · ${sh.placed.filter(it => !it.p.isDiagram).length} PARTS · MATERIAL USE ${usePct.toFixed(0)} %</text>
+          <text x="12" y="24" font-size="2.3" fill="#DC2626" font-weight="bold">● SOLID RED = CUT THROUGH   <tspan fill="#0055FF">- - DASHED BLUE = SCORE &amp; FOLD</tspan></text>
+          ${checkRulerSvg(SW)}
+          <text x="${NEST_MARGIN}" y="${P2(listY - 0.6)}" font-size="1.8" font-weight="bold">PARTS ON THIS SHEET</text>
+          ${lines.map((l, i) => `<text x="${NEST_MARGIN}" y="${P2(listY + (i + 1) * PARTS_LINE_H - 0.4)}" font-size="1.8" fill="#3E372B">${escapeXml(l)}</text>`).join('')}`;
+        const middle = `${cfg.course || 'RIR2101'} // ${Object.keys(byPiece).length} PIECE${Object.keys(byPiece).length > 1 ? 'S' : ''}`;
+        const tb = sheetTitleBlock(SW, SH, cfg, middle, `SCALE 1:${cfg.scale} ON ${cfg.sheetSize}`, `SHEET ${idx}/${total} · ${sh.placed.length} ITEMS`, stamp);
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SW} ${SH}" width="${SW}mm" height="${SH}mm" data-sheet="${idx}">` +
+          `<rect class="no-export" x="0" y="0" width="${SW}" height="${SH}" fill="#FFFFFF"/>` +
+          `<g id="01_CUT_RED" fill="none" stroke="#DC2626" stroke-width="${PRINT_STROKE.cut}" stroke-linejoin="round">${cut}</g>` +
+          `<g id="02_SCORE_BLUE" fill="none" stroke="#0055FF" stroke-width="${PRINT_STROKE.score}" stroke-dasharray="${PRINT_STROKE.scoreDash}">${score}</g>` +
+          `<g id="03_LABELS_BLACK" fill="#1E1B18" font-family="'JetBrains Mono', ui-monospace, Consolas, monospace" font-size="2">${header}${label}${tb}</g></svg>`;
+        return { idx, svg, stamp, usePct, parts: sh.placed.length, canon: sheetCanon(sh, idx, total, pieces) };
+      });
+      return { sheets, oversize: nest.oversize, parts, total };
+    }
+
+    // ---- print any list of sheet SVGs, one per page, at 100 % ----
+    function printSheetSvgs(svgs, sheetSize) {
+      const root = document.getElementById('print-root');
+      root.innerHTML = svgs.map(s => `<div class="print-page print-${sheetSize}">${s}</div>`).join('');
+      document.getElementById('dynamic-page-print-style').innerHTML = `@page { size: ${sheetSize} portrait; margin: 0; }`;
+      const keep = [...document.body.classList].filter(c => c.startsWith('print-mode-'));
+      keep.forEach(c => document.body.classList.remove(c));
+      document.body.classList.add('print-root-mode');
+      const done = () => { document.body.classList.remove('print-root-mode'); keep.forEach(c => document.body.classList.add(c)); root.innerHTML = ''; window.removeEventListener('afterprint', done); };
+      window.addEventListener('afterprint', done);
+      if (!window.__noRealPrint) window.print();
+    }
+    function downloadSheetSvg(svgString, filename) {
+      const holder = document.createElement('div'); holder.innerHTML = svgString;
+      const el = holder.firstElementChild; el.querySelectorAll('.no-export').forEach(n => n.remove()); laserStrokes(el);
+      const xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Studio Flat-Pack Maker v' + TOOL_VERSION + ' laser sheet: 01 = cut, 02 = score (low power), 03 = labels (engrave or delete) -->\n' + new XMLSerializer().serializeToString(el);
+      const url = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
+      const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
   </script>
 </body>
