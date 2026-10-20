@@ -324,6 +324,8 @@
     .handout-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; min-height: 0; }
     .handout-grid figure { margin: 0; border: 1px solid var(--v4-line); border-radius: 8px; padding: 2mm; display: flex; flex-direction: column; min-height: 0; }
     .handout-grid img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+    .bi-tip { margin-top: 3px; padding: 3px 5px; border-left: 3px solid #D97706; background: #FEF3C7; border-radius: 4px; }
+    .handout-grid .bi-tip .bi-en { font-size: 9px; line-height: 1.25; } .handout-grid .bi-tip .bi-ar { font-size: 10.5px; line-height: 1.35; }
     .handout-grid figcaption { font-size: 10.5px; line-height: 1.3; margin-top: 1mm; } .handout-grid .bi-ar { font-family: "Noto Naskh Arabic", "Segoe UI", Tahoma, Arial, sans-serif; font-size: 12.5px; text-align: right; }
     .handout-grid .n { font: 800 10px ui-monospace, Consolas, monospace; color: #B45309; }
     .handout-dodont { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2mm; }
@@ -1578,7 +1580,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.2';
+    const TOOL_VERSION = '4.2.1';
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -4037,7 +4039,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'H08', img: 'H08', en: 'Printed side out · score on the print · all blue lines fold away from you.', ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك.' },
       { key: 'H09', img: 'H09', en: 'Then cut the red lines on a cutting mat.', ar: 'ثم اقطع الخطوط الحمراء على قاعدة القص.' },
       { key: 'H10', img: 'H10', en: 'A tiny bead of glue on each tab; hold 20 s.', ar: 'نقطة غراء صغيرة على كل لسان؛ اضغط ٢٠ ثانية.' },
-      { key: 'H11', img: 'H11', en: 'Stand the X-ribs, drop the Y-ribs into the slots.', ar: 'ثبّت أضلاع X ثم أنزل أضلاع Y في الشقوق.' },
+      { key: 'H11', img: 'H11', en: 'Stand the X-ribs, drop the Y-ribs into the slots.', ar: 'ثبّت أضلاع X ثم أنزل أضلاع Y في الشقوق.',
+        tipEn: 'Table: assemble upside down on a flat bench, with the tabletop edges resting on the bench. Chair: secure the two middle ribs with a small dot of glue at their joints.',
+        tipAr: 'الطاولة: جمّع النموذج مقلوبًا على سطح عمل مستوٍ، بحيث تستند حواف الأضلاع التي تكوّن سطح الطاولة إلى سطح العمل. الكرسي: ثبّت الضلعين الأوسطين بنقطة صغيرة من الغراء عند وصلاتهما.' },
       { key: 'H12', img: 'H12', en: 'Place the finished pieces on your plan.', ar: 'ضع القطع الجاهزة على مسقطك.' },
       { key: 'H13', img: 'H13', en: 'Good: flat side view on pure white.', ar: 'صحيح: منظر جانبي مسطح على خلفية بيضاء.' },
       { key: 'H14', img: 'H14', en: 'Wrong: perspective, room and shadows.', ar: 'خطأ: منظور وغرفة وظلال.' },
@@ -4054,7 +4058,8 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { img: 'S07', no: '¾ render', yes: 'Flat elevation', ar: '✗ صورة بمنظور · ✓ واجهة مسطحة' },
     ];
     const biGet = key => BI_GUIDES.find(g => g.key === key);
-    const biCaption = g => `<figcaption><div class="bi-en">${g.en}</div><div class="bi-ar" dir="rtl" lang="ar">${g.ar}</div></figcaption>`;
+    const biCaption = g => `<figcaption><div class="bi-en">${g.en}</div><div class="bi-ar" dir="rtl" lang="ar">${g.ar}</div>` +
+      (g.tipEn ? `<div class="bi-tip"><div class="bi-en"><b>Tip:</b> ${g.tipEn}</div><div class="bi-ar" dir="rtl" lang="ar"><b>نصيحة:</b> ${g.tipAr}</div></div>` : '') + `</figcaption>`;
     function biFigureHtml(key) { const g = biGet(key); return g ? `<img data-img="${g.img}" alt="">${biCaption(g)}` : ''; }
     function biInstallGuides() {
       document.querySelectorAll('figure.v4-fig[data-guide]').forEach(f => { f.innerHTML = biFigureHtml(f.dataset.guide); });

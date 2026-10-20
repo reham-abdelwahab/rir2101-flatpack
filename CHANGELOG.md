@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.2.1 — 2026-10-20 (assembly tip after the independent v4.2 re-audit)
+- H11 now carries a bilingual tip, shown in the waffle build strip and on handout page 2: "Table: assemble upside down on a flat bench, with the tabletop edges resting on the bench. Chair: secure the two middle ribs with a small dot of glue at their joints." The Arabic text is next to it.
+- Why: the middle X-ribs of the chair (seat band) and the table (tabletop band) do not reach the floor. A Y-rib rests on an X-rib, so these ribs are held only by friction or glue. This is correct geometry, but it needs the tip. Paper test E1 confirms the physical stability.
+- No geometry changes. The handout is still 3 A4 pages, and `RIR2101_FlatPack_Student_Handout_v4_0_1.pdf` was regenerated.
+
 ## v4.2 — 2026-10-20 (waffle sofa + cabinet; see docs/v4_2_HANDOVER.md)
 - **K · Sofa.** The ribs are now exact sections of a union of boxes: seat block, two arms and back. Previously, side × front left a void under the back: the boards collided at 28 crossings at 1:10 and 7 at 1:20, there were windows, and parts hung free. Now 1:10 gives 26 parts and 144 joints, and 1:20 gives 13 parts and 36 joints. `waffleSilhouettes` can return `xSection(x)` / `ySection(y)`, and `waffle()` uses them for the ribs and the crossing table.
 - **L · Cabinet.** The toe recess now stops (t + k)/2 + 0.5 mm short of the outer rib positions. At 1:10 it is 3.25 mm (3.15 mm hand-cut), so X1 and X12 stand on the floor and all 60 joints assemble.
