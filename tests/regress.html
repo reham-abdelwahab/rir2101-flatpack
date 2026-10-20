@@ -400,6 +400,16 @@ function overlapCheck(w, svgId) {
     log(pages.length === 3 && counts === '6/6/4' && capsOk && pages[2].querySelectorAll('.handout-dodont > div').length === 6, 'Handout: 3 pages · 6/6/4 panels (H01–H16) + 6 do/don\'t · EN + AR under every picture', counts);
     log(d.querySelector('#ai-prompt-a') && d.querySelector('#ai-prompt-b') && /Neufert/i.test($('step-G').textContent), 'Help · G keeps the Neufert table and Prompt A / B copy buttons');
     log(!$('share-support-modal').open && $('share-support-modal').tagName === 'DETAILS', 'Instructor section collapsed by default');
+    // credits: English only (Arabic credit line removed 20 Oct), and no empty row where it was
+    const team = wc.eval('COURSE_TEAM'), arEls = [...d.querySelectorAll('.team-credit-ar')];
+    $('share-support-modal').open = true;
+    const arHidden = arEls.every(e => e.textContent === '' && wc.getComputedStyle(e).display === 'none');
+    $('share-support-modal').open = false;
+    const enShown = [...d.querySelectorAll('.team-credit-en')].every(e => /Reham Ahmed Abdelwahab/.test(e.textContent));
+    const footers = pages.map(p => p.querySelector('footer').textContent).join(' ');
+    log(wc.eval('teamLineAr()') === '' && team.instructorAr === '' && team.tasAr.length === 0 && arHidden && enShown && /Reham Ahmed Abdelwahab/.test(footers) && !/[؀-ۿ]/.test(footers),
+      'Credits: English everywhere, no Arabic credit line and no empty row', `${arEls.length} Arabic credit slot(s) hidden`);
+    log(wc.eval("biGet('H16')").ar.includes('فريق التدريس') && wc.eval("biGet('I1')").ar.startsWith('للمدرّس'), 'Captions H16 / I1 use the revised Arabic wording');
     const size = (await (await fetch(CAND.split('?')[0], { cache: 'no-store' })).blob()).size;
     let alone = ''; wc.__standaloneProbe = h => { alone = h; }; wc.downloadStandaloneHTMLTool(); delete wc.__standaloneProbe;
     const aSize = new Blob([alone]).size;

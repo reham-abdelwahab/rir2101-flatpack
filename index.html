@@ -314,6 +314,7 @@
     .handout-page { background: #fff; border: 1px solid var(--v4-line); border-radius: 12px; padding: 7mm 8mm; width: 100%; max-width: 210mm; margin: 0 auto; display: flex; flex-direction: column; gap: 3mm; }
     /* my display rules must not beat Tailwind's .hidden */
     .v4-editor.hidden, .v4-method-panel.hidden, .handout-page.hidden, .v4-field.hidden, .v4-warn.hidden { display: none !important; }
+    .team-credit-ar { display: block; } .team-credit-ar:empty { display: none; }   /* an empty Arabic credit leaves no row */
     /* tabs 1–2 are picture-led: the v3 explanation paragraphs give way to the step pictures + one-line captions */
     #tracer-column p, #test-lab-panel p:not([id]), #image-controls p, #image-sheet-settings p, #inline-info-step-1 { display: none !important; }
     .handout-page header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--v4-ink); padding-bottom: 1.5mm; position: static; }
@@ -1444,7 +1445,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         </div>
 
 
-        <div class="text-[11px] text-paper-700"><span class="team-credit-en"></span> · <span class="team-credit-inst"></span><br><span class="team-credit-ar" dir="rtl" lang="ar"></span><br>Studio Flat-Pack Maker <span id="instructor-version"></span></div>
+        <div class="text-[11px] text-paper-700"><span class="team-credit-en"></span> · <span class="team-credit-inst"></span><span class="team-credit-ar" dir="rtl" lang="ar"></span><br>Studio Flat-Pack Maker <span id="instructor-version"></span></div>
       </div>
     </details>
   </section>
@@ -1573,7 +1574,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.0';
+    const TOOL_VERSION = '4.0.1';
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -3976,12 +3977,12 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       course: 'RIR2101 Interior Design 1 · Fall 2026',
       institution: 'College of Art & Design, Arab Academy for Science, Technology & Maritime Transport (AASTMT)',
       instructor: 'Dr. Reham Ahmed Abdelwahab',
-      instructorAr: 'د. ريهام أحمد عبد الوهاب',
+      instructorAr: '',
       tas: ['Eng. Mariam Thamarat, MSc.', 'Eng. Mariam Emad, BSc.'],
-      tasAr: ['م. مريم ثمرات', 'م. مريم عماد']
+      tasAr: []
     };
     const teamLine = () => `${COURSE_TEAM.instructor} (Instructor) · TAs: ${COURSE_TEAM.tas.join(' · ')}`;
-    const teamLineAr = () => `${COURSE_TEAM.instructorAr} (مدرس المقرر) · المعيدات: ${COURSE_TEAM.tasAr.join(' · ')}`;
+    const teamLineAr = () => '';   // no Arabic credit line (removed 20 Oct 2026); English credits only
     function installTeamCredits() {
       document.querySelectorAll('.team-credit-en').forEach(e => e.textContent = `${COURSE_TEAM.course} · ${teamLine()}`);
       document.querySelectorAll('.team-credit-ar').forEach(e => e.textContent = teamLineAr());
@@ -4011,7 +4012,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'D1', img: 'P04', en: 'Print at 100 % — the check ruler must measure 5 cm.', ar: 'اطبع بنسبة ١٠٠٪ — يجب أن تقيس مسطرة التحقق ٥ سم.' },
       { key: 'D2', img: 'H06', en: 'Never "fit to page": it shrinks the scale.', ar: 'لا تختر "ملاءمة الصفحة" أبدًا: فهي تُصغّر المقياس.' },
       // tab 3 · HELP (instructor)
-      { key: 'I1', img: 'P08', en: 'TA: check the VERIFY stamp against the printed values.', ar: 'المعيدة: طابقي ختم VERIFY مع القيم المطبوعة.' },
+      { key: 'I1', img: 'P08', en: 'TA: check the VERIFY stamp against the printed values.', ar: 'للمدرّس: طابق ختم VERIFY مع القيم المطبوعة.' },
       // handout panels H01–H16 (also used by the build strips)
       { key: 'H01', img: 'H01', en: 'Look up the real size in the Neufert table.', ar: 'ابحث عن المقاس الحقيقي في جدول نويفرت.' },
       { key: 'H02', img: 'H02', en: 'Pick the closest piece in the tool.', ar: 'اختر أقرب قطعة في الأداة.' },
@@ -4028,7 +4029,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'H13', img: 'H13', en: 'Good: flat side view on pure white.', ar: 'صحيح: منظر جانبي مسطح على خلفية بيضاء.' },
       { key: 'H14', img: 'H14', en: 'Wrong: perspective, room and shadows.', ar: 'خطأ: منظور وغرفة وظلال.' },
       { key: 'H15', img: 'H15', en: 'Click two points of a size you know.', ar: 'انقر نقطتين على بُعد تعرفه.' },
-      { key: 'H16', img: 'H16', en: 'Stuck? Send your Help Code to your TA.', ar: 'واجهت مشكلة؟ أرسل رمز المساعدة إلى المعيدة.' },
+      { key: 'H16', img: 'H16', en: 'Stuck? Send your Help Code to your TA.', ar: 'واجهت مشكلة؟ أرسل رمز المساعدة إلى فريق التدريس.' },
     ];
     // do / don't pairs (handout page 3): step icon + ✗ / ✓
     const BI_DODONT = [

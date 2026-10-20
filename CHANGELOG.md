@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.0.1 — 2026-10-20
+- Credits are English only. The Arabic credit line is removed: in `COURSE_TEAM`, `instructorAr` and `tasAr` are empty and `teamLineAr()` returns an empty string, and no empty row is left where it was. The English credits are unchanged.
+- Revised Arabic captions:
+  - H16: «واجهت مشكلة؟ أرسل رمز المساعدة إلى فريق التدريس.»
+  - I1: «للمدرّس: طابق ختم VERIFY مع القيم المطبوعة.»
+
 ## v4.0 — 2026-10-20 (redesign after Reham's v3.6 print test)
 - **C1 Waffle (laser):** replaces the old table leg-frame slots, which did not work.
   - JavaScript port of `waffle.py`: a grid of X-ribs (side elevation) and Y-ribs (front elevation). Where they cross, the X-rib is slotted half-depth from the top and the Y-rib from the bottom.
