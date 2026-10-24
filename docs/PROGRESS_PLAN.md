@@ -45,6 +45,8 @@ Status key: ⬜ open · 🟡 in progress · ✅ passed · ❌ failed (→ fix, r
 
 ## Track C — Research (paper)
 
+Detailed protocol, decision rule and integration path: [TOOLS_INTEGRATION_PLAN.md](TOOLS_INTEGRATION_PLAN.md) (steps D0–D10; C1 = D4–D7, C2 = scoring inside D4–D7, C3 = D8, C4 = D10). Status 24 Oct: nothing run yet.
+
 | # | Step | Output | Status |
 |---|---|---|---|
 | C1 | Same 3 cases (chair, table, curved sofa) in Export Paper Model (Blender) and PolyZamboni; Lamina for Waffle; VTracer for tracing | exported SVG nets per tool | ⬜ |
