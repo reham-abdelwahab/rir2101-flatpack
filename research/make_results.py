@@ -23,7 +23,7 @@ def net_rows():
                 if d is None:
                     if os.path.isdir(os.path.join(HERE, t)): rows.append(f'| {name} | {c} | 1:{s[2:]} | ❌ no output | | | | | | | | |')
                     continue
-                tabs = f"{d['tabs_mated']}/{d['tabs'] + d['unplaced_faces']}" if (d['tabs'] + d['unplaced_faces']) else '—'
+                tabs = f"{d['tabs_mated']}/{d['tabs']}" if d['tabs'] else '—'   # tabs that land / the tool's own tabs (unplaced faces have their own column)
                 rows.append(f"| {name} | {c} | 1:{s[2:]} | {'✅' if d['ok'] else '❌'} | {fmt(d['M1_size_error_mm'])} | {fmt(d['coverage_pct'])} | {fmt(d['M2_fold_direction_ok_pct'])} ({d['folds_counted']} folds) | {tabs} | {d['M4_overlapping_panels']} | {d['unplaced_faces']} | {d['printed_inward_faces']} | {d['unmatched_scores']} |")
     return '\n'.join(rows)
 

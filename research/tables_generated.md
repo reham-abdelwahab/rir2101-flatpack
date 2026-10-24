@@ -13,23 +13,23 @@
 | Export Paper Model 1.4.2 | table | 1:10 | ❌ | 0.0 | 100.0 | 100.0 (5 folds) | 3/3 | 0 | 0 | 0 | 1 |
 | Export Paper Model 1.4.2 | table | 1:20 | ❌ | 0.0 | 100.0 | 100.0 (5 folds) | 3/3 | 0 | 0 | 0 | 1 |
 | Export Paper Model 1.4.2 | sofa_curved | 1:10 | ❌ no output | | | | | | | | |
-| Export Paper Model 1.4.2 | sofa_curved | 1:20 | ❌ | 0.0 | 100.0 | 83.3 (6 folds) | 2/3 | 0 | 1 | 0 | 0 |
+| Export Paper Model 1.4.2 | sofa_curved | 1:20 | ❌ | 0.0 | 100.0 | 83.3 (6 folds) | 2/2 | 0 | 1 | 0 | 0 |
 | PolyZamboni 1.3.1 | chair | 1:10 | ✅ | 0.0 | 100.0 | 100.0 (7 folds) | 3/3 | 0 | 0 | 0 | 0 |
 | PolyZamboni 1.3.1 | chair | 1:20 | ✅ | 0.0 | 100.0 | 100.0 (7 folds) | 3/3 | 0 | 0 | 0 | 0 |
 | PolyZamboni 1.3.1 | table | 1:10 | ❌ no output | | | | | | | | |
 | PolyZamboni 1.3.1 | table | 1:20 | ✅ | 0.0 | 100.0 | 100.0 (8 folds) | 4/4 | 0 | 0 | 0 | 0 |
 | PolyZamboni 1.3.1 | sofa_curved | 1:10 | ❌ no output | | | | | | | | |
 | PolyZamboni 1.3.1 | sofa_curved | 1:20 | ✅ | 0.0 | 100.0 | 100.0 (5 folds) | 1/1 | 0 | 0 | 0 | 0 |
-| Lamina 0.3.0 (Folded) | chair | 1:10 | ❌ | 5.0 | 72.55 | 83.3 (6 folds) | 2/7 | 0 | 5 | 0 | 0 |
-| Lamina 0.3.0 (Folded) | chair | 1:20 | ❌ | 2.5 | 72.74 | 83.3 (6 folds) | 1/6 | 2 | 5 | 0 | 0 |
+| Lamina 0.3.0 (Folded) | chair | 1:10 | ❌ | 5.0 | 72.55 | 83.3 (6 folds) | 2/2 | 0 | 5 | 0 | 0 |
+| Lamina 0.3.0 (Folded) | chair | 1:20 | ❌ | 2.5 | 72.74 | 83.3 (6 folds) | 1/1 | 2 | 5 | 0 | 0 |
 | Lamina 0.3.0 (Folded) | table | 1:10 | ✅ | 0.0 | 100.0 | 100.0 (8 folds) | 4/4 | 0 | 0 | 0 | 0 |
 | Lamina 0.3.0 (Folded) | table | 1:20 | ✅ | 0.0 | 100.0 | 100.0 (8 folds) | 4/4 | 0 | 0 | 0 | 0 |
 | Lamina 0.3.0 (Folded) | sofa_curved | 1:10 | ❌ | 0.0 | 100.0 | 100.0 (6 folds) | — | 0 | 0 | 13 | 0 |
 | Lamina 0.3.0 (Folded) | sofa_curved | 1:20 | ❌ | 0.0 | 100.0 | 100.0 (6 folds) | — | 0 | 0 | 13 | 0 |
 | Ours v4.2.4 (negative control) | chair | 1:10 | ❌ | 0.0 | 100.0 | 62.5 (8 folds) | 6/6 | 0 | 0 | 2 | 0 |
 | Ours v4.2.4 (negative control) | chair | 1:20 | ❌ | 0.0 | 100.0 | 62.5 (8 folds) | 6/6 | 0 | 0 | 2 | 0 |
-| Ours v4.2.4 (negative control) | table | 1:10 | ❌ | 0.0 | 100.0 | 100.0 (4 folds) | 0/4 | 0 | 4 | 0 | 0 |
-| Ours v4.2.4 (negative control) | table | 1:20 | ❌ | 0.0 | 100.0 | 100.0 (4 folds) | 0/4 | 0 | 4 | 0 | 0 |
+| Ours v4.2.4 (negative control) | table | 1:10 | ❌ | 0.0 | 100.0 | 100.0 (4 folds) | — | 0 | 4 | 0 | 0 |
+| Ours v4.2.4 (negative control) | table | 1:20 | ❌ | 0.0 | 100.0 | 100.0 (4 folds) | — | 0 | 4 | 0 | 0 |
 | Ours v4.2.4 (negative control) | sofa_curved | 1:10 | ❌ | 0.0 | 100.0 | 62.5 (8 folds) | 6/6 | 0 | 0 | 2 | 0 |
 | Ours v4.2.4 (negative control) | sofa_curved | 1:20 | ❌ | 0.0 | 100.0 | 62.5 (8 folds) | 6/6 | 0 | 0 | 2 | 0 |
 
