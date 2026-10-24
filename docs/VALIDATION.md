@@ -1,4 +1,4 @@
-# Validation — Studio Flat-Pack Maker v4.3
+# Validation — Studio Flat-Pack Maker v4.3.0-preview.1 (testing version)
 
 *RIR2101 Interior Design 1 · 24 October 2026 · for the paper on the tool*
 
@@ -11,11 +11,11 @@ A convincing picture proves nothing on its own. Each build method needs three se
 | **3 · Physical build** | students build the printed sheet without corrective cuts | E1, FIT TEST, lift-and-place cycles | 🧪 studio tests pending |
 
 ## 1. Geometry (unchanged method, re-run on v4.3)
-- Waffle: 20 cases (chair, sofa, table, bed, cabinet × 1:10 / 1:20 × laser / hand-cut). `waffleValidate` plus the independent drop-assembly check in `tests/regress.html` (polygon-clipping only): 0 interference, 0 holes, one connected grid, X-parts on the floor. Rib geometry is byte-identical to v4.2.2 in 20 / 20 cases.
+- Waffle: 20 cases (chair, sofa, table, bed, cabinet × 1:10 / 1:20 × laser / hand-cut). `waffleValidate` plus the independent drop-assembly check in `testing/tests/regress.html` (polygon-clipping only): 0 interference, 0 holes, one connected grid, X-parts on the floor. Rib geometry is byte-identical to v4.2.2 in 20 / 20 cases.
 - Fold & Glue: score lines inside material and not on cut edges; true scale kept by the packer; 1:1 print checked by the 50 mm ruler, a vertical 50 mm ruler and the ID-card edge (85.6 mm).
-- Regression: 112 / 112 checks (Chromium, Linux, v3.4 baseline hosted in `tests/`).
+- Regression: 112 / 112 checks (Chromium, Linux, v3.4 baseline hosted in `testing/tests/`).
 
-## 2a. Assembly proof — Fold & Glue (`tests/fold_verify.js`)
+## 2a. Assembly proof — Fold & Glue (`testing/tests/fold_verify.js`)
 **Method.** The verifier reads only the printed sheet SVGs: red cut paths, blue score lines and part labels, with all packer transforms. For each part it (1) splits the outline into faces along the score lines, (2) builds the hinge graph, (3) searches the fold directions (±90° per hinge) that bring the main part to its target size, with the base panel at its height above the floor, (4) places separate parts by the stated rule (side profiles in the planes x = 0 and x = W with the tall post under the back; the chair back on the seat's rear edge, printed side to the rear; a separate top on the walls; the bed headboard on the back wall), (5) folds every glue tab and requires ≥ 95 % of its area to lie flat on a face of the model, and (6) checks that no two panels overlap. "Mountain" means away from the printed side, as the sheet rule says; a net passes only if **every** fold is a mountain fold. Zero board thickness is assumed.
 
 **Results.** 22 nets: 5 types × 1:10 / 1:20, plus arched and sloped tops for chair, sofa and bed.
@@ -87,15 +87,15 @@ Every part has a step; every part that would hang has a stated retention method;
 | Test | Answers | Sheet |
 |---|---|---|
 | **FIT TEST strip** (every Waffle / bookcase sheet) | which slot (−0.1 / 0 / +0.1 mm) fits the real board and cutter | on the sheet |
-| **E1** table 1:10, laser and hand-cut; upside down; turn upright; 5 lift-and-place cycles | do glued X2–X13 hold? real kerf? | `tests/prints/E1_table_1-10_waffle_*_v4_3.pdf` |
+| **E1** table 1:10, laser and hand-cut; upside down; turn upright; 5 lift-and-place cycles | do glued X2–X13 hold? real kerf? | `testing/tests/prints/E1_table_1-10_waffle_*_v4_3.pdf` |
 | **1:20 hand-cut** table / chair | does the web under a 3 mm slot split? (sets the 4 mm threshold) | from the tool |
-| **Class trial** 4 chairs + 1 table, 1:20, 0.5 mm Bristol | do students build the new chair back and the table tabs without corrective cuts? | `tests/prints/TRIAL_4chairs_1table_1-20_fold_v4_3.pdf` |
-| **Curved backs** (P3-7) flat / arched / sloped chair 1:20 | do the tabs reach and hold? | `tests/prints/P3-7_curved_backs_chair_1-20_A4.pdf` |
+| **Class trial** 4 chairs + 1 table, 1:20, 0.5 mm Bristol | do students build the new chair back and the table tabs without corrective cuts? | `testing/tests/prints/TRIAL_4chairs_1table_1-20_fold_v4_3.pdf` |
+| **Curved backs** (P3-7) flat / arched / sloped chair 1:20 | do the tabs reach and hold? | `testing/tests/prints/P3-7_curved_backs_chair_1-20_A4.pdf` |
 | **Template transfer**, **score coupon**, **glue timing** | paper stretch; cracking; minutes to handling strength for the class glue | — |
 
 ## Image-derived outlines
 Tested: a clean elevation traces to one shape; a room-like picture is flagged ("outline fills the picture / touches three edges") with the removed fragment shown; parts cannot print until the student confirms the outline and, for a Waffle interpretation, its Neufert width. Still open: the three image cases with students (clean elevation with known size; the same with a hand-checked outline; a perspective/room photo).
 
 ## Reproduce
-- Browser: `tests/regress.html` (all checks, including the fold verifier).
-- Headless (Linux, Chromium via Playwright): load `index.html`, add `tests/fold_verify.js`, call `FoldVerify.verifyModel(nestAll([piece], cfg).sheets.map(s => s.svg), id, spec, polygonClipping)`.
+- Browser: `testing/tests/regress.html` (all checks, including the fold verifier).
+- Headless (Linux, Chromium via Playwright): load `testing/index.html`, add `testing/tests/fold_verify.js`, call `FoldVerify.verifyModel(nestAll([piece], cfg).sheets.map(s => s.svg), id, spec, polygonClipping)`.

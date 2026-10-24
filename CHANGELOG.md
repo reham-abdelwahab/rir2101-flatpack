@@ -1,8 +1,12 @@
 # Changelog
 
-## v4.3 — 2026-10-24 (modification list v4.3: P1–P4 closed in code; physical values left to the studio)
+## Two versions from 24 Oct 2026
+- **Student release** (site root): **v4.2.3**. Unchanged by the preview below.
+- **Testing version** (`testing/`): **v4.3.0-preview.1**, red "EXPERIMENTAL — not for coursework production" banner, the same warning printed on every sheet, its own browser setting key, its own tests (`testing/tests/`) and handout. It is promoted to the root only after the geometry checks, the physical builds and a first-year usability test pass.
+
+## v4.3.0-preview.1 — 2026-10-24 (testing/ only: modification list P1–P4 closed in code; physical values left to the studio)
 **Fold & Glue — proven by folding the exported nets (P4-2)**
-- New `tests/fold_verify.js`: reads only the printed sheet SVGs, splits every part into faces along its blue lines, folds them in 3D, places the separate parts by the assembly rule, and checks size, fold direction, glue tabs and overlaps. 22 nets (5 types × 1:10/1:20 × flat/arched/sloped tops): all fold to the target W × D × H with mountain folds only; 110 of 110 tabs land on a face (162 hinges).
+- New `testing/tests/fold_verify.js`: reads only the printed sheet SVGs, splits every part into faces along its blue lines, folds them in 3D, places the separate parts by the assembly rule, and checks size, fold direction, glue tabs and overlaps. 22 nets (5 types × 1:10/1:20 × flat/arched/sloped tops): all fold to the target W × D × H with mountain folds only; 110 of 110 tabs land on a face (162 hinges).
 - What it found in v4.2.3 (8 of 22 passed): the chair/sofa back folded UP from the seat is a **valley** fold, so "all blue lines fold away from you" was false for every chair and sofa; a sloped back's raised corner left its tab hanging above the post; the table's tabs ran along the full leg edges and met the apron only near the top.
 - Fixes: the chair/sofa back **A1** is a separate panel (drawn mirrored, "printed side to the rear") with side tabs only up to the post top; the table tabs sit on the four apron ends (apron ≥ 6 mm). The fold rule is now true for every net. Fold & Glue strip note for chair/sofa backs (EN/AR).
 **Waffle and bookcase**
@@ -20,7 +24,7 @@
 **Wording and sheets**
 - The 3D view is labelled an illustration, not a fold test; checks say "geometry" (P1-10, P2-7). Score before cut: blue listed first on sheets and in the toolbar; scoring method in the H08 tip (P2-4). Glue timing in H10 (P2-5). "Change the scale of the whole model" (P2-6). Vertical 50 mm ruler and ID-card edge (85.6 mm) in the sheet margins (P2-9). "1 model = N parts" with a ☐ checklist (P3-2). Neufert table names the source size of each model size (P3-1). Paper-skinning sequence (P3-3).
 **Tests**
-- `tests/_baseline.html` (v3.4) is hosted, so the full regression runs from GitHub Pages (P3-5). 112 checks pass, including the fold verifier and its negative case. Waffle rib geometry: 20/20 identical to v4.2.2. Handout 3 A4 pages.
+- `tests/_baseline.html` and `testing/tests/_baseline.html` (v3.4) are hosted, so both regressions run from GitHub Pages (P3-5). 112 checks pass, including the fold verifier and its negative case. Waffle rib geometry: 20/20 identical to v4.2.2. Handout 3 A4 pages.
 
 ## v4.2.3 — 2026-10-24 (P0 fixes from the v4.3 modification list, before the student release)
 - **P0-1 · Bookcase locked below 1.5 mm board.** The bookcase uses slotted notches, the same joint as Waffle. On 0.5 mm Bristol it now shows a red check before printing and an EN/AR lock note in the piece editor; while a bookcase piece exists, choosing paper or a custom thickness under 1.5 mm is refused.

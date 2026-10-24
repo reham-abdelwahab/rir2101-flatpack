@@ -2,7 +2,9 @@
 
 A single, self-contained HTML tool that works offline. First-year interior-design students at AASTMT use it to make true-scale maquette sheets: they list their furniture pieces, pack all the parts onto A4/A3 sheets (a shelf packer, not a guaranteed minimum), and print them at 100 % or export layered laser SVGs (`01_CUT_RED`, `02_SCORE_BLUE`, `03_LABELS_BLACK`).
 
-Open it online at **https://reham-abdelwahab.github.io/rir2101-flatpack/**. Open it in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md).
+Open it online at **https://reham-abdelwahab.github.io/rir2101-flatpack/** — the **student release (v4.2.3)**.
+
+**Testing version:** https://reham-abdelwahab.github.io/rir2101-flatpack/testing/ — **v4.3.0-preview.1**, marked "Experimental — not for coursework production" on screen and on every printed sheet. It holds the v4.3 work (net-folding verifier, separate chair back, table tabs on the aprons, FIT TEST strip, rib assembly order, image quality gate) until physical builds and a first-year usability test pass; then it replaces the root. The rest of this README describes v4.3 unless it says otherwise. Open it in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md).
 
 Course team: Dr. Reham Ahmed Abdelwahab (Instructor) · Eng. Mariam Thamarat, MSc. · Eng. Mariam Emad, BSc. (TAs).
 
@@ -31,7 +33,7 @@ There are three tabs, each with an English and an Arabic label. Every step shows
 - The bookcase keeps its notched shelves (board ≥ 1.5 mm, like Waffle).
 - Since v4.3 every Waffle and bookcase sheet carries a **FIT TEST** strip (slots at base − 0.1, base, base + 0.1 mm). Students cut it first and set the result in A ("Slot fit"); the correction moves every slot and is part of the VERIFY stamp. Each Waffle sheet prints an explicit **assembly order** for every rib (upright or upside down, chosen by the fewest glued parts), the ribs that need glue, and the finished size, in English and Arabic.
 
-**Fold rule:** printed on every Fold & Glue sheet and under picture H08, in English and Arabic: *printed side out · score on the print · all blue lines fold away from you*. Every fold in the nets is a mountain fold — proven since v4.3 by the net-folding verifier (`tests/fold_verify.js`), which folds the exported sheets in 3D. It found that the v4.2 chair/sofa back was a valley fold; the back is now a separate panel glued to the posts, printed side to the rear.
+**Fold rule:** printed on every Fold & Glue sheet and under picture H08, in English and Arabic: *printed side out · score on the print · all blue lines fold away from you*. Every fold in the nets is a mountain fold — proven since v4.3 by the net-folding verifier (`testing/tests/fold_verify.js`), which folds the exported sheets in 3D. It found that the v4.2 chair/sofa back was a valley fold; the back is now a separate panel glued to the posts, printed side to the rear.
 
 **Counts:** for example "2 furniture types · 5 models · 13 cut-out parts · 1 A4 sheet". Every part carries its model's id (CH1-A1, TB1-…).
 
@@ -52,10 +54,11 @@ To check a sheet, a TA opens **Help → I · Instructor → Verify a Printed She
 ## Regression checks
 
 The laptop has no Python or Node, so the tests run in a browser.
-- **Online:** open https://reham-abdelwahab.github.io/rir2101-flatpack/tests/regress.html — the v3.4 baseline is hosted beside it (`tests/_baseline.html`), so every check runs.
-- **Offline:** start the server with `pwsh -NoProfile -File tests/serve.ps1` (port 8765, or `$env:PORT`) and open `tests/regress.html`. `?base=` (empty) runs the self-checks only.
+- **Student release:** `tests/regress.html` (97 checks against the hosted v3.4 baseline).
+- **Testing version:** `testing/tests/regress.html` (112 checks, including the fold verifier).
+- Online, prefix either with https://reham-abdelwahab.github.io/rir2101-flatpack/. Offline, start `pwsh -NoProfile -File tests/serve.ps1` (port 8765, or `$env:PORT`). `?base=` (empty) runs the self-checks only.
 
-Validation for the paper (geometry, assembly, physical) is in [docs/VALIDATION.md](docs/VALIDATION.md). Studio test prints are in `tests/prints/`.
+Validation for the paper (geometry, assembly, physical) is in [docs/VALIDATION.md](docs/VALIDATION.md). Studio test prints are in `testing/tests/prints/`.
 
 The page runs these checks:
 - **v3 behaviour:** the archetype × scale × sheet sweep must match the baseline exactly for bed, cabinet and bookcase; chair, sofa and table changed on purpose in v4.3 and are proven by the fold verifier. It also covers fit, ruler, stamp, Help Code and verify box, the image trace, offline loading and the icons.
