@@ -2,7 +2,8 @@
 
 ## Two versions from 24 Oct 2026
 - **Student release** (site root): **v4.2.3**. Unchanged by the preview below.
-- **Testing version** (`testing/`): **v4.3.0-preview.1**, red "EXPERIMENTAL — not for coursework production" banner, the same warning printed on every sheet, its own browser setting key, its own tests (`testing/tests/`) and handout. It is promoted to the root only after the geometry checks, the physical builds and a first-year usability test pass.
+- **Testing version** (`testing/`): **v4.3.0-preview.1**, red "EXPERIMENTAL — not for coursework production" banner, the same warning printed on every sheet, its own browser setting key, its own tests (`testing/tests/`) and handout. It is promoted to the root only after the gates in `docs/PROGRESS_PLAN.md` close (geometry ✅; physical builds and a first-year usability test pending).
+- Both suites re-run headless at `b972c85` (24 Oct, Chromium 153): student 97/97, testing 112/112.
 
 ## v4.3.0-preview.1 — 2026-10-24 (testing/ only: modification list P1–P4 closed in code; physical values left to the studio)
 **Fold & Glue — proven by folding the exported nets (P4-2)**
@@ -31,6 +32,7 @@
 - **P0-2 · Bookcase build pictures.** The bookcase no longer receives the Fold & Glue strip (score, fold, glue tabs). It gets its own strip (H07 → H09 → bookcase picture → H12) with an EN/AR caption and tip, and every bookcase sheet carries an assembly picture drawn from its geometry: front view, uprights V1–V3 (slots from the front edge), shelves H (slots from the back edge), "no folding · board t mm · glue only if loose". The archetype tip "Egg-crate slots need zero glue" is replaced.
 - **P0-3 · No false overflow warning.** Fit in the editor (Step 2 issue list, diagnostic card 1, "Make it fit") now comes from packing the open piece on its own, as in PRINT & BUILD. Table 140 × 80 cm, 1:10, A4, Waffle: "all parts fit A4 (2 sheets)" instead of "net overflows A4". The one-sheet Fold & Glue preview says "Preview layout only — packs on N sheets" when the packed parts fit. The overflow message now says to change the scale of the whole model, furniture and room plan together.
 - **P0-4 · Waffle failure advice matches the error.** "Increase the spacing or use thinner board" is gone. Image pieces: "check and repair the traced outline first". Web too thin: increase rib spacing. Piece too small: larger scale for the whole model, or Fold & Glue. The advice is also shown at the top of the Waffle panel's check list.
+- **Known limit (found by the v4.3 verifier, not fixed in this release):** chair and sofa backs are a valley fold, so the printed fold rule is wrong for that line (fold the back and its side tabs toward you); table tabs meet the apron only near the top (glue the top, trim the rest). Bed and cabinet nets pass. Fixed in v4.3.0-preview.1.
 - No waffle geometry changes: 20/20 cases give identical cut paths and sheet counts to v4.2.2. Regression 97/97 (7 new P0 checks). Handout still 3 A4 pages, regenerated under the same filename.
 
 ## v4.2.2 — 2026-10-24 (Waffle locked below 1.5 mm board, after the first paper test)

@@ -1,5 +1,7 @@
 # Handover to Claude Code — Studio Flat-Pack Maker (RIR2101) → GitHub Pages + verification stamp
 
+> **Historical record — closed.** v3.4 → GitHub Pages handover (18 Oct 2026). Kept for the paper trail; current status is in [README](../README.md), [VALIDATION](VALIDATION.md) and [PROGRESS_PLAN](PROGRESS_PLAN.md).
+
 Date: 18 Oct 2026 · Owner: Reham Ahmed Abdelwahab (AASTMT, RIR2101 Interior Design 1) · Written by the Cowork session that built v3.4.
 
 ## 1. What the tool is

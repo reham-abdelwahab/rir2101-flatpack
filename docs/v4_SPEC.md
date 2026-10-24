@@ -1,5 +1,7 @@
 # Studio Flat-Pack Maker v4 — redesign spec from Reham's print test (18 Oct 2026, 22:35)
 
+> **Historical record — closed.** v4 redesign spec (18 Oct 2026). Kept for the paper trail; current status is in [README](../README.md), [VALIDATION](VALIDATION.md) and [PROGRESS_PLAN](PROGRESS_PLAN.md).
+
 Source: Reham printed v3.6 and reviewed it. Measurements on paper are correct (ruler and part sizes). Everything below is what must change. This supersedes the "optional later" list in `flatpack-tool-status-2026-10-18.md`.
 
 ## A. Defects found in the print test

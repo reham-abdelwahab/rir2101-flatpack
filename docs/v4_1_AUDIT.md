@@ -1,5 +1,7 @@
 # Flat-Pack Maker v4.0.1 — independent audit of fold lines and waffle slots (20 Oct 2026)
 
+> **Historical record — closed.** v4.0.1 audit (20 Oct 2026). Kept for the paper trail; current status is in [README](../README.md), [VALIDATION](VALIDATION.md) and [PROGRESS_PLAN](PROGRESS_PLAN.md).
+
 Question from Reham: how do we verify that fold lines are in the right position and direction, and that waffle notches have the right size, location and number?
 
 Method: Playwright (Chromium, network blocked) loads the live `index.html` (v4.0.1), calls the tool's own functions (`waffleForPiece`, `waffleSilhouettes`, `#print-test=e2` sheets) and the rib polygons / score lines are checked with an independent Python geometry library (shapely). The checker is NOT the tool's `waffleValidate`, so the tool is not grading itself. Scripts: Cowork container `/home/claude/v401/audit.py, audit4.py, audit7.py`; the reproduction in audit7.py is also the reference for the fix below.

@@ -2,9 +2,24 @@
 
 A single, self-contained HTML tool that works offline. First-year interior-design students at AASTMT use it to make true-scale maquette sheets: they list their furniture pieces, pack all the parts onto A4/A3 sheets (a shelf packer, not a guaranteed minimum), and print them at 100 % or export layered laser SVGs (`01_CUT_RED`, `02_SCORE_BLUE`, `03_LABELS_BLACK`).
 
-Open it online at **https://reham-abdelwahab.github.io/rir2101-flatpack/** — the **student release (v4.2.3)**.
+## Two versions
 
-**Testing version:** https://reham-abdelwahab.github.io/rir2101-flatpack/testing/ — **v4.3.0-preview.1**, marked "Experimental — not for coursework production" on screen and on every printed sheet. It holds the v4.3 work (net-folding verifier, separate chair back, table tabs on the aprons, FIT TEST strip, rib assembly order, image quality gate) until physical builds and a first-year usability test pass; then it replaces the root. The rest of this README describes v4.3 unless it says otherwise. Open it in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md).
+| | Student release | Testing version |
+|---|---|---|
+| URL | https://reham-abdelwahab.github.io/rir2101-flatpack/ | https://reham-abdelwahab.github.io/rir2101-flatpack/testing/ |
+| Version | **v4.2.3** (`index.html`) | **v4.3.0-preview.1** (`testing/index.html`) |
+| Use | coursework | studio trials only — red "Experimental — not for coursework production" banner (EN/AR) and the same warning on every printed sheet |
+| Regression | `tests/regress.html` — 97 / 97 | `testing/tests/regress.html` — 112 / 112, incl. the net-folding verifier |
+| Handout | `RIR2101_FlatPack_Student_Handout_v4_0_1.pdf` | `testing/RIR2101_FlatPack_Student_Handout_PREVIEW.pdf` |
+| Browser setting key | `bi-guide-hidden` | `preview:bi-guide-hidden` (no student projects are stored in the browser; the Help Code holds them) |
+
+Both suites were re-run headless (Chromium 153, Linux) on 24 Oct 2026 at commit `b972c85`: 97 / 97 and 112 / 112.
+
+**Known limit of the student release (v4.2.3), fixed only in testing:** the net-folding verifier passes 8 of 22 v4.2.3 nets. Bed and cabinet are correct. In the **chair and sofa** nets the back folds *up* from the seat, which is a valley fold, so the printed rule "all blue lines fold away from you" is wrong for that one line: **fold the back and its two side tabs toward you**. In the **table** net the tabs run along the full leg edge and meet the apron only near the top: glue the top part of each tab and trim the rest. Tell students this in class until v4.3 is promoted. See [docs/VALIDATION.md](docs/VALIDATION.md) §2a.
+
+**Promotion.** The testing version replaces the root only when the gates in [docs/PROGRESS_PLAN.md](docs/PROGRESS_PLAN.md) are closed: geometry (done), physical builds (E1, FIT TEST, class trial, curved backs) and a first-year usability test.
+
+Open either version in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md). Sections below marked **(v4.3, testing only)** are not in the student release.
 
 Course team: Dr. Reham Ahmed Abdelwahab (Instructor) · Eng. Mariam Thamarat, MSc. · Eng. Mariam Emad, BSc. (TAs).
 
@@ -31,9 +46,9 @@ There are three tabs, each with an English and an Arabic label. Every step shows
 - Since v4.2 the sofa uses the exact sections of its boxes (seat, arms, back). Validation also checks drop assembly: every Y-rib can be lowered onto the standing X-ribs, there are no windows, the X-ribs stand on the floor, and the grid is one connected piece.
 - Validation must pass before printing. It checks that every slot is board + kerf wide, that the web between slots is at least 2 × board, that every crossing has its top/bottom slot pair meeting at mid-height, that every slot reaches the rib edge (no closed slots), and that rib count × board fits inside the piece.
 - The bookcase keeps its notched shelves (board ≥ 1.5 mm, like Waffle).
-- Since v4.3 every Waffle and bookcase sheet carries a **FIT TEST** strip (slots at base − 0.1, base, base + 0.1 mm). Students cut it first and set the result in A ("Slot fit"); the correction moves every slot and is part of the VERIFY stamp. Each Waffle sheet prints an explicit **assembly order** for every rib (upright or upside down, chosen by the fewest glued parts), the ribs that need glue, and the finished size, in English and Arabic.
+- **(v4.3, testing only)** Every Waffle and bookcase sheet carries a **FIT TEST** strip (slots at base − 0.1, base, base + 0.1 mm). Students cut it first and set the result in A ("Slot fit"); the correction moves every slot and is part of the VERIFY stamp. Each Waffle sheet prints an explicit **assembly order** for every rib (upright or upside down, chosen by the fewest glued parts), the ribs that need glue, and the finished size, in English and Arabic.
 
-**Fold rule:** printed on every Fold & Glue sheet and under picture H08, in English and Arabic: *printed side out · score on the print · all blue lines fold away from you*. Every fold in the nets is a mountain fold — proven since v4.3 by the net-folding verifier (`testing/tests/fold_verify.js`), which folds the exported sheets in 3D. It found that the v4.2 chair/sofa back was a valley fold; the back is now a separate panel glued to the posts, printed side to the rear.
+**Fold rule:** printed on every Fold & Glue sheet and under picture H08, in English and Arabic: *printed side out · score on the print · all blue lines fold away from you*. **(v4.3, testing only)** Every fold in the nets is a mountain fold — proven by the net-folding verifier (`testing/tests/fold_verify.js`), which folds the exported sheets in 3D. It found that the v4.2 chair/sofa back was a valley fold; in v4.3 the back is a separate panel glued to the posts, printed side to the rear. In the student release v4.2.3 the rule still has that one exception (see above).
 
 **Counts:** for example "2 furniture types · 5 models · 13 cut-out parts · 1 A4 sheet". Every part carries its model's id (CH1-A1, TB1-…).
 

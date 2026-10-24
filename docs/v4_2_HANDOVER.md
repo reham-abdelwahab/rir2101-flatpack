@@ -1,5 +1,7 @@
 # Handover for Claude Code: Flat-Pack v4.2 (waffle sofa + cabinet), 20 Oct 2026
 
+> **Historical record — closed.** v4.2 handover (20 Oct 2026). Kept for the paper trail; current status is in [README](../README.md), [VALIDATION](VALIDATION.md) and [PROGRESS_PLAN](PROGRESS_PLAN.md).
+
 **Repo:** `reham-abdelwahab/rir2101-flatpack`, base = tag `v4.1` (commit 7600639).
 **Source of findings:** Cowork independent audit, project doc `claude/flatpack-v4-1-independent-audit-2026-10-20.md`.
 **Scope:** waffle geometry only. Fold & Glue and From-image passed the audit and must not change.
