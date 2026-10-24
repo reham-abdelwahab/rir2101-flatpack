@@ -282,6 +282,10 @@
     .v4-method img { width: 52px; height: 52px; }
     .v4-method b { display: block; font-size: 14px; } .v4-method i { display: block; font-size: 15px; color: #5C5343; }
     .v4-method.active { border-color: var(--v4-ink); background: var(--v4-amber-l); }
+    .v4-method.v4-locked, .v4-seg button.v4-locked { opacity: .45; border-style: dashed; cursor: not-allowed; }
+    .v4-lock-note { font-size: 13px; color: #8A2B12; background: #FBE9E3; border: 1px solid #E8B4A3; border-radius: 12px; padding: 8px 12px; }
+    .v4-lock-note i { font-style: normal; display: block; text-align: right; font-size: 14px; }
+    .v4-lock-note.hidden { display: none !important; }
     .v4-method-panel { display: flex; flex-direction: column; gap: 12px; }
     .v4-editor-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
     .v4-seg { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -500,13 +504,13 @@
             <label class="block text-[11px] font-bold uppercase tracking-wider text-paper-700 mb-1.5">Sheet Thickness (mm):</label>
             <div class="flex gap-1.5">
               <select id="select-thickness" onchange="updateThicknessSelect(this.value)" class="w-full p-2 rounded-xl border border-paper-300 bg-white text-xs font-bold text-paper-900">
-                <option value="0.5" selected>0.5 mm — Bristol Card</option>
-                <option value="1.5">1.5 mm — Maquette Carton</option>
+                <option value="0.5" selected>0.5 mm — Bristol Card (Fold &amp; Glue only)</option>
+                <option value="1.5">1.5 mm — Maquette Carton (Fold or Waffle)</option>
                 <option value="2.0">2.0 mm — Greyboard</option>
                 <option value="3.0">3.0 mm — Foam / MDF</option>
                 <option value="custom">Custom Caliper (mm)...</option>
               </select>
-              <input type="number" id="inp-custom-thickness" value="1.5" min="0.2" max="10" step="0.1" oninput="updateCustomThickness(this.value)" class="hidden w-16 px-2 py-1 rounded-xl border border-cutred bg-white text-xs font-mono font-bold text-cutred" title="Custom board thickness in mm">
+              <input type="number" id="inp-custom-thickness" value="1.5" min="0.2" max="10" step="0.1" oninput="updateCustomThickness(this.value)" onchange="commitCustomThickness(this.value)" class="hidden w-16 px-2 py-1 rounded-xl border border-cutred bg-white text-xs font-mono font-bold text-cutred" title="Custom board thickness in mm">
             </div>
           </div>
           <div class="hidden" aria-hidden="true">
@@ -544,6 +548,7 @@
           <button type="button" id="ed-m-waffle" class="v4-method" onclick="setPieceMethod('waffle')"><img data-img="S06" alt=""><span><b>Waffle (laser)</b><i lang="ar" dir="rtl">تعشيق</i></span></button>
           <button type="button" id="ed-m-image" class="v4-method" onclick="setPieceMethod('image')"><img data-img="S07" alt=""><span><b>From image</b><i lang="ar" dir="rtl">من صورة</i></span></button>
         </div>
+        <p id="waffle-lock-note" class="v4-lock-note hidden" role="note">Waffle is locked: it needs board 1.5 mm or thicker. Paper or Bristol card makes loose joints, so use Fold &amp; Glue — or set the material in A to 1.5 mm board or thicker. <i lang="ar" dir="rtl">التعشيق مُقفل: يحتاج كرتونًا بسماكة ١٫٥ مم أو أكثر. الورق أو البريستول يجعل الوصلات سائبة، لذا استخدم الطي واللصق — أو اختر في A كرتونًا بسماكة ١٫٥ مم أو أكثر.</i></p>
 
         <!-- type + real cm (fold and waffle) -->
         <div id="ed-shape" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -909,6 +914,7 @@
               </div>
               <div id="wf-counts" class="v4-pill"></div>
               <ul id="wf-checks" class="v4-checks"></ul>
+              <p id="wf-board-note" class="v4-note"></p>
               <p class="v4-note">Open lattice: skin it with paper for solid faces, or use Fold &amp; Glue. <i lang="ar" dir="rtl">شبكة مفتوحة: غطّها بالورق لأسطح مصمتة، أو استخدم الطي واللصق.</i></p>
             </div>
             <div class="space-y-3">
@@ -1580,7 +1586,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.2.1';
+    const TOOL_VERSION = '4.2.2';
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -2008,11 +2014,44 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       document.getElementById('sheet-status-tag').textContent = `${state.sheetSize} Sheet (${dimText}) // Scale 1:${safeScale}`;
     }
 
+    // v4.2.2 · waffle needs real board: never paper or Bristol card (studio test 24 Oct: 600 gsm card in 1.5 mm slots was loose)
+    const WAFFLE_MIN_BOARD = 1.5;
+    const usesWaffle = p => !!p && (p.method === 'waffle' || ((p.method === 'image' || p.archetype === 'image') && p.imageBuild === 'waffle'));
+    const projectUsesWaffle = () => { try { return pieces.some(usesWaffle); } catch (e) { return false; } };
+    const WAFFLE_LOCK_MSG = 'Waffle needs board 1.5 mm or thicker — not paper or Bristol card / التعشيق يحتاج كرتونًا بسماكة ١٫٥ مم أو أكثر — ليس الورق أو البريستول';
+    function refreshWaffleLock() {
+      const locked = state.thicknessMm < WAFFLE_MIN_BOARD;
+      ['ed-m-waffle', 'img-build-waffle'].forEach(id => {
+        const b = document.getElementById(id); if (!b) return;
+        b.classList.toggle('v4-locked', locked); b.setAttribute('aria-disabled', locked ? 'true' : 'false');
+        b.title = locked ? 'Locked: set the material in A to 1.5 mm board or thicker' : '';
+      });
+      const note = document.getElementById('waffle-lock-note');
+      if (note) note.classList.toggle('hidden', !locked);
+      const bn = document.getElementById('wf-board-note');
+      if (bn) bn.innerHTML = `Cut the ribs from <b>${state.thicknessMm} mm board</b> — the thickness set in A. Never paper or Bristol card: the slots would be loose. <i lang="ar" dir="rtl">اقطع الأضلاع من كرتون بسماكة ${String(state.thicknessMm).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]).replace('.', '٫')} مم كما في A. لا تستخدم الورق أو البريستول أبدًا: ستصبح الشقوق سائبة.</i>`;
+    }
+    function refuseThinBoardForWaffle(t) {
+      if (!(t < WAFFLE_MIN_BOARD) || !projectUsesWaffle()) return false;
+      showToast('A piece uses Waffle: change it to Fold & Glue before choosing paper / قطعة تستخدم التعشيق: غيّرها إلى الطي واللصق قبل اختيار الورق');
+      return true;
+    }
+
     function updateThicknessSelect(val) {
       const customInp = document.getElementById('inp-custom-thickness');
+      if (val !== 'custom' && refuseThinBoardForWaffle(parseFloat(val))) {
+        const sel = document.getElementById('select-thickness');
+        const prev = [...sel.options].find(o => o.value !== 'custom' && parseFloat(o.value) === state.thicknessMm);
+        sel.value = prev ? prev.value : 'custom';
+        customInp.classList.toggle('hidden', !!prev);
+        customInp.value = state.thicknessMm;
+        refreshWaffleLock();
+        return;
+      }
       if (val === 'custom') {
         customInp.classList.remove('hidden');
-        state.thicknessMm = parseFloat(customInp.value) || 0;
+        const cv = parseFloat(customInp.value) || 0;
+        if (!(cv < WAFFLE_MIN_BOARD && projectUsesWaffle())) state.thicknessMm = cv;
       } else {
         customInp.classList.add('hidden');
         state.thicknessMm = parseFloat(val);
@@ -2021,15 +2060,24 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       renderA4Sheet();
       render3DFoldPreview();
       runPrePrintDiagnostics();
+      refreshWaffleLock();
       showToast(`Board thickness set to ${state.thicknessMm} mm`);
     }
 
     function updateCustomThickness(val) {
       const parsed = parseFloat(val);
-      state.thicknessMm = isNaN(parsed) ? 0 : parsed;
+      const t = isNaN(parsed) ? 0 : parsed;
+      if (t < WAFFLE_MIN_BOARD && projectUsesWaffle()) return;   // keep the last valid board while typing; the change event explains
+      state.thicknessMm = t;
       renderA4Sheet();
       render3DFoldPreview();
       runPrePrintDiagnostics();
+      refreshWaffleLock();
+    }
+    function commitCustomThickness(val) {
+      const t = parseFloat(val);
+      if (refuseThinBoardForWaffle(isNaN(t) ? 0 : t)) document.getElementById('inp-custom-thickness').value = state.thicknessMm;
+      refreshWaffleLock();
     }
 
     function updateJoinery(val) {
@@ -4020,7 +4068,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'A2', img: 'P02', en: 'Pick the scale and the sheet: at 1:20, 1 m becomes 5 cm.', ar: 'اختر المقياس والورقة: بمقياس ١:٢٠ يصبح المتر ٥ سم.' },
       { key: 'B1', img: 'P03', en: 'Add every piece you need — they share the same sheets.', ar: 'أضف كل القطع التي تحتاجها — تُرصّ معًا على نفس اللوحات.' },
       { key: 'M-fold', img: 'P05', en: 'Fold & Glue: score blue, cut red, glue the tabs.', ar: 'طيّ ولصق: حزّز الأزرق، اقطع الأحمر، الصق الألسنة.' },
-      { key: 'M-waffle', img: 'P06', en: 'Waffle: ribs cross at half-depth slots — no glue.', ar: 'تعشيق: أضلاع تتقاطع في شقوق بنصف العمق — بدون غراء.' },
+      { key: 'M-waffle', img: 'P06', en: 'Waffle: ribs of 1.5 mm board or thicker cross at half-depth slots. Not for paper or Bristol card.', ar: 'تعشيق: أضلاع من كرتون ١٫٥ مم أو أسمك تتقاطع في شقوق بنصف العمق. لا يصلح للورق أو البريستول.' },
       { key: 'M-image', img: 'P07', en: 'Prepare the image outside → upload → check the shape → enter a measured size → trace.', ar: 'جهّز الصورة خارج الأداة ← ارفعها ← راجع الشكل ← أدخل مقاسًا مقيسًا ← تتبّع.' },
       { key: 'C1', img: 'P05', en: 'Fix every red line before you print.', ar: 'أصلح كل سطر أحمر قبل الطباعة.' },
       // tab 2 · PRINT & BUILD
@@ -4039,7 +4087,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'H08', img: 'H08', en: 'Printed side out · score on the print · all blue lines fold away from you.', ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك.' },
       { key: 'H09', img: 'H09', en: 'Then cut the red lines on a cutting mat.', ar: 'ثم اقطع الخطوط الحمراء على قاعدة القص.' },
       { key: 'H10', img: 'H10', en: 'A tiny bead of glue on each tab; hold 20 s.', ar: 'نقطة غراء صغيرة على كل لسان؛ اضغط ٢٠ ثانية.' },
-      { key: 'H11', img: 'H11', en: 'Stand the X-ribs, drop the Y-ribs into the slots.', ar: 'ثبّت أضلاع X ثم أنزل أضلاع Y في الشقوق.',
+      { key: 'H11', img: 'H11', en: 'Waffle: board 1.5 mm or thicker, never paper. Stand the X-ribs, drop the Y-ribs into the slots.', ar: 'التعشيق: كرتون ١٫٥ مم أو أسمك، وليس الورق أبدًا. ثبّت أضلاع X ثم أنزل أضلاع Y في الشقوق.',
         tipEn: 'Table: assemble upside down on a flat bench, with the tabletop edges resting on the bench. Chair: secure the two middle ribs with a small dot of glue at their joints.',
         tipAr: 'الطاولة: جمّع النموذج مقلوبًا على سطح عمل مستوٍ، بحيث تستند حواف الأضلاع التي تكوّن سطح الطاولة إلى سطح العمل. الكرسي: ثبّت الضلعين الأوسطين بنقطة صغيرة من الغراء عند وصلاتهما.' },
       { key: 'H12', img: 'H12', en: 'Place the finished pieces on your plan.', ar: 'ضع القطع الجاهزة على مسقطك.' },
@@ -4420,7 +4468,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
             `<path d="M ${P2(Math.min(2, w / 4))},0.35 l 1.1,1.9 l -2.2,0 z" fill="#1E1B18"/>` };
       });
       const iso = waffleIsoSvg(res, 46, 34);
-      const notes = [`${pieceName} — ASSEMBLY`, '▲ = TOP edge of every rib', 'X-ribs: slots from the TOP', `Y-ribs: slots from the BOTTOM · slot ${res.slotWidth.toFixed(2)} mm`];
+      const notes = [`${pieceName} — ASSEMBLY`, `▲ = TOP edge · board ${res.t} mm, not paper`, 'X-ribs: slots from the TOP', `Y-ribs: slots from the BOTTOM · slot ${res.slotWidth.toFixed(2)} mm`];
       parts.push({ name: 'ASSEMBLY', piece: pieceNo, pieceName, w: Math.max(iso.w, 46), h: iso.h + 2 + notes.length * 2.2, area: 0, isDiagram: true, cut: '', score: '',
         label: `<g>${iso.svg}</g>` + notes.map((n, i) => `<text x="0" y="${P2(iso.h + 2.4 + i * 2.2)}" font-size="${i ? 1.5 : 1.7}"${i ? ' fill="#5C5343"' : ' font-weight="bold"'}>${escapeXml(n)}</text>`).join('') });
       return parts;
@@ -4739,8 +4787,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     function setPieceQty(v) { const p = pieces[activePiece]; if (!p) return; p.qty = Math.max(1, Math.min(20, parseInt(v) || 1)); refreshV4Soon(); }
     function setPieceMethod(m) {
       const p = pieces[activePiece]; if (!p) return;
+      if ((m === 'waffle' || (m === 'image' && p.imageBuild === 'waffle')) && state.thicknessMm < WAFFLE_MIN_BOARD) {
+        if (m === 'image') p.imageBuild = 'profile';
+        else { refreshWaffleLock(); showToast(WAFFLE_LOCK_MSG); document.getElementById('waffle-lock-note').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); return; }
+      }
       p.method = m;
-      if ((m === 'waffle' || (m === 'image' && p.imageBuild === 'waffle')) && state.thicknessMm < 1.5) { document.getElementById('select-thickness').value = '1.5'; updateThicknessSelect('1.5'); showToast('Waffle (laser) uses 1.5 mm board / التعشيق يستخدم كرتون ١٫٥ مم'); }
       state.joinery = m === 'waffle' ? 'slot' : 'fold';
       document.getElementById('select-joinery').value = state.joinery;
       showMethodPanel(m);
@@ -4754,6 +4805,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         const b = document.getElementById('ed-m-' + k); b.classList.toggle('active', k === m); b.setAttribute('aria-checked', k === m);
       });
       document.getElementById('ed-shape').classList.toggle('hidden', m === 'image');
+      refreshWaffleLock();
       if (m === 'image') syncImageToProject();
       const p = pieces[activePiece];
       if (p && m === 'image') {
@@ -4772,7 +4824,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         document.getElementById('wf-kerf-hand').classList.toggle('active', p.kerf === 'hand');
       }
     }
-    function setImageBuild(b) { const p = pieces[activePiece]; if (!p) return; p.imageBuild = b; if (b === 'waffle' && state.thicknessMm < 1.5) { document.getElementById('select-thickness').value = '1.5'; updateThicknessSelect('1.5'); } showMethodPanel('image'); refreshV4(); }
+    function setImageBuild(b) { const p = pieces[activePiece]; if (!p) return; if (b === 'waffle' && state.thicknessMm < WAFFLE_MIN_BOARD) { refreshWaffleLock(); showToast(WAFFLE_LOCK_MSG); return; } p.imageBuild = b; showMethodPanel('image'); refreshV4(); }
     function setImageWaffleWidth(v) { const p = pieces[activePiece]; if (!p) return; p.widthCm = Math.max(5, +v || 45); refreshV4Soon(); }
     function setWaffleSpacing(v) { const p = pieces[activePiece]; if (!p) return; p.spacing = +v; refreshV4Soon(); }
     function setWaffleKerf(k) { const p = pieces[activePiece]; if (!p) return; p.kerf = k; showMethodPanel('waffle'); refreshV4(); }
@@ -4826,6 +4878,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       pieces.forEach((p, i) => {
         const tag = `#${i + 1} ${pieceDisplayName(p)}`;
         if (isImgPiece(p) && !(p.parts && p.parts.length)) items.push({ cls: 'err', en: `${tag}: trace the image first`, ar: 'تتبّع الصورة أولًا', act: `editPiece(${i})`, actLabel: '✎' });
+        else if (pieceMethod(p) === 'waffle' && state.thicknessMm < WAFFLE_MIN_BOARD) items.push({ cls: 'err', en: `${tag}: Waffle needs board 1.5 mm or thicker (now ${state.thicknessMm} mm) — set the material in A, or use Fold & Glue`, ar: 'التعشيق يحتاج كرتونًا بسماكة ١٫٥ مم أو أكثر — غيّر الخامة في A أو استخدم الطي واللصق', act: `goStep('A')`, actLabel: 'A' });
         else if (pieceMethod(p) === 'waffle') {
           const wf = waffleForPiece(p, cfg);
           if (wf && !wf.validation.ok) items.push({ cls: 'err', en: `${tag}: waffle check failed — ${wf.validation.errors[0]}`, ar: 'فحص التعشيق لم ينجح — زِد المسافة أو استخدم كرتونًا أرق', act: `editPiece(${i})`, actLabel: '✎' });
@@ -5033,6 +5086,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         v4Ready = true;
         renderHandout();
         refreshV4();
+        refreshWaffleLock();
         v4LoadImages();
         // tests only: #print-test=e2 | handout builds the print pages without a dialog (headless print-to-PDF)
         const pt = (location.hash.match(/print-test=(\w+)/) || [])[1];

@@ -505,8 +505,23 @@ function overlapCheck(w, svgId) {
     await sleep(400);
     const firstChecks = fresh.document.getElementById('check-list').textContent;
     log(fresh.eval('state.thicknessMm') === 0.5 && !/too thick|Thick/i.test(firstChecks), 'I First open: Fold & Glue on 0.5 mm Bristol, no board warning', firstChecks.slice(0, 80));
+    // v4.2.2: Waffle is locked below 1.5 mm board (studio test 24 Oct: paper in 1.5 mm slots was loose)
+    const fp = () => fresh.eval('pieces[activePiece]'), fd = id => fresh.document.getElementById(id);
     fresh.setPieceMethod('waffle');
-    log(fresh.eval('state.thicknessMm') === 1.5, 'I Switching a piece to Waffle sets 1.5 mm board');
+    log(fp().method !== 'waffle' && fresh.eval('state.thicknessMm') === 0.5 && !fd('waffle-lock-note').classList.contains('hidden') && fd('ed-m-waffle').classList.contains('v4-locked') && fd('ed-m-waffle').getAttribute('aria-disabled') === 'true',
+      'I Waffle is locked on 0.5 mm Bristol: the piece stays Fold & Glue, the material is not changed, the EN/AR lock note shows', `method ${fp().method}, t ${fresh.eval('state.thicknessMm')}`);
+    fd('select-thickness').value = '1.5'; fresh.updateThicknessSelect('1.5'); fresh.setPieceMethod('waffle');
+    log(fp().method === 'waffle' && fd('waffle-lock-note').classList.contains('hidden') && !fd('ed-m-waffle').classList.contains('v4-locked') && /1\.5 mm board/.test(fd('wf-board-note').textContent) && /كرتون/.test(fd('wf-board-note').textContent),
+      'I On 1.5 mm board Waffle unlocks; the panel says which board to cut (EN + AR)', fd('wf-board-note').textContent.slice(0, 60));
+    fd('select-thickness').value = '0.5'; fresh.updateThicknessSelect('0.5');
+    const ci = fd('inp-custom-thickness'); fd('select-thickness').value = 'custom'; fresh.updateThicknessSelect('custom'); ci.value = '0.8'; ci.dispatchEvent(new Event('input')); ci.dispatchEvent(new Event('change'));
+    log(fresh.eval('state.thicknessMm') === 1.5 && ci.value === '1.5', 'I With a Waffle piece, paper (0.5 mm or custom 0.8 mm) is refused and the board stays 1.5 mm', `t ${fresh.eval('state.thicknessMm')}, box ${ci.value}`);
+    fresh.eval('state.thicknessMm = 0.5'); fresh.refreshV4(); await sleep(300);
+    log(/Waffle needs board 1\.5 mm or thicker/.test(fd('check-list').textContent), 'I An old Help Code with Waffle on 0.5 mm shows a red check before printing');
+    fresh.eval('state.thicknessMm = 1.5'); fd('select-thickness').value = '1.5'; fresh.updateThicknessSelect('1.5');
+    const wsv = fresh.nestAll([{ ...fp(), qty: 1 }], { scale: 10, sheetSize: 'A3', thicknessMm: 1.5, name: 'T', id: '1', course: 'RIR2101' }).sheets.map(x => x.svg).join('');
+    log(/board 1\.5 mm, not paper/.test(wsv), 'I The printed assembly note names the board ("board 1.5 mm, not paper")');
+    fresh.setPieceMethod('fold');
     const boxes = ['slider-w', 'slider-d', 'slider-h', 'slider-sub', 'wf-spacing', 'img-bgtol', 'img-thr', 'img-clean', 'img-tol'].filter(id => !fresh.document.getElementById(id + '-num'));
     const nb = fresh.document.getElementById('slider-w-num'); nb.value = '61'; nb.dispatchEvent(new Event('input'));
     log(boxes.length === 0 && fresh.eval('state.w') === 61 && fresh.document.getElementById('wf-spacing').closest('details.v4-adv') && fresh.document.getElementById('img-tol').closest('details.v4-adv'), 'I Numeric box next to every slider (typing 61 sets W = 61 cm); tolerance / simplify / rib spacing under Advanced', boxes.join(','));

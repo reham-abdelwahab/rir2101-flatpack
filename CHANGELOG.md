@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.2.2 — 2026-10-24 (Waffle locked below 1.5 mm board, after the first paper test)
+- Why: Reham's first E1 try used 600 gsm card in slots drawn for 1.5 mm board, and the joints were loose. Paper and Bristol card are too thin and too flexible for a waffle; the tool can only size the slot from the thickness chosen in A.
+- **Lock.** With material under 1.5 mm, the Waffle button and "Waffle from the outline" are greyed out and refuse with an EN/AR message; a note under the build methods explains why. Choosing Waffle no longer raises the material silently to 1.5 mm.
+- **Guard.** While any piece uses Waffle, choosing 0.5 mm Bristol or a custom thickness under 1.5 mm is refused (the board stays as it was). A Waffle piece on thin board (for example from an old Help Code) shows a red check, so it cannot reach printing unnoticed.
+- **Guidance.** The material list says "Bristol Card (Fold & Glue only)" and "Maquette Carton (Fold or Waffle)". The Waffle panel names the board to cut ("Cut the ribs from 1.5 mm board … never paper", EN + AR). The printed assembly note reads "▲ = TOP edge · board 1.5 mm, not paper". Guide M-waffle and handout H11 carry the rule; M-waffle no longer says "no glue", which contradicted the H11 tip.
+- No geometry changes: all 20 waffle cases (5 types × 1:10/1:20 × laser/hand) give identical cut paths and sheet counts to v4.2.1. The handout is still 3 A4 pages, regenerated under the same filename.
+- Tests: `tests/regress.html` replaces "Switching a piece to Waffle sets 1.5 mm board" with 5 lock checks. 90 / 90 pass against the v3.4 baseline.
+
 ## v4.2.1 — 2026-10-20 (assembly tip after the independent v4.2 re-audit)
 - H11 now carries a bilingual tip, shown in the waffle build strip and on handout page 2: "Table: assemble upside down on a flat bench, with the tabletop edges resting on the bench. Chair: secure the two middle ribs with a small dot of glue at their joints." The Arabic text is next to it.
 - Why: the middle X-ribs of the chair (seat band) and the table (tabletop band) do not reach the floor. A Y-rib rests on an X-rib, so these ribs are held only by friction or glue. This is correct geometry, but it needs the tip. Paper test E1 confirms the physical stability.
