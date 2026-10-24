@@ -15,14 +15,14 @@
 <body>
 <h1>FlatPack regressions</h1>
 <p>Compares the candidate build against a baseline build (the last verified master).
-Usage: <code>tests/regress.html?cand=../index.html&amp;base=../_baseline.html</code>.
-Without a baseline only the self-checks run. Results are also on <code>window.REGRESS</code>.</p>
+Usage: <code>tests/regress.html</code> runs every check against the hosted v3.4 baseline (<code>tests/_baseline.html</code>); <code>?base=</code> (empty) runs the self-checks only. Results are also on <code>window.REGRESS</code>.</p>
 <pre id="out">running…</pre>
 <div class="frames"><iframe id="fc"></iframe><iframe id="fb"></iframe></div>
+<script src="fold_verify.js"></script>
 <script>
 const qs = new URLSearchParams(location.search);
 const CAND = qs.get('cand') || '../index.html';
-const BASE = qs.has('base') ? (qs.get('base') || null) : '_baseline.html';   // the v3.4 baseline is hosted beside this page
+const BASE = qs.has('base') ? (qs.get('base') || null) : '_baseline.html';   // v4.3 (P3-5): the v3.4 baseline is hosted beside this page
 const out = document.getElementById('out');
 const results = [];
 const log = (ok, name, detail = '') => { results.push({ ok, name, detail }); render(); };
@@ -172,8 +172,13 @@ function overlapCheck(w, svgId) {
   const vText = sc.every(r => r.svg.includes('Studio Flat-Pack Maker v' + wc.__S.v));
   log(vText, 'Version printed in Tab 1 title block (all 72 combinations)');
   if (sb) {
-    const diffs = sc.filter((r, i) => normalize(r.svg) !== normalize(sb[i].svg) || r.fits !== sb[i].fits).map(r => r.key);
-    log(diffs.length === 0, '72-combination sweep identical to baseline (geometry, fit flags, labels)', diffs.slice(0, 6).join(', '));
+    // v4.3 (P4-2): the chair / sofa back is a separate panel and the table tabs moved to the apron ends — changed on purpose,
+    // proven by the folding verifier below. Every other archetype must stay identical to the v3.4 baseline.
+    const CHANGED = /^(chair|sofa|table) /;
+    const diffs = sc.filter((r, i) => !CHANGED.test(r.key) && (normalize(r.svg) !== normalize(sb[i].svg) || r.fits !== sb[i].fits)).map(r => r.key);
+    log(diffs.length === 0, 'Sweep identical to baseline for bed / cabinet / bookcase (36 combinations: geometry, fit flags, labels)', diffs.slice(0, 6).join(', '));
+    const changed = sc.filter((r, i) => CHANGED.test(r.key) && normalize(r.svg) !== normalize(sb[i].svg)).length;
+    log(changed > 0, 'Chair / sofa / table nets differ from v3.4 only where v4.3 changed them on purpose (checked by the fold verifier)', `${changed} of 36 changed`);
   }
   log(sc.filter(r => !r.fits).length === (sb ? sb.filter(r => !r.fits).length : sc.filter(r => !r.fits).length), 'Overflow reported, never shrunk', `${sc.filter(r => !r.fits).length} of 72 combinations report "does not fit"`);
 
@@ -608,41 +613,100 @@ function overlapCheck(w, svgId) {
     const bks = w2.eval('v4Nest').sheets.map(s => s.svg).join('');
     log(/ASSEMBLY/.test(bks) && /No folding: no blue lines/.test(bks) && !/Egg-crate slots need zero glue/.test(w2.document.documentElement.innerHTML), 'P0-2 Bookcase sheet carries its assembly picture; the "zero glue" claim is gone');
     // P0-4: failure advice matches the error and never says "thinner board"
-    const bad = { method: 'image', archetype: 'image', imageBuild: 'waffle', qty: 1, widthCm: 45, label: 'X', captureScale: 20, parts: [{ w: 3, h: 40, label: 'X', shapes: [{ kind: 'cut', closed: true, pts: [[0, 0], [3, 0], [3, 40], [0, 40]] }] }] };
+    const bad = { method: 'image', archetype: 'image', imageBuild: 'waffle', qty: 1, widthCm: 45, widthOk: true, traceOk: true, simplify: 'test', label: 'X', captureScale: 20, parts: [{ w: 3, h: 40, label: 'X', shapes: [{ kind: 'cut', closed: true, pts: [[0, 0], [3, 0], [3, 40], [0, 40]] }] }] };
     w2.eval('pieces = ' + JSON.stringify([bad])); const it = w2.collectV4Checks(w2.v4Cfg(), w2.nestAll(w2.eval('pieces'), w2.v4Cfg())).filter(i => i.cls === 'err' && /waffle check failed/.test(i.en));
     log(it.length === 1 && /الحد الخارجي/.test(it[0].ar) && /traced outline/.test(it[0].en) && !/أرق/.test(w2.document.documentElement.innerHTML.replace(/data:[^"']+/g, '')), 'P0-4 Image Waffle failure: "check and repair the traced outline first" (EN/AR); no "thinner board" advice anywhere', it[0] && it[0].ar);
     log(w2.__errors.length === 0, 'P0 checks: no console errors', w2.__errors.join(' | '));
   }
 
-  // ---------------- v4.2.4 · fold exceptions found by the v4.3 net-folding verifier ----------------
+  // ---------------- v4.3 · P1–P3 (modification list 24 Oct) ----------------
   {
     const f3 = document.createElement('iframe'); f3.style.display = 'none'; document.body.appendChild(f3);
     const w3 = await load(f3, CAND); await sleep(300);
-    const cfg = { scale: 20, sheetSize: 'A4', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' };
-    const sv = list => w3.nestAll(list.map(([a, m]) => w3.newPiece(a, m)), cfg).sheets.map(x => x.svg).join('');
-    const mix = sv([['chair', 'fold'], ['table', 'fold'], ['sofa', 'fold']]), bc = sv([['bed', 'fold'], ['cabinet', 'fold']]);
-    const wf = w3.nestAll([{ ...w3.newPiece('chair', 'waffle') }], { ...cfg, scale: 10, thicknessMm: 1.5 }).sheets.map(x => x.svg).join('');
-    log(/EXCEPT chair\/sofa BACK \+ side tabs: fold TOWARD you/.test(mix) && /إلا ظهر الكرسي أو الكنبة وألسنته: تُطوى نحوك/.test(mix) && /TABLE: glue only the top of each leg tab, trim the rest/.test(mix) && /الطاولة: الصق أعلى كل لسان فقط وقصّ الباقي/.test(mix),
-      'v4.2.4 Chair, sofa and table Fold & Glue sheets print the two fold exceptions (EN/AR)');
-    log(!/EXCEPT chair|TABLE: glue only/.test(bc) && !/EXCEPT chair|TABLE: glue only/.test(wf), 'v4.2.4 Bed/cabinet and Waffle-only sheets carry no exception (their nets pass the verifier)');
-    const host = document.createElement("div"); host.innerHTML = w3.nestAll([w3.newPiece('chair', 'fold'), w3.newPiece('table', 'fold')], cfg).sheets[0].svg; document.body.appendChild(host);
-    const bb = [...host.querySelectorAll('text')].map(t => ({ t: t.textContent, b: t.getBBox() }));
-    const ex = bb.filter(o => /EXCEPT|TABLE: glue|إلا ظهر|الطاولة/.test(o.t)), others = bb.filter(o => !ex.includes(o) && o.b.y < 31);
-    const hit = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
-    log(ex.length === 4 && ex.every(o => o.b.x >= 91 && o.b.x + o.b.width <= 202.5 && o.b.y >= 19.6 && o.b.y + o.b.height <= 31) && !ex.some(a => others.some(o => hit(a.b, o.b))) && !ex.some(a => ex.some(c => c !== a && hit(a.b, c.b))),
-      'v4.2.4 Exception lines sit in the free band beside the legend: no overlap with the header, ruler, fold rule or each other', ex.map(o => `${o.t.slice(0, 12)} ${o.b.x.toFixed(1)}–${(o.b.x + o.b.width).toFixed(1)}`).join(' | '));
-    const a = w3.nestAll([w3.newPiece('chair', 'fold'), w3.newPiece('table', 'fold')], cfg), b = w3.nestAll([w3.newPiece('chair', 'fold'), w3.newPiece('table', 'fold')], { ...cfg, stampVersion: '4.2.3' });
-    log(w3.eval('STAMP_COMPATIBLE').includes('4.2.3') && a.sheets.length === b.sheets.length && a.sheets.every((x, i) => x.stamp !== b.sheets[i].stamp && x.svg.length > 0), 'v4.2.4 Same packing as v4.2.3; v4.2.3 nested-sheet stamps are still accepted by the TA verify box');
-    host.remove();
-    // single-piece sheet (longer legend): exception stacked at the right edge, clear of the legend
-    for (const ar of ['chair', 'table']) {
-      w3.selectArchetype(ar); await sleep(250);
-      const h2 = document.createElement('div'); h2.innerHTML = w3.document.getElementById('a4-cut-svg').outerHTML; document.body.appendChild(h2);
-      const b2 = [...h2.querySelectorAll('text')].map(t => ({ t: t.textContent, b: t.getBBox() })), e2 = b2.filter(o => /EXCEPT|TABLE: glue|إلا ظهر|الطاولة/.test(o.t)), o2 = b2.filter(o => !e2.includes(o) && o.b.y < 31 && o.b.width > 0);
-      log(e2.length === 2 && !e2.some(a => o2.some(o => hit(a.b, o.b))) && !hit(e2[0].b, e2[1].b), `v4.2.4 Single-piece ${ar} sheet: exception (EN over AR) clear of the legend and ruler`, e2.map(o => `${o.b.x.toFixed(1)}–${(o.b.x + o.b.width).toFixed(1)} y${o.b.y.toFixed(1)}`).join(' | '));
-      h2.remove();
+    const d3 = id => w3.document.getElementById(id), A = w3.eval('archetypes');
+    const mk = (a, o = {}) => ({ archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty: 1, method: 'waffle', curveOffsets: [0, 0, 0, 0, 0], spacing: 10, kerf: 'laser', ...o });
+    const cfg = { scale: 10, sheetSize: 'A4', thicknessMm: 1.5, name: 'T', id: '1', course: 'RIR2101' };
+    // P1-1 FIT TEST strip: laser 1.40/1.50/1.60/1.70, hand 1.60/1.70/1.80/1.90, bookcase 1.40/1.50/1.60/1.70
+    const fit = n => n.parts.find(p => p.isTest);
+    const fl = fit(w3.nestAll([mk('table')], cfg)), fh = fit(w3.nestAll([mk('table', { kerf: 'hand' })], cfg)), fb = fit(w3.nestAll([mk('shelf', { method: 'fold' })], { ...cfg, scale: 20 }));
+    log(fl && /1\.40.*1\.50.*1\.60.*1\.70/s.test(fl.label) && />D</.test(fl.label) && fh && /1\.60.*1\.70.*1\.80.*1\.90/s.test(fh.label) && fb && /1\.40.*1\.50.*1\.60.*1\.70/s.test(fb.label) && /M 0,0 L 8\.30,0/.test(fl.cut), 'P1-1 FIT TEST strip on Waffle (laser/hand) and bookcase sheets: slots A–D at base − 0.1, base, base + 0.1, base + 0.2');
+    // P1-2 the measured correction moves every slot, and the stamp (P3-4) changes with it
+    const r0 = w3.waffleForPiece(mk('table'), cfg).res, r1 = w3.waffleForPiece(mk('table', { slotAdj: 0.1 }), cfg).res;
+    const st = o => w3.nestAll([mk('table', o)], cfg).sheets.map(s => s.stamp).join();
+    log(Math.abs(r0.slotWidth - 1.5) < 1e-9 && Math.abs(r1.slotWidth - 1.6) < 1e-9 && st({}) !== st({ kerf: 'hand' }) && st({}) !== st({ slotAdj: 0.1 }) && /slot1\.50/.test(w3.nestAll([mk('table')], cfg).sheets[0].canon), 'P1-2/P3-4 FIT TEST correction applies to every slot; laser, hand-cut and corrected sheets carry different stamps');
+    // P1-3/P1-4/P4-3 rib list and order from the actual ribs
+    const tp = w3.waffleAssemblyPlan(r0), c10 = w3.waffleAssemblyPlan(w3.waffleForPiece(mk('chair'), cfg).res), c20 = w3.waffleAssemblyPlan(w3.waffleForPiece(mk('chair'), { ...cfg, scale: 20 }).res);
+    const tsv = w3.nestAll([mk('table')], cfg).sheets.map(s => s.svg).join('');
+    log(tp.mode === 'upside-down' && w3.ribRange(tp.retain) === 'X2–X13' && /X2–X13 do not reach the floor/.test(tsv) && /لا تصل إلى الأرض/.test(tsv) && c10.retain.filter(n => /^X/.test(n)).length === 2 && c20.mode === 'upright' && c20.retain.length === 0,
+      'P1-3/P1-4 Floating ribs named on the sheet from the real ribs (table 1:10 X2–X13, chair 1:10 two, chair 1:20 none), EN + AR', `chair 1:10 ${w3.ribRange(c10.retain)}`);
+    log(Math.abs(tp.size.w - 140) < 0.01 && Math.abs(tp.size.d - 80) < 0.01 && Math.abs(tp.size.h - 75) < 0.01 && /1\. Upside down/.test(tsv) && /Finished ≈ 140\.0 × 80\.0 × 75\.0 mm/.test(tsv), 'P4-3 Insertion order for every rib + finished size incl. outer-rib thickness (table 1:10 = 140 × 80 × 75 mm)');
+    // P1-5 Fold & Glue on 1.5 mm board: always a warning, with the Bristol fix
+    w3.eval("state.studentName='T'; state.studentId='1'; pieces = [{ ...newPiece('table'), w: 140, d: 80, h: 75 }]; state.thicknessMm = 1.5"); w3.refreshV4();
+    const ci = w3.collectV4Checks(w3.v4Cfg(), w3.nestAll(w3.eval('pieces'), w3.v4Cfg()));
+    log(ci.some(i => i.cls === 'warn' && /Fold & Glue on 1\.5 mm board cracks/.test(i.en) && /0\.5 mm Bristol/.test(i.en)) && /1\.5 mm — Maquette Carton \(Waffle, bookcase\)/.test(d3('select-thickness').innerHTML), 'P1-5 Fold & Glue on 1.5 mm board warns for every model size (not only small ones); material label changed');
+    // P1-6 shallow hand-cut slots at 1:20 warn
+    const wd = w3.waffleMinSlotDepth(w3.waffleForPiece(mk('table', { kerf: 'hand' }), { ...cfg, scale: 20 }).res);
+    w3.eval(`closeEditor(); setScale(20); pieces = [${JSON.stringify(mk('table', { kerf: 'hand' }))}]`); w3.refreshV4();
+    const ci2 = w3.collectV4Checks(w3.v4Cfg(), w3.nestAll(w3.eval('pieces'), w3.v4Cfg()));
+    log(wd < 4 && ci2.some(i => i.cls === 'warn' && /hand-cut slots only/.test(i.en)), 'P1-6 Hand-cut table at 1:20 (3 mm slots): shallow-slot warning (laser, 1:10 or Fold & Glue)', `min slot depth ${wd.toFixed(2)} mm`);
+    w3.setScale(10);
+    // P1-7 / P1-8 / P1-10 wording
+    log(/stack 10 pieces/.test(d3('board-measure-note').textContent) && !/Waffle \(laser\)/.test(d3('ed-methods').textContent) && /not a fold test/.test(d3('test-lab-panel').textContent) && /HAND-CUT/.test(w3.nestAll([mk('table', { kerf: 'hand' })], cfg).sheets.map(s => s.svg).join('')),
+      'P1-7/P1-8/P1-10 Board-measuring helper; "Waffle" (process shown separately, also on the sheet); 3D preview labelled an illustration');
+    // P1-11 / P1-12 image pieces: Neufert width confirmed, traced outline confirmed
+    const img = { method: 'image', archetype: 'image', imageBuild: 'waffle', qty: 1, label: 'X', captureScale: 10, widthCm: null, widthOk: false, traceOk: false,
+      parts: [{ w: 40, h: 40, label: 'X', shapes: [{ kind: 'cut', closed: true, pts: [[0, 0], [40, 0], [40, 40], [0, 40]] }] }] };
+    const chk = o => { w3.eval(`pieces = [${JSON.stringify({ ...img, ...o })}]`); return w3.collectV4Checks(w3.v4Cfg(), w3.nestAll(w3.eval('pieces'), w3.v4Cfg())).filter(i => i.cls === 'err').map(i => i.en).join(' | '); };
+    log(/confirm it is ONLY the furniture/.test(chk({})) && /confirm its real width/.test(chk({ traceOk: true })) && !/real width|ONLY the furniture/.test(chk({ traceOk: true, widthCm: 180, widthOk: true })) && w3.eval("newPiece('chair').widthCm") === null,
+      'P1-11/P1-12 Traced pieces: no 45 cm default; width must be confirmed; the outline must be confirmed before printing');
+    // P2 wording and pictures
+    const g = k => w3.eval(`biGet('${k}')`);
+    log(/glue stick/.test(g('H07').en) && /Score first/.test(g('H08').tipEn) && /Wait 10 min/.test(g('H10').en) && /WHOLE model/.test(g('H05').en) && g('HC1') && g('UD1') && /does not reach|names the ribs/.test(g('H11').tipEn) && !/two middle ribs/.test(g('H11').tipEn),
+      'P2-1/2/3/4/5/6 Captions: no wet glue, scoring method, glue timing, whole-model scale; hand-cut and upside-down pictures; rib tip generic');
+    const ts = w3.nestAll([mk('table')], cfg).sheets[0].svg;
+    log(/ID-CARD LONG EDGE = 85\.6 mm/.test(ts) && /SCORE FIRST/.test(ts) && ts.indexOf('SCORE FIRST') < ts.indexOf('CUT THROUGH') && /1 model = 22 parts/.test(w3.nestAll([mk('table')], cfg).sheets.map(s => s.svg).join('')),
+      'P2-4/P2-9/P3-2 Sheet: blue (score) listed before red (cut), vertical ruler + ID-card edge, "1 model = N parts" checklist');
+    log(/Neufert size/.test(d3('img-step-2').textContent) && d3('img-build-fold') && /Profile study/.test(d3('img-build-profile').textContent) && d3('img-simplify') && /STUDENT-DRAWN/.test(w3.imageParts({ parts: [{ w: 20, h: 20, label: 'P', shapes: [{ kind: 'cut', closed: true, pts: [[0, 0], [20, 0], [20, 20], [0, 20]] }, { kind: 'score', closed: false, pts: [[0, 10], [20, 10]] }] }] }, 10, 1, 'X')[0].label),
+      'P2-8/10/11/12 Image tab: Neufert size, three named outputs, simplification steps, student-drawn folds labelled');
+    log(w3.__errors.length === 0, 'P1–P3 checks: no console errors', w3.__errors.join(' | '));
+  }
+
+  // ---------------- v4.3 · P4-2 net-folding verifier (tests/fold_verify.js, independent of the tool's geometry) ----------------
+  if (typeof FoldVerify !== 'undefined') {
+    const A = wc.eval('archetypes'), rows = [], bad = [];
+    for (const a of ['chair', 'sofa', 'table', 'bed', 'cabinet']) for (const sc2 of [10, 20]) for (const curve of [[0, 0, 0, 0, 0], [0, -14, -20, -14, 0], [-15, -8, 0, 8, 15]]) {
+      if (curve[1] && !['chair', 'sofa', 'bed'].includes(a)) continue;
+      const p = { archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty: 1, method: 'fold', curveOffsets: curve }, f = 10 / sc2;
+      const n = wc.nestAll([p], { scale: sc2, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' });
+      const r = FoldVerify.verifyModel(n.sheets.map(s => s.svg), { chair: 'CH1', sofa: 'SF1', table: 'TB1', bed: 'BD1', cabinet: 'CB1' }[a], { archetype: a, W: p.w * f, D: p.d * f, H: p.h * f, sub: p.subH * f, curve }, wc.polygonClipping);
+      rows.push(r); if (!r.ok) bad.push(`${a} 1:${sc2} [${curve}]: ${[...r.valley, ...r.tabsUnmated, ...r.notes].slice(0, 2).join('; ')}`);
     }
-    log(w3.__errors.length === 0, 'v4.2.4 checks: no console errors', w3.__errors.join(' | '));
+    log(bad.length === 0, `P4-2 Every exported Fold & Glue net folds to its target W × D × H with mountain folds only; every glue tab lands on a face; no overlaps (${rows.length} nets, ${rows.reduce((s, r) => s + r.hinges, 0)} hinges, ${rows.reduce((s, r) => s + r.tabsMated, 0)} tabs)`, bad.slice(0, 3).join(' | '));
+    // negative case: the v4.2 chair net (back folded up from the seat) must fail the printed rule
+    const old = `<svg xmlns="http://www.w3.org/2000/svg"><g id="01_CUT_RED"><g><path d="M 0,90 L 0,50 L 0,45 L 0,0 L 45,0 L 45,45 L 45,50 L 45,90 Z"/></g></g><g id="02_SCORE_BLUE"><g><line x1="0" y1="45" x2="45" y2="45"/><line x1="0" y1="50" x2="45" y2="50"/></g></g><g id="03_LABELS_BLACK"><g><text x="22" y="20" font-weight="bold">CH1-A1 BACK</text><text x="22" y="48" font-weight="bold">A2 SEAT</text><text x="22" y="70">A3 FRONT</text></g></g></svg>`;
+    const rOld = FoldVerify.verifyModel([old], 'CH1', { archetype: 'chair', W: 45, D: 5, H: 85, sub: 40 }, wc.polygonClipping);
+    log(!rOld.ok && rOld.valley.some(v => /BACK–SEAT|SEAT–BACK/.test(v)), 'P4-2 Negative case: a back folded up from the seat is reported as a valley fold (breaks the printed rule)', rOld.valley.join('; '));
+  }
+
+  // ---------------- v4.3.0 · promotion to the student release (24 Oct 2026) ----------------
+  {
+    const html = await (await fetch(CAND.split('?')[0], { cache: 'no-store' })).text();
+    const allSvg = wc.nestAll([{ ...wc.eval("newPiece('chair')"), qty: 1 }], { scale: 10, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' }).sheets.map(s => s.svg).join('');
+    log(wc.eval('TOOL_VERSION') === '4.3.0' && wc.eval('PREVIEW_BUILD') === false && !wc.document.getElementById('preview-banner') && !/EXPERIMENTAL/.test(wc.document.title) && !/EXPERIMENTAL|NOT FOR COURSEWORK/.test(allSvg),
+      'Promotion: v4.3.0 student build — no experimental banner, title or sheet watermark');
+    log(JSON.stringify(wc.eval('STAMP_COMPATIBLE')) === '["4.3.0"]' && /bi-guide-hidden/.test(html) && !/preview:bi-guide-hidden/.test(html),
+      'Promotion: only v4.3.0 stamps verify here (v4.2.x nets differ); student browser key, not the preview key');
+    let ptr = '';
+    try {
+      const set = (id, v) => { const e = wc.document.getElementById(id); if (e) e.value = v; };
+      wc.__vfPieces = [{ ...wc.eval("newPiece('chair')"), qty: 1 }];
+      set('vf-ver', '4.2.4'); set('vf-stamp', 'AAAA-AAAA'); set('vf-name', 'T'); set('vf-id', '1');
+      wc.verifySheet(); ptr = wc.document.getElementById('vf-result').innerHTML;
+    } catch (e) { ptr = 'error: ' + e.message; }
+    log(/v4\.2\.4\//.test(ptr) && /الإصدار/.test(ptr), 'Promotion: a v4.2.x stamp is sent to the kept v4.2.4 page for checking (EN/AR)', ptr.slice(0, 120));
+    let prev = '';
+    try { prev = await (await fetch(new URL('../v4.2.4/index.html', new URL(CAND.split('?')[0], location.href)), { cache: 'no-store' })).text(); } catch (e) {}
+    log(/TOOL_VERSION = '4\.2\.4'/.test(prev) && /id="previous-banner"/.test(prev) && /PREVIOUS VERSION v4\.2\.4/.test(prev), 'Promotion: previous version v4.2.4 kept at v4.2.4/ with a bilingual "previous version" banner');
   }
 
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));

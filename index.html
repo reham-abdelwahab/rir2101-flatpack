@@ -375,7 +375,7 @@
             <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-paper-200 text-paper-800 hidden md:inline-block">RIR2101 Studio</span>
             <span id="header-version-pill" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-paper-200 text-paper-800" title="Tool version">v</span>
           </div>
-          <p class="text-[11px] text-paper-700 hidden sm:block">Custom Scale 2D Cut-Sheet Generator + Interactive 3D Fold & Diagnostic Test Lab</p>
+          <p class="text-[11px] text-paper-700 hidden sm:block">True-scale 2D cut sheets + 3D shape illustration and geometry checks</p>
           <p class="text-[10px] text-paper-700 hidden md:block"><span class="team-credit-en"></span></p>
         </div>
       </div>
@@ -508,19 +508,27 @@
             <div class="flex gap-1.5">
               <select id="select-thickness" onchange="updateThicknessSelect(this.value)" class="w-full p-2 rounded-xl border border-paper-300 bg-white text-xs font-bold text-paper-900">
                 <option value="0.5" selected>0.5 mm — Bristol Card (Fold &amp; Glue only)</option>
-                <option value="1.5">1.5 mm — Maquette Carton (Fold or Waffle)</option>
+                <option value="1.5">1.5 mm — Maquette Carton (Waffle, bookcase)</option>
                 <option value="2.0">2.0 mm — Greyboard</option>
                 <option value="3.0">3.0 mm — Foam / MDF</option>
                 <option value="custom">Custom Caliper (mm)...</option>
               </select>
               <input type="number" id="inp-custom-thickness" value="1.5" min="0.2" max="10" step="0.1" oninput="updateCustomThickness(this.value)" onchange="commitCustomThickness(this.value)" class="hidden w-16 px-2 py-1 rounded-xl border border-cutred bg-white text-xs font-mono font-bold text-cutred" title="Custom board thickness in mm">
             </div>
+            <p id="board-measure-note" class="v4-note">Measure your board: stack 10 pieces, measure the stack, divide by 10. Enter the <b>finished</b> thickness — a mounted print adds about 0.1 mm. <i lang="ar" dir="rtl">قِس الكرتون: ضع ١٠ قطع فوق بعضها، قِس الارتفاع، واقسم على ١٠. أدخل السماكة النهائية — الطباعة الملصوقة تضيف نحو ٠٫١ مم.</i></p>
+            <label id="slot-adj-wrap" class="v4-field">Slot fit from your FIT TEST strip <i lang="ar" dir="rtl">مقاس الشق من شريط الاختبار</i>
+              <select id="select-slot-adj" onchange="setSlotAdj(this.value)">
+                <option value="-0.1">A · tighter (−0.1 mm)</option>
+                <option value="0" selected>B · as drawn (0)</option>
+                <option value="0.1">C · looser (+0.1 mm)</option>
+                <option value="0.2">D · looser (+0.2 mm)</option>
+              </select></label>
           </div>
           <div class="hidden" aria-hidden="true">
             <label class="block text-[11px] font-bold uppercase tracking-wider text-paper-700 mb-1.5">Joinery Method:</label>
             <select id="select-joinery" onchange="updateJoinery(this.value)" class="w-full p-2 rounded-xl border border-paper-300 bg-white text-xs font-bold text-paper-900">
               <option value="fold">Fold & Glue Net (With Tabs)</option>
-              <option value="slot">Waffle (laser) / bookcase notches</option>
+              <option value="slot">Waffle / bookcase notches</option>
             </select>
           </div>
         </div>
@@ -548,7 +556,7 @@
         <div class="v4-sub">Build method <i lang="ar" dir="rtl">طريقة البناء</i></div>
         <div id="ed-methods" class="v4-methods" role="radiogroup">
           <button type="button" id="ed-m-fold" class="v4-method" onclick="setPieceMethod('fold')"><img data-img="S05" alt=""><span><b>Fold &amp; Glue</b><i lang="ar" dir="rtl">طيّ ولصق</i></span></button>
-          <button type="button" id="ed-m-waffle" class="v4-method" onclick="setPieceMethod('waffle')"><img data-img="S06" alt=""><span><b>Waffle (laser)</b><i lang="ar" dir="rtl">تعشيق</i></span></button>
+          <button type="button" id="ed-m-waffle" class="v4-method" onclick="setPieceMethod('waffle')"><img data-img="S06" alt=""><span><b>Waffle</b><i lang="ar" dir="rtl">تعشيق</i></span></button>
           <button type="button" id="ed-m-image" class="v4-method" onclick="setPieceMethod('image')"><img data-img="S07" alt=""><span><b>From image</b><i lang="ar" dir="rtl">من صورة</i></span></button>
         </div>
         <p id="waffle-lock-note" class="v4-lock-note hidden" role="note">Waffle is locked: it needs board 1.5 mm or thicker. Paper or Bristol card makes loose joints, so use Fold &amp; Glue — or set the material in A to 1.5 mm board or thicker. <i lang="ar" dir="rtl">التعشيق مُقفل: يحتاج كرتونًا بسماكة ١٫٥ مم أو أكثر. الورق أو البريستول يجعل الوصلات سائبة، لذا استخدم الطي واللصق — أو اختر في A كرتونًا بسماكة ١٫٥ مم أو أكثر.</i></p>
@@ -786,15 +794,15 @@
               <i class="fa-solid fa-cube"></i>
             </span>
             <div>
-              <h3 class="font-display font-bold text-sm sm:text-base text-white">🧪 Pre-Print Test Lab & Interactive 3D Fold Checker</h3>
-              <p class="text-[11px] text-paper-300">Test how your flat cut sheet folds & slots together into a 3D maquette before printing</p>
+              <h3 class="font-display font-bold text-sm sm:text-base text-white">3D illustration of the target shape <span lang="ar" dir="rtl">توضيح ثلاثي الأبعاد للشكل المطلوب</span></h3>
+              <p class="text-[11px] text-paper-300">Shows the shape your piece should become — it is <b>not</b> a fold test of your printed net. <span lang="ar" dir="rtl">ليس اختبار طيّ للوحة المطبوعة.</span></p>
             </div>
           </div>
 
           <div class="flex items-center gap-2">
             <button type="button" onclick="animateFoldTest()" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-paper-900 font-bold text-xs flex items-center gap-1.5 transition shadow-xs">
               <i class="fa-solid fa-play text-[10px]"></i>
-              <span>Auto-Fold Test</span>
+              <span>Animate</span>
             </button>
           </div>
         </div>
@@ -814,9 +822,9 @@
             <!-- Fold & Assemble Slider (0% Flat Sheet -> 100% Assembled Maquette) -->
             <div class="mt-2 pt-2 border-t border-paper-700">
               <div class="flex justify-between text-[11px] font-bold mb-1">
-                <span class="text-paper-300">0% Flat Cut Sheet</span>
-                <span class="text-amber-300">Drag to Fold Blue Score Lines ➔</span>
-                <span class="text-emerald-300">100% 3D Maquette</span>
+                <span class="text-paper-300">0% flat</span>
+                <span class="text-amber-300">Drag to animate the illustration ➔</span>
+                <span class="text-emerald-300">100% target shape</span>
               </div>
               <input type="range" id="slider-fold-test" min="0" max="100" value="85" oninput="updateFoldSimulation(this.value)" class="w-full accent-amber-400 cursor-pointer">
             </div>
@@ -825,7 +833,7 @@
           <!-- Right 5 Cols: 4 Live Pre-Print Diagnostic Checks -->
           <div class="md:col-span-5 flex flex-col justify-between gap-2">
             <div class="text-[11px] font-mono uppercase tracking-wider text-amber-300 font-bold flex items-center justify-between">
-              <span>4-Point Diagnostic Report</span>
+              <span>Geometry checks (not a physical test)</span>
               <span id="diag-overall-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px]">ALL READY</span>
             </div>
 
@@ -880,10 +888,10 @@
         <!-- Sheet Header Toolbar -->
         <div id="sheet-toolbar" class="no-print w-full flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-paper-200">
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-cutred"></span>
-            <span class="text-xs font-bold text-paper-900">RED = Cut 100% Through</span>
-            <span class="w-3 h-3 rounded-full bg-scoreblue ml-2"></span>
-            <span class="text-xs font-bold text-paper-900">BLUE DASHED = Score & Fold 90°</span>
+            <span class="w-3 h-3 rounded-full bg-scoreblue"></span>
+            <span class="text-xs font-bold text-paper-900">1 · BLUE DASHED = Score first, fold later</span>
+            <span class="w-3 h-3 rounded-full bg-cutred ml-2"></span>
+            <span class="text-xs font-bold text-paper-900">2 · RED = Cut through</span>
           </div>
           <span id="sheet-status-tag" class="text-[11px] font-mono font-bold bg-paper-200 text-paper-900 px-2.5 py-1 rounded-lg">
             A4 Sheet (210 × 297 mm) // Scale 1:20
@@ -913,13 +921,15 @@
                 <input id="wf-spacing" type="range" min="6" max="15" step="0.5" value="10" oninput="setWaffleSpacing(this.value)"></label>
               </details>
               <div class="v4-seg" role="radiogroup" aria-label="Cutting">
-                <button type="button" id="wf-kerf-laser" class="active" onclick="setWaffleKerf('laser')">Laser (slot = board) <i lang="ar" dir="rtl">ليزر</i></button>
-                <button type="button" id="wf-kerf-hand" onclick="setWaffleKerf('hand')">Hand-cut (+0.2 mm) <i lang="ar" dir="rtl">قص يدوي</i></button>
+                <button type="button" id="wf-kerf-laser" class="active" onclick="setWaffleKerf('laser')">Cut by laser · slot drawn = board <i lang="ar" dir="rtl">قص بالليزر</i></button>
+                <button type="button" id="wf-kerf-hand" onclick="setWaffleKerf('hand')">Cut by hand · +0.2 mm clearance <i lang="ar" dir="rtl">قص يدوي</i></button>
               </div>
+              <p class="v4-note">Laser: most studio lasers burn 0.15–0.25 mm and many do not compensate. Cut the FIT TEST strip on your sheet first, then set the result in A. <i lang="ar" dir="rtl">الليزر: يحرق معظمها ٠٫١٥–٠٫٢٥ مم. اقطع شريط الاختبار في لوحتك أولًا ثم اختر النتيجة في A.</i></p>
+              <p class="v4-note"><b>Scale:</b> Waffle works best at 1:10. At 1:20 the slots are only 2–3 mm deep: laser-cut them, or use Fold &amp; Glue. <i lang="ar" dir="rtl">المقياس: التعشيق أفضل بمقياس ١:١٠. بمقياس ١:٢٠ عمق الشق ٢–٣ مم فقط: اقطعه بالليزر أو استخدم الطي واللصق.</i></p>
               <div id="wf-counts" class="v4-pill"></div>
               <ul id="wf-checks" class="v4-checks"></ul>
               <p id="wf-board-note" class="v4-note"></p>
-              <p class="v4-note">Open lattice: skin it with paper for solid faces, or use Fold &amp; Glue. <i lang="ar" dir="rtl">شبكة مفتوحة: غطّها بالورق لأسطح مصمتة، أو استخدم الطي واللصق.</i></p>
+              <p class="v4-note">Open lattice. For solid faces: assemble and let the glue dry; cut paper skins 2 mm oversize; spray-mount one face at a time with the model resting on a flat bench; trim the edges when dry. Or use Fold &amp; Glue. <i lang="ar" dir="rtl">شبكة مفتوحة. للأسطح المصمتة: جمّع واترك الغراء يجف؛ قصّ أغطية ورقية أكبر بـ٢ مم؛ ألصقها بالرذاذ وجهًا بعد وجه والنموذج على سطح مستوٍ؛ شذّب الحواف بعد الجفاف. أو استخدم الطي واللصق.</i></p>
             </div>
             <div class="space-y-3">
               <div class="v4-preview"><svg id="wf-iso" viewBox="0 0 100 70" class="w-full h-auto"></svg></div>
@@ -931,10 +941,28 @@
         <div id="ed-image" class="v4-method-panel hidden">
           <div class="v4-figs"><figure class="v4-fig" data-guide="M-image"></figure><figure class="v4-fig" data-guide="H15"></figure></div>
           <div class="v4-seg" role="radiogroup" aria-label="Image piece">
-            <button type="button" id="img-build-profile" class="active" onclick="setImageBuild('profile')">Cut the outline <i lang="ar" dir="rtl">قص الحد الخارجي</i></button>
-            <button type="button" id="img-build-waffle" onclick="setImageBuild('waffle')">Waffle from the outline <i lang="ar" dir="rtl">تعشيق من الحد الخارجي</i></button>
-            <label id="img-waffle-width-wrap" class="v4-field hidden">Width <i lang="ar" dir="rtl">العرض</i> (cm) <input id="img-waffle-width" type="number" min="5" max="400" value="45" oninput="setImageWaffleWidth(this.value)"></label>
+            <button type="button" id="img-build-profile" class="active" onclick="setImageBuild('profile')">Profile study · flat silhouette <i lang="ar" dir="rtl">دراسة مقطع · ظلّ مسطح</i></button>
+            <button type="button" id="img-build-waffle" onclick="setImageBuild('waffle')">Waffle interpretation · ribs <i lang="ar" dir="rtl">تفسير بالتعشيق · أضلاع</i></button>
+            <button type="button" id="img-build-fold" onclick="setImageBuild('fold')">Folded approximation · nearest type <i lang="ar" dir="rtl">تقريب بالطي · أقرب نوع</i></button>
+            <div id="img-waffle-width-wrap" class="v4-field hidden" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+              <label>Furniture type <i lang="ar" dir="rtl">نوع القطعة</i> <select id="img-waffle-type" onchange="setImageWaffleType(this.value)"><option value="">— choose —</option><option value="chair">Chair</option><option value="sofa">Sofa</option><option value="table">Table</option><option value="bed">Bed</option><option value="cabinet">Cabinet</option></select></label>
+              <label>Real width <i lang="ar" dir="rtl">العرض الحقيقي</i> (cm) <input id="img-waffle-width" type="number" min="5" max="400" value="" oninput="setImageWaffleWidth(this.value)"></label>
+              <label><input type="checkbox" id="img-waffle-width-ok" onchange="setImageWidthOk(this.checked)"> I checked this width in the Neufert table <i lang="ar" dir="rtl">تحققت من العرض في جدول نويفرت</i></label>
+            </div>
           </div>
+          <p id="img-output-note" class="v4-note"></p>
+          <details class="v4-adv" open><summary>Simplify before you trace (6 steps) <span lang="ar" dir="rtl">بسّط قبل التتبّع (٦ خطوات)</span></summary>
+            <ol class="v4-note" style="margin:4px 0 0 18px;list-style:decimal">
+              <li>Name 3 features that must stay recognisable. <i lang="ar" dir="rtl">حدّد ٣ سمات يجب أن تبقى واضحة.</i></li>
+              <li>Use a front or side elevation, not a perspective. <i lang="ar" dir="rtl">استخدم واجهة أمامية أو جانبية وليس منظورًا.</i></li>
+              <li>Enter the real dimensions from Neufert, separately. <i lang="ar" dir="rtl">أدخل الأبعاد الحقيقية من نويفرت بشكل منفصل.</i></li>
+              <li>State the simplification below. <i lang="ar" dir="rtl">اكتب التبسيط في الحقل أدناه.</i></li>
+              <li>Check the outline over the picture (only the furniture). <i lang="ar" dir="rtl">راجع الحد فوق الصورة (قطعة الأثاث فقط).</i></li>
+              <li>Cut one profile and one joint as a trial. <i lang="ar" dir="rtl">اقطع مقطعًا ووصلة واحدة كتجربة.</i></li>
+            </ol>
+            <label class="v4-field">My simplification <i lang="ar" dir="rtl">التبسيط الذي اخترته</i>
+              <input id="img-simplify" type="text" maxlength="90" placeholder="e.g. keep the curved back and arms, simplify the cushions" oninput="setImageSimplify(this.value)" style="width:100%"></label>
+          </details>
           <button type="button" class="v4-link" onclick="openGuide(3)">AI image prompts / أوامر صور الذكاء الاصطناعي →</button>
   <div id="tab-image" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
@@ -959,7 +987,7 @@
         <!-- Workflow steps -->
         <ol class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-[11px]">
           <li id="img-step-1" class="p-2 rounded-xl border border-paper-200 bg-paper-50"><strong>1. Upload</strong><br>drop / paste / choose a file</li>
-          <li id="img-step-2" class="p-2 rounded-xl border border-paper-200 bg-paper-50"><strong>2. Calibrate</strong><br>click 2 points on a known size, type the cm</li>
+          <li id="img-step-2" class="p-2 rounded-xl border border-paper-200 bg-paper-50"><strong>2. Neufert size</strong><br>click 2 points, type their real cm from Neufert</li>
           <li id="img-step-3" class="p-2 rounded-xl border border-paper-200 bg-paper-50"><strong>3. Trace</strong><br>auto-trace or click around the shape</li>
           <li id="img-step-4" class="p-2 rounded-xl border border-paper-200 bg-paper-50"><strong>4. Sheet</strong><br>scale, copies → print / SVG</li>
         </ol>
@@ -996,8 +1024,8 @@
       <!-- Calibration + auto-trace -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-white rounded-3xl border border-paper-200 p-4 space-y-3 shadow-xs">
-          <h3 class="font-display font-bold text-sm">📏 2. Calibrate real size</h3>
-          <p class="text-[11px] text-paper-700">Click <strong>Calibrate</strong>, then click two points on something whose real size you know (seat height ≈ 45 cm, table height ≈ 75 cm, door ≈ 210 cm, a ruler in the photo…).</p>
+          <h3 class="font-display font-bold text-sm">📏 2. Give the picture a Neufert size</h3>
+          <p class="text-[11px] text-paper-700">The picture gives the <strong>shape</strong>; the size comes from the <strong>Neufert table</strong>. Click <strong>Calibrate</strong>, click two points on the picture, then type that dimension's real size from Neufert (seat height 45 cm, table height 75 cm…). <span lang="ar" dir="rtl">الصورة تعطي الشكل؛ المقاس من جدول نويفرت.</span></p>
           <div class="flex items-center gap-2">
             <label class="text-[11px] font-bold">That distance is</label>
             <input id="img-calib-cm" type="number" min="1" step="0.5" value="45" oninput="imgSetCalibCm(this.value)" class="w-20 px-2 py-1 rounded-lg border border-paper-300 font-mono text-sm">
@@ -1039,6 +1067,10 @@
           <label class="flex items-center gap-2 text-[11px]"><input id="img-largest" type="checkbox" checked> Keep only the largest shape</label>
           <button type="button" onclick="imgAutoTrace()" class="w-full py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-paper-900 font-bold text-xs">Auto-trace now</button>
           <p id="img-trace-info" class="text-[10px] font-mono text-paper-700"></p>
+          <div id="img-trace-gate" class="v4-lock-note v4-info hidden" role="group">
+            <span id="img-trace-gate-msg"></span>
+            <label class="block mt-1"><input type="checkbox" id="img-trace-ok" onchange="setTraceOk(this.checked)"> <b>Yes — the red outline is ONLY the furniture</b> (no floor, wall, shadow or background) <i lang="ar" dir="rtl">نعم — الحد الأحمر يحتوي قطعة الأثاث فقط</i></label>
+          </div>
           <div class="pt-2 border-t border-paper-200 space-y-1">
             <div class="flex items-center justify-between gap-2 flex-wrap"><span class="text-[11px] font-bold">🤖 Using Gemini / ChatGPT / web images?</span>
               <span class="flex gap-1">
@@ -1297,23 +1329,23 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
                 <td class="p-3">200 cm</td>
                 <td class="p-3">85 cm</td>
                 <td class="p-3">Seat 42 / Back 80 cm</td>
-                <td class="p-3 font-mono text-cutred">100 × 42.5 × 40 mm</td>
-                <td class="p-3 font-mono text-scoreblue">200 × 85 × 80 mm</td>
+                <td class="p-3 font-mono text-cutred">100 × 42.5 × 40 mm <span class="text-paper-700">(from 200 cm; tool preset 180 cm → 90 mm)</span></td>
+                <td class="p-3 font-mono text-scoreblue">200 × 85 × 80 mm <span class="text-paper-700">(from 200 cm)</span></td>
               </tr>
               <tr class="bg-white">
                 <td class="p-3 font-bold">Dining / Study Table</td>
                 <td class="p-3">140 – 180 cm</td>
                 <td class="p-3">80 cm</td>
                 <td class="p-3">75 cm</td>
-                <td class="p-3 font-mono text-cutred">70 × 40 × 37.5 mm</td>
-                <td class="p-3 font-mono text-scoreblue">140 × 80 × 75 mm</td>
+                <td class="p-3 font-mono text-cutred">70 × 40 × 37.5 mm <span class="text-paper-700">(from 140 cm)</span></td>
+                <td class="p-3 font-mono text-scoreblue">140 × 80 × 75 mm <span class="text-paper-700">(from 140 cm; 180 cm → 180 mm)</span></td>
               </tr>
               <tr class="bg-paper-50">
                 <td class="p-3 font-bold">Queen Bed + Headboard</td>
                 <td class="p-3">160 cm</td>
                 <td class="p-3">200 cm</td>
-                <td class="p-3">Base 35 / Head 110 cm</td>
-                <td class="p-3 font-mono text-cutred">80 × 100 × 55 mm</td>
+                <td class="p-3">Base 35–38 / Head 110 cm</td>
+                <td class="p-3 font-mono text-cutred">80 × 100 × 55 mm <span class="text-paper-700">(from 160 × 200 × 110 cm)</span></td>
                 <td class="p-3 font-mono text-scoreblue">160 × 200 × 110 mm</td>
               </tr>
               <tr class="bg-white">
@@ -1321,8 +1353,8 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
                 <td class="p-3">120 cm</td>
                 <td class="p-3">50 – 60 cm</td>
                 <td class="p-3">80 cm (or 210 cm)</td>
-                <td class="p-3 font-mono text-cutred">60 × 25 × 40 mm</td>
-                <td class="p-3 font-mono text-scoreblue">120 × 50 × 80 mm</td>
+                <td class="p-3 font-mono text-cutred">60 × 25 × 40 mm <span class="text-paper-700">(from 120 × 50 × 80 cm)</span></td>
+                <td class="p-3 font-mono text-scoreblue">120 × 50 × 80 mm <span class="text-paper-700">(from 120 × 50 × 80 cm)</span></td>
               </tr>
             </tbody>
           </table>
@@ -1590,9 +1622,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.2.4';
-    // v4.2.4 changes printed notes only (no parts, packing or sheet content), so v4.2.3 nested-sheet stamps still verify
-    const STAMP_COMPATIBLE = ['4.2.3', '4.2.4'];
+    const TOOL_VERSION = '4.3.0';
+    // v4.3.0: only v4.3.0 sheets verify here. v4.2.x chair/sofa/table nets differ, so v4.2.x stamps are NOT listed;
+    // TAs verify v4.2.x sheets in the kept previous version at v4.2.4/.
+    const STAMP_COMPATIBLE = ['4.3.0'];
+    const PREVIEW_BUILD = false;  // student release: no experimental banner or sheet watermark
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -1605,24 +1639,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // v4.1 (audit B): every blue line on a Fold & Glue net is a mountain fold — printed side out
     const FOLD_RULE = { en: 'FOLD RULE: printed side out · score on the print · all blue lines fold away from you',
                         ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك' };
-    // v4.2.4: the v4.3 net-folding verifier showed two exceptions in these nets; they are printed beside the legend
-    // (free band x 92–202 mm, y 20–24.6 mm), so packing, sheet counts and VERIFY stamps do not change.
-    const FOLD_EXCEPTIONS = {
-      back:  { en: 'EXCEPT chair/sofa BACK + side tabs: fold TOWARD you', ar: 'إلا ظهر الكرسي أو الكنبة وألسنته: تُطوى نحوك' },
-      table: { en: 'TABLE: glue only the top of each leg tab, trim the rest', ar: 'الطاولة: الصق أعلى كل لسان فقط وقصّ الباقي' } };
-    // stacked (single-piece sheet, longer legend): one type only, English over Arabic at the right edge (x ≥ 130 mm)
-    function foldExceptionsSvg(sheetW, types, stacked) {
-      const keys = [];
-      if (types.some(t => t === 'chair' || t === 'sofa')) keys.push('back');
-      if (types.includes('table')) keys.push('table');
-      const T = (x, y, txt, ar) => `<text class="fold-rule" x="${x}" y="${y}"${x === sheetW - 8 ? ' text-anchor="end"' : ''}${ar ? ' font-family="Segoe UI, Tahoma, Arial, sans-serif"' : ''} font-size="1.6" font-weight="bold" fill="#B91C1C">${txt}</text>`;
-      if (stacked) return keys.slice(0, 1).map(k => T(sheetW - 8, 21.6, FOLD_EXCEPTIONS[k].en) + T(sheetW - 8, 24.0, FOLD_EXCEPTIONS[k].ar, true)).join('');
-      return keys.map((k, i) => { const y = 21.6 + i * 2.4, e = FOLD_EXCEPTIONS[k]; return T(92, y, e.en) + T(sheetW - 8, y, e.ar, true); }).join('');
-    }
-    function foldRuleSvg(sheetW, y, types = [], stacked = false) {
+    function foldRuleSvg(sheetW, y) {
       return `<text class="fold-rule" x="12" y="${y}" font-size="1.8" font-weight="bold" fill="#0055FF">${FOLD_RULE.en}</text>` +
-        `<text class="fold-rule" x="${sheetW - 8}" y="${y}" text-anchor="end" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="2.1" font-weight="bold" fill="#0055FF">${FOLD_RULE.ar}</text>` +
-        foldExceptionsSvg(sheetW, types, stacked);
+        `<text class="fold-rule" x="${sheetW - 8}" y="${y}" text-anchor="end" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="2.1" font-weight="bold" fill="#0055FF">${FOLD_RULE.ar}</text>`;
     }
 
     // Laser files: hairline cut + score, score as a continuous line (score = low laser power)
@@ -1752,6 +1771,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       projectRoom: 'Studio Living Zone',
       courseCode: 'RIR2101 - Interior Design 1',
       fitsOnPage: true,
+      slotAdj: 0,              // v4.3 (P1-1/P1-2): measured slot correction from the FIT TEST strip (mm)
       hasUploadedPhoto: false,
       pendingExportAction: null
     };
@@ -1826,7 +1846,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         subLabel: 'Number of Horizontal Shelves:',
         tip: 'Bookcase depth is 28–38 cm; notched shelves need board 1.5 mm or thicker',
         ergoCheck: (s) => (s.d >= 25 && s.d <= 45)
-          ? { ok: true, msg: `Ergonomic Pass: Bookcase depth (${s.d}cm) with ${s.subH} shelves is stable and proportional.` }
+          ? { ok: true, msg: `Ergonomic Pass: Bookcase depth (${s.d}cm) with ${s.subH} shelves is in the standard range.` }
           : { ok: false, msg: `Ergonomic Tip: Standard bookcases are 28–38 cm deep (currently ${s.d} cm).` }
       }
     };
@@ -2336,11 +2356,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
       // 6c. Board too thick to fold crisply at this model size
       const fpMin = Math.min(state.w, state.d) * 10 / (state.scale || 20);
-      if (state.joinery === 'fold' && state.archetype !== 'shelf' && state.thicknessMm > 0.8 && state.thicknessMm < 3.0 && fpMin < 30) {
+      if (state.joinery === 'fold' && state.archetype !== 'shelf' && state.thicknessMm > 0.8 && state.thicknessMm < 3.0 && (fpMin < 30 || state.thicknessMm >= 1.5)) {
         issues.push({
           step: 'Step 2: Board vs. Model Size', severity: 'warning', sectionId: 'section-step-2',
           title: `${state.thicknessMm} mm board is too thick to fold a ${fpMin.toFixed(0)} mm model`,
-          instruction: 'Small folded nets crack or round over when the board is thick. Use 0.5 mm Bristol card for folding, or choose a larger scale (e.g. 1:10).',
+          instruction: 'Board of 1.5 mm or more cracks at a fold without a V-groove and leaves gaps of about one board thickness at the corners. Use 0.5 mm Bristol card for folding.',
           fixLabel: 'Use 0.5 mm Bristol', fixFn: 'fixStep2ThinCard'
         });
       }
@@ -3142,6 +3162,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
       // Painter's algorithm sort back-to-front
       faces.sort((a, b) => a.avgDepth - b.avgDepth);
+      // v4.3 (P1-10): drawn from W × D × H, not from the exported net — say so on the canvas itself
+      ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = 'bold 10px "JetBrains Mono", monospace'; ctx.textAlign = 'left';
+      ctx.fillText('ILLUSTRATION · not a fold test of your net', 8, 14); ctx.restore();
 
       faces.forEach(f => {
         ctx.beginPath();
@@ -3217,7 +3240,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
       if (issues.length === 0) {
         overall.className = "px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px]";
-        overall.textContent = "4/4 PASS • READY";
+        overall.textContent = "GEOMETRY OK";
       } else {
         overall.className = "px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px]";
         overall.textContent = `${issues.length} ISSUE(S) • CLICK VERIFY`;
@@ -3272,8 +3295,12 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const guide = (x1, y1, x2, y2) => `<line x1="${P(x1)}" y1="${P(y1)}" x2="${P(x2)}" y2="${P(y2)}" stroke="#8A8070" stroke-width="0.25" stroke-dasharray="0.6,0.8"/>`;
 
       if (state.archetype === 'chair' || state.archetype === 'sofa') {
+        // v4.3 (P4-2 finding): the folding verifier showed that a back folded UP from the seat is a valley fold
+        // (it breaks "all blue lines fold away from you"). The back is now a separate panel, printed side to the
+        // REAR, held by two side tabs on the posts: every fold of the chair is a mountain fold again.
         const back = Math.max(4, H - subH);           // backrest above seat
-        const stripH = back + D + subH;
+        const G = 4;                                  // cut gap between the back panel and the seat
+        const stripH = back + G + D + subH;
         // Layout: sides beside the strip when there is room, otherwise below it
         let stripX = ox + D + 8 + tabD;
         let stripY = oy - minOff;
@@ -3283,19 +3310,27 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           sy = stripY + stripH + 10;
         }
         const o = state.curveOffsets;
-        const yS = stripY + back, yL = stripY + back + D, yB = stripY + stripH;
+        const yBk = stripY + back, yS = yBk + G, yL = yS + D, yB = stripY + stripH;
         const x0 = stripX, x4 = stripX + W;
-        const pts = [
-          [x0, yB], [x0, yL], [x0, yS], [x0, stripY + o[0]],
-          [x0 + W * 0.25, stripY + o[1]], [x0 + W * 0.5, stripY + o[2]], [x0 + W * 0.75, stripY + o[3]],
-          [x4, stripY + o[4]], [x4, yS], [x4, yL], [x4, yB]
-        ];
-        // tabs on legs, seat and backrest side edges (left: 0,1,2 / right: 7,8,9)
-        const strip = outlineWithTabs(pts, [0, 1, 2, 7, 8, 9], x0 + W / 2, yS + D / 2);
+        // A1 BACK: drawn mirrored (it is glued with its printed side to the REAR, so the curve reads correctly from the front).
+        // Its side tabs run only up to the post top (back height above the seat): a raised curve corner never overhangs the post.
+        const om = [o[4], o[3], o[2], o[1], o[0]], yPost = stripY;
+        const bpts = [[x0, yBk]]; const tabE = [];
+        tabE.push(0); if (om[0] < -0.01) bpts.push([x0, yPost]);
+        bpts.push([x0, stripY + om[0]], [x0 + W * 0.25, stripY + om[1]], [x0 + W * 0.5, stripY + om[2]], [x0 + W * 0.75, stripY + om[3]], [x4, stripY + om[4]]);
+        if (om[4] < -0.01) bpts.push([x4, yPost]);
+        tabE.push(bpts.length - 1); bpts.push([x4, yBk]);
+        const backPanel = outlineWithTabs(bpts, tabE, x0 + W / 2, stripY + back / 2);
+        cutLayer += `<path d="${backPanel.d}" fill="#FFFFFF"/>`;
+        scoreLayer += backPanel.folds;
+        // A2 SEAT + A3 FRONT: one strip, tabs on the seat and front side edges
+        const pts = [[x0, yB], [x0, yL], [x0, yS], [x4, yS], [x4, yL], [x4, yB]];
+        const strip = outlineWithTabs(pts, [0, 1, 3, 4], x0 + W / 2, yS + D / 2);
         cutLayer += `<path d="${strip.d}" fill="#FFFFFF"/>`;
-        scoreLayer += strip.folds + line(x0, yS, x4, yS) + line(x0, yL, x4, yL);
+        scoreLayer += strip.folds + line(x0, yL, x4, yL);
         labelLayer += `
           <text x="${P(x0 + W/2)}" y="${P(stripY + back/2)}" text-anchor="middle" font-weight="bold" font-size="${fs(W)}">A1 BACK</text>
+          <text x="${P(x0 + W/2)}" y="${P(stripY + back/2 + Math.min(3.2, back / 4 + 1))}" text-anchor="middle" font-size="${(fs(W) * 0.6).toFixed(2)}">PRINTED SIDE TO THE REAR</text>
           <text x="${P(x0 + W/2)}" y="${P(yS + D/2)}" text-anchor="middle" font-weight="bold" font-size="${fs(W)}">A2 SEAT</text>
           <text x="${P(x0 + W/2)}" y="${P(yS + D/2 + 3.5)}" text-anchor="middle" font-size="${fs(W)*0.7}">${W.toFixed(1)}×${D.toFixed(1)}mm</text>
           <text x="${P(x0 + W/2)}" y="${P(yL + subH/2)}" text-anchor="middle" font-size="${fs(W)}">A3 FRONT</text>
@@ -3312,14 +3347,16 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       } else if (state.archetype === 'table') {
         if (sheetJoinery === 'fold') {
           const tW = W, tD = D, tH = H;
-          const apron = Math.max(5, Math.min(subH, 16));
+          const apron = Math.max(6, Math.min(subH, 16));   // v4.3: ≥ 6 mm so every apron end carries a glue tab
           const cx = ox + tH + tabD, cy = oy + apron + 2;
           const pts = [
             [cx, cy - apron], [cx + tW, cy - apron], [cx + tW, cy], [cx + tW + tH, cy],
             [cx + tW + tH, cy + tD], [cx + tW, cy + tD], [cx + tW, cy + tD + apron], [cx, cy + tD + apron],
             [cx, cy + tD], [cx - tH, cy + tD], [cx - tH, cy], [cx, cy]
           ];
-          const net = outlineWithTabs(pts, [2, 4, 8, 10], cx + tW / 2, cy + tD / 2);
+          // v4.3 (P4-2 finding): tabs on the four apron ends glue fully onto the legs; tabs along the legs' long edges
+          // only met the apron near the top and hung free down to the floor
+          const net = outlineWithTabs(pts, [1, 5, 7, 11], cx + tW / 2, cy + tD / 2);
           cutLayer += `<path d="${net.d}" fill="#FFFFFF"/>`;
           scoreLayer += net.folds + line(cx, cy, cx, cy + tD) + line(cx + tW, cy, cx + tW, cy + tD) + line(cx, cy, cx + tW, cy) + line(cx, cy + tD, cx + tW, cy + tD);
           labelLayer += `
@@ -3377,6 +3414,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
       } else if (state.archetype === 'shelf') {
         const sW = W, sD = D, sH = H;
+        { const tN = state.notchW || state.thicknessMm; if (tN !== t) return foldGeometry({ ...state, thicknessMm: tN, notchW: 0 }, sheetW); }
         const numShelves = Math.max(2, Math.min(7, Math.round(state.subH)));
         let curY = oy;
         for (let i = 0; i < numShelves; i++) {
@@ -3483,7 +3521,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       // =======================================================================
       // 4. ARCHITECTURAL STUDENT TITLE BLOCK STAMP AT BOTTOM OF SHEET
       // =======================================================================
-      if (state.archetype !== 'shelf' && state.fitsOnPage) labelLayer += foldRuleSvg(sheetW, 28.8, [state.archetype], true);
+      if (state.archetype !== 'shelf' && state.fitsOnPage) labelLayer += foldRuleSvg(sheetW, 28.8);
       const tbY = sheetH - 25;
       const tbW = sheetW - 12;
       state.stamp = computeStamp(sheetStampFields());
@@ -3769,6 +3807,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           h += `<circle data-shape="${si}" data-pt="${pi}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r}" fill="${isDraft && pi === 0 ? '#16A34A' : '#fff'}" stroke="${col}" stroke-width="${sw * 1.4}" style="cursor:move"/>`;
         });
       };
+      (imgState.traceQA && imgState.traceQA.dropped || []).forEach(b => { h += `<rect x="${b[0]}" y="${b[1]}" width="${b[2] - b[0]}" height="${b[3] - b[1]}" fill="rgba(120,120,120,0.18)" stroke="#6B6B6B" stroke-width="${sw}" stroke-dasharray="${sw * 4},${sw * 3}"/><text x="${b[0] + r}" y="${b[1] + r * 3}" font-size="${r * 2.6}" font-family="JetBrains Mono, monospace" fill="#3E3E3E">removed</text>`; });
       imgState.shapes.forEach((s, si) => drawShape(s, si, false));
       if (imgState.draft) drawShape(imgState.draft, -1, true);
       const c = imgState.calib;
@@ -3846,7 +3885,13 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       if (!nl) { showToast('Nothing found — move the threshold slider or tick "light object on dark"'); return; }
       const minArea = Math.max(40, W * H * 0.0015);
       let keep = []; for (let l = 1; l <= nl; l++) if (areas[l] >= minArea) keep.push(l);
-      keep.sort((a, b) => areas[b] - areas[a]); if (largestOnly) keep = keep.slice(0, 1); else keep = keep.slice(0, 12);
+      keep.sort((a, b) => areas[b] - areas[a]);
+      const droppedLabels = keep.slice(largestOnly ? 1 : 12);
+      if (largestOnly) keep = keep.slice(0, 1); else keep = keep.slice(0, 12);
+      // v4.3 (P1-12): remember what was removed and how much of the picture the outline covers
+      { const box = {}; droppedLabels.forEach(l => { box[l] = [W, H, 0, 0]; });
+        if (droppedLabels.length) for (let i = 0; i < W * H; i++) { const b = box[lab[i]]; if (b) { const x = i % W, y = (i / W) | 0; if (x < b[0]) b[0] = x; if (y < b[1]) b[1] = y; if (x > b[2]) b[2] = x; if (y > b[3]) b[3] = y; } }
+        imgState.traceQA = { dropped: droppedLabels.map(l => box[l]), keptArea: keep.reduce((s, l) => s + areas[l], 0) }; }
       if (!keep.length) { showToast('Only tiny specks found — lower the threshold or untick "largest only"'); return; }
       // 4. boundary tracing per component (Moore neighbourhood, 8-connected walk around 4-connected blob)
       const mmPerPx = imgMmPerPx() || (210 / W);
@@ -3861,6 +3906,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         // holes: background components enclosed by this blob (only when not filling)
         if (!fill) imgTraceHoles(lab, l, W, H, tolPx).forEach(r => shapes.push({ pts: r, kind: 'cut', closed: true }));
       });
+      { const pts = shapes.flatMap(s => s.pts), qa = imgState.traceQA || {};
+        const bx = [Math.min(...pts.map(q => q[0])), Math.min(...pts.map(q => q[1])), Math.max(...pts.map(q => q[0])), Math.max(...pts.map(q => q[1]))], m = 2;
+        qa.bboxFrac = (bx[2] - bx[0]) * (bx[3] - bx[1]) / (W * H);
+        qa.edges = [bx[0] <= m, bx[1] <= m, bx[2] >= W - 1 - m, bx[3] >= H - 1 - m].filter(Boolean).length;
+        qa.suspect = qa.bboxFrac > 0.85 || qa.edges >= 3; imgState.traceQA = qa; }
       imgState.shapes = shapes; imgState.draft = null;
       imgSetMode('select'); imgRenderOverlay(); renderImageSheet(); imgStepState();
       document.getElementById('img-trace-info').textContent = `${shapes.length} outline(s), ${shapes.reduce((n, s) => n + s.pts.length, 0)} points. Not right? adjust threshold / simplify and trace again, or hand-trace.`;
@@ -4126,15 +4176,16 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       { key: 'H02', img: 'H02', en: 'Pick the closest piece in the tool.', ar: 'اختر أقرب قطعة في الأداة.' },
       { key: 'H03', img: 'H03', en: 'Choose the scale and the sheet: A4 or A3.', ar: 'اختر المقياس وحجم الورقة: A4 أو A3.' },
       { key: 'H04', img: 'H04', en: 'Add every piece; the sheets fill up.', ar: 'أضف كل القطع؛ تمتلئ اللوحات تلقائيًا.' },
-      { key: 'H05', img: 'H05', en: 'Too big? Use A3 or a smaller scale — never shrink.', ar: 'كبيرة جدًا؟ استخدم A3 أو مقياسًا أصغر — لا تُصغّر أبدًا.' },
+      { key: 'H05', img: 'H05', en: 'Too big? Use A3, or a smaller scale for the WHOLE model — never shrink one piece.', ar: 'كبيرة جدًا؟ استخدم A3 أو مقياسًا أصغر للنموذج كله — لا تُصغّر قطعة وحدها أبدًا.' },
       { key: 'H06', img: 'H06', en: 'Print at 100 % and check the 5 cm ruler.', ar: 'اطبع بنسبة ١٠٠٪ وتحقق من مسطرة ٥ سم.' },
-      { key: 'H07', img: 'H07', en: 'Spray-mount the print on card.', ar: 'ألصق المطبوعة على الكرتون بالرذاذ.' },
-      { key: 'H08', img: 'H08', en: 'Printed side out · score on the print · all blue lines fold away from you.', ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك.' },
+      { key: 'H07', img: 'H07', en: 'Spray-mount the print on card or board. No wet PVA or glue stick: they stretch the paper.', ar: 'ألصق المطبوعة على الكرتون بالرذاذ. لا غراء أبيض رطب ولا أصبع غراء: يمطّان الورق.' },
+      { key: 'H08', img: 'H08', en: 'Printed side out · score on the print · all blue lines fold away from you.', ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك.',
+        tipEn: 'Score first, while the sheet is whole: one light pass, about ⅓ of the card deep, sharp blade. Then cut. Pre-fold every blue line before gluing.', tipAr: 'حزّز أولًا والورقة كاملة: مرّة خفيفة بعمق نحو ثلث الكرتون بشفرة حادة. ثم اقطع. اثنِ كل خط أزرق قبل اللصق.' },
       { key: 'H09', img: 'H09', en: 'Then cut the red lines on a cutting mat.', ar: 'ثم اقطع الخطوط الحمراء على قاعدة القص.' },
-      { key: 'H10', img: 'H10', en: 'A tiny bead of glue on each tab; hold 20 s.', ar: 'نقطة غراء صغيرة على كل لسان؛ اضغط ٢٠ ثانية.' },
+      { key: 'H10', img: 'H10', en: 'A tiny bead of glue on each tab; hold 20 s for a first grip. Wait 10 min before loading that joint; full strength next day.', ar: 'نقطة غراء صغيرة على كل لسان؛ اضغط ٢٠ ثانية للتثبيت الأول. انتظر ١٠ دقائق قبل تحميل الوصلة؛ القوة الكاملة في اليوم التالي.' },
       { key: 'H11', img: 'H11', en: 'Waffle: board 1.5 mm or thicker, never paper. Stand the X-ribs, drop the Y-ribs into the slots.', ar: 'التعشيق: كرتون ١٫٥ مم أو أسمك، وليس الورق أبدًا. ثبّت أضلاع X ثم أنزل أضلاع Y في الشقوق.',
-        tipEn: 'Table: assemble upside down on a flat bench, with the tabletop edges resting on the bench. Chair: secure the two middle ribs with a small dot of glue at their joints.',
-        tipAr: 'الطاولة: جمّع النموذج مقلوبًا على سطح عمل مستوٍ، بحيث تستند حواف الأضلاع التي تكوّن سطح الطاولة إلى سطح العمل. الكرسي: ثبّت الضلعين الأوسطين بنقطة صغيرة من الغراء عند وصلاتهما.' },
+        tipEn: 'Your sheet names the ribs that do not reach the floor and gives the order. Those pieces are built upside down on their top edges; glue the named ribs at their joints, let dry, then turn upright.',
+        tipAr: 'لوحتك تذكر الأضلاع التي لا تصل إلى الأرض وترتيب التجميع. هذه القطع تُجمَّع مقلوبة على حوافها العلوية؛ ثبّت الأضلاع المذكورة بنقطة غراء عند كل وصلة، اتركها تجف، ثم اقلبها.' },
       { key: 'H12', img: 'H12', en: 'Place the finished pieces on your plan.', ar: 'ضع القطع الجاهزة على مسقطك.' },
       // v4.2.3 (P0-2): the bookcase has no folds — its own picture (drawn from the same geometry as the sheet)
       { key: 'BK1', img: '', svg: () => { const a = bookcaseAssemblySvg(50, 17.5, 90, 4, 1.5); return { vb: `-2 -2 ${(a.w + 4).toFixed(1)} ${(a.h + 4).toFixed(1)}`, body: a.svg }; },
@@ -4142,6 +4193,12 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         ar: 'المكتبة: لا يوجد طيّ — لا توجد خطوط زرقاء. كرتون بسماكة ١٫٥ مم أو أكثر. ثبّت القوائم V1–V3 وشقوقها نحوك، ثم أدخل كل رف H من الأمام، شقًّا في شق، حتى تتساوى الحواف.',
         tipEn: 'Test-fit one shelf on one upright first. If a joint is loose, fix it with a small dot of glue.',
         tipAr: 'جرّب تركيب رف واحد على قائم واحد أولًا. إذا كانت الوصلة سائبة فثبّتها بنقطة صغيرة من الغراء.' },
+      { key: 'HC1', img: '', svg: () => ({ vb: '0 0 60 60', body: handCutSlotSvg() }),
+        en: 'Hand-cut slots: blade vertical. Cut the slot root first, then the two sides, one pass each. Test-fit two ribs before cutting the whole sheet.',
+        ar: 'الشقوق اليدوية: الشفرة عمودية. اقطع قاع الشق أولًا ثم جانبيه، مرة واحدة لكل خط. جرّب تركيب ضلعين قبل قص اللوحة كلها.' },
+      { key: 'UD1', img: '', svg: () => ({ vb: '0 0 60 60', body: upsideDownSvg() }),
+        en: 'Upside down: TOP means the top of the finished furniture — it rests on the bench now. Lower the X-ribs, glue the named ribs, let dry, turn upright.',
+        ar: 'مقلوبًا: «الأعلى» هو أعلى قطعة الأثاث النهائية — وهو الآن على سطح العمل. أنزل أضلاع X، ثبّت الأضلاع المذكورة بالغراء، اتركها تجف، ثم اقلبها.' },
       { key: 'H13', img: 'H13', en: 'Good: flat side view on pure white.', ar: 'صحيح: منظر جانبي مسطح على خلفية بيضاء.' },
       { key: 'H14', img: 'H14', en: 'Wrong: perspective, room and shadows.', ar: 'خطأ: منظور وغرفة وظلال.' },
       { key: 'H15', img: 'H15', en: 'A traced picture gives ONE flat profile (a rib or a panel) — not a complete model. Size comes from the Neufert table, never from the picture.', ar: 'الصورة المتتبَّعة تعطي مقطعاً مسطحاً واحداً فقط (ضلع أو لوح) وليس نموذجاً كاملاً. المقاس من جدول نويفرت وليس من الصورة.' },
@@ -4465,6 +4522,27 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       return { svg: s, w: jx + 25, h: Math.max(eh + 2.5, 24) };
     }
 
+    // v4.3 (P2-2) · hand-cut slot: root first, then the sides; blade vertical; test-fit two ribs
+    function handCutSlotSvg() {
+      const t = (x, y, s, w = '') => `<text x="${x}" y="${y}" font-size="${s}" ${w} font-family="JetBrains Mono, monospace">`;
+      return `<rect x="6" y="20" width="48" height="16" fill="#FDE9B8" stroke="#242018" stroke-width="0.5"/>` +
+        `<path d="M 28.5,20 L 28.5,28 L 31.5,28 L 31.5,20" fill="#fff" stroke="#DC2626" stroke-width="0.7"/>` +
+        `<line x1="27" y1="28" x2="33" y2="28" stroke="#0055FF" stroke-width="0.9"/>${t(34, 30.5, 3.2, 'font-weight="bold" fill="#0055FF"')}1</text>` +
+        `${t(22.2, 25, 3.2, 'font-weight="bold" fill="#DC2626"')}2</text>${t(33, 25, 3.2, 'font-weight="bold" fill="#DC2626"')}2</text>` +
+        `<path d="M 30,4 L 30,17" stroke="#242018" stroke-width="0.8"/><path d="M 28.4,13 L 30,18 L 31.6,13 Z" fill="#242018"/>${t(32, 9, 3)}blade 90°</text>` +
+        `<rect x="10" y="42" width="18" height="6" fill="#FDE9B8" stroke="#242018" stroke-width="0.4"/><rect x="17.5" y="38" width="3" height="14" fill="#fff" stroke="#242018" stroke-width="0.4"/>` +
+        `${t(30.5, 46.5, 2.7, 'font-weight="bold"')}3 test 2 ribs</text>${t(6, 57, 2.6, 'fill="#5C5343"')}1 root · 2 sides · one pass each</text>`;
+    }
+    // v4.3 (P2-3) · upside-down assembly: the tabletop edge is on the bench; "TOP" = top of the finished furniture
+    function upsideDownSvg() {
+      return `<line x1="4" y1="48" x2="56" y2="48" stroke="#242018" stroke-width="1"/><text x="5" y="53" font-size="3" font-family="JetBrains Mono, monospace">BENCH</text>` +
+        `<path d="M 10,48 L 50,48 L 50,40 L 45,40 L 45,20 L 41,20 L 41,40 L 19,40 L 19,20 L 15,20 L 15,40 L 10,40 Z" fill="#fff" stroke="#242018" stroke-width="0.5"/>` +
+        `<text x="30" y="46" text-anchor="middle" font-size="2.8" font-weight="bold" font-family="JetBrains Mono, monospace">TOP ▼</text>` +
+        `<rect x="20" y="8" width="20" height="10" fill="#FDE9B8" stroke="#242018" stroke-width="0.5"/><text x="30" y="14.5" text-anchor="middle" font-size="3" font-family="JetBrains Mono, monospace">X-rib</text>` +
+        `<path d="M 30,19 L 30,30" stroke="#242018" stroke-width="0.7"/><path d="M 28.5,27 L 30,31 L 31.5,27 Z" fill="#242018"/>` +
+        `<text x="30" y="58" text-anchor="middle" font-size="2.6" fill="#5C5343" font-family="JetBrains Mono, monospace">glue · dry · turn upright</text>`;
+    }
+
     // The waffle.py reference case (lounge chair 70 × 80 × 80 mm at 1:10) — used by the tests
     function waffleReferenceChair(opts = {}) {   // opts.section = false → exact waffle.py copies (for the shapely area test)
       const W = 70, D = 80, H = 80, seatH = 42, backT = 10, armH = 60, seatT = 10;
@@ -4511,6 +4589,60 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     function ringArea(pts) { let s = 0; for (let i = 0; i < pts.length; i++) { const p = pts[i], q = pts[(i + 1) % pts.length]; s += p[0] * q[1] - q[0] * p[1]; } return Math.abs(s) / 2; }
     const ser = el => new XMLSerializer().serializeToString(el).replace(/ xmlns="http:\/\/www\.w3\.org\/2000\/svg"/g, '');
 
+    // ---- v4.3 · slot widths (P1-1/P1-2/P3-4). Laser draws slot = board; hand-cut adds 0.2 mm clearance;
+    //      the FIT TEST correction (−0.1 … +0.2 mm) is measured by the student and applies to every slot.
+    const pieceKerf = p => (p.kerf === 'hand' ? WAFFLE_HANDCUT_KERF : 0) + (+p.slotAdj || 0);
+    function slotWidthFor(p, t) { const m = pieceMethod(p); return m === 'waffle' ? t + pieceKerf(p) : m === 'notch' ? t + (+p.slotAdj || 0) : null; }
+    const fmtMm = v => (Math.round(v * 100) / 100).toFixed(2);
+    // "X2, X3, X4, X7a" → "X2–X4, X7a"
+    function ribRange(names) {
+      const out = []; let run = null;
+      const flush = () => { if (run) out.push(run.a === run.b ? run.p + run.a : `${run.p}${run.a}–${run.p}${run.b}`); run = null; };
+      names.forEach(n => { const m = /^([A-Z])(\d+)$/.exec(n); if (m && run && run.p === m[1] && +m[2] === run.b + 1) run.b = +m[2]; else { flush(); if (m) run = { p: m[1], a: +m[2], b: +m[2] }; else out.push(n); } });
+      flush(); return out.join(', ');
+    }
+    // FIT TEST strip: four slots A–D at base − 0.1, base, base + 0.1, base + 0.2 (base = board + hand-cut clearance) — matches the A–D Slot fit choices
+    function fitTestPart(base, pieceNo, pieceName, process) {
+      const w = 51, h = 12, depth = 5, xs = [9, 20, 31, 42], vals = [base - 0.1, base, base + 0.1, base + 0.2];
+      let d = `M 0,0`;
+      xs.forEach((x, i) => { const a = x - vals[i] / 2, b = x + vals[i] / 2; d += ` L ${P2(a)},0 L ${P2(a)},${depth} L ${P2(b)},${depth} L ${P2(b)},0`; });
+      d += ` L ${w},0 L ${w},${h} L 0,${h} Z`;
+      const lab = xs.map((x, i) => `<text x="${x}" y="${P2(depth + 2.2)}" text-anchor="middle" font-size="1.4" font-weight="bold">${'ABCD'[i]}</text><text x="${x}" y="${P2(depth + 3.9)}" text-anchor="middle" font-size="1.1">${fmtMm(vals[i])}</text>`).join('');
+      return { name: 'FIT TEST', piece: pieceNo, pieceName, w, h, area: w * h, isTest: true,
+        cut: `<path d="${d}" fill="#FFFFFF"/>`, score: '',
+        label: lab + `<text x="1" y="${h - 1}" font-size="1.2" font-weight="bold">FIT TEST · ${process} · cut first</text>` };
+    }
+    // v4.3 (P1-3/P1-4/P4-3) · an explicit insertion order for every rib, from the rib geometry itself.
+    // Upright when every X-part stands on the floor; otherwise upside down on the Y-ribs' top edges, and every part
+    // that would hang once turned upright is named with its retention method (glue at its joints).
+    function waffleAssemblyPlan(res) {
+      const q = res.ribs.map(r => ({ r, b: wfBounds(r.poly) }));
+      const H = Math.max(...q.map(o => o.b.maxZ)), e = 1e-6;
+      const names = dir => q.filter(o => o.r.dir === dir).map(o => o.r.name);
+      const floatX = q.filter(o => o.r.dir === 'x' && o.b.minZ > e).map(o => o.r.name);
+      const yOff = q.filter(o => o.r.dir === 'y' && o.b.maxZ < H - e).map(o => o.r.name);
+      const ext = { x0: Math.min(...q.map(o => o.r.dir === 'x' ? o.r.pos - res.t / 2 : o.b.minU)), x1: Math.max(...q.map(o => o.r.dir === 'x' ? o.r.pos + res.t / 2 : o.b.maxU)),
+        y0: Math.min(...q.map(o => o.r.dir === 'y' ? o.r.pos - res.t / 2 : o.b.minU)), y1: Math.max(...q.map(o => o.r.dir === 'y' ? o.r.pos + res.t / 2 : o.b.maxU)) };
+      const size = { w: ext.x1 - ext.x0, d: ext.y1 - ext.y0, h: H };
+      if (!floatX.length) return { mode: 'upright', size, retain: [], unsupported: [],
+        steps: [{ en: `Stand ${ribRange(names('x'))} on the bench, slots up`, ar: `ثبّت ${ribRange(names('x'))} على سطح العمل والشقوق للأعلى` },
+                { en: `Lower ${ribRange(names('y'))} into the slots, one at a time`, ar: `أنزل ${ribRange(names('y'))} في الشقوق واحدًا تلو الآخر` }] };
+      // upside down (on the Y-ribs' top edges) needs glue for floating X-parts AND for Y-parts that cannot stand;
+      // upright needs glue only for the floating X-parts, pushed up into the Y-rib slots from below. Fewer glued parts wins; a tie goes upside down.
+      if (yOff.length) {
+        const standX = q.filter(o => o.r.dir === 'x' && o.b.minZ <= e).map(o => o.r.name);
+        return { mode: 'upright', size, retain: floatX, unsupported: [],
+          steps: [{ en: `Stand ${ribRange(standX)} on the bench, slots up`, ar: `ثبّت ${ribRange(standX)} على سطح العمل والشقوق للأعلى` },
+                  { en: `Lower ${ribRange(names('y'))} into the slots`, ar: `أنزل ${ribRange(names('y'))} في الشقوق` },
+                  { en: `Push ${ribRange(floatX)} up into the Y-rib slots from below; glue them at their joints`, ar: `ادفع ${ribRange(floatX)} للأعلى في شقوق أضلاع Y من الأسفل وثبّتها بنقطة غراء عند كل وصلة` }] };
+      }
+      return { mode: 'upside-down', size, retain: floatX, unsupported: [],
+        steps: [{ en: `Upside down: stand ${ribRange(names('y'))} on their TOP edges, slots up`, ar: `مقلوبًا: ثبّت ${ribRange(names('y'))} على حوافها العلوية والشقوق للأعلى` },
+                { en: `Lower ${ribRange(names('x'))} into the slots`, ar: `أنزل ${ribRange(names('x'))} في الشقوق` },
+                { en: `Glue ${ribRange(floatX)} at their joints; let dry; turn upright`, ar: `ثبّت ${ribRange(floatX)} بنقطة غراء عند كل وصلة؛ اتركها تجف؛ ثم اقلب النموذج` }] };
+    }
+    const AR_FONT = `font-family="Segoe UI, Tahoma, Arial, sans-serif"`;
+
     // ---- fold nets → separate parts (each cut outline with the folds and labels that sit on it) ----
     function splitFoldParts(g, pieceNo, pieceName) {
       const parts = svgElems(g.cut).map(el => {
@@ -4532,7 +4664,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     }
 
     // ---- waffle ribs → parts (+ one isometric assembly diagram per piece) ----
-    function waffleParts(res, pieceNo, pieceName) {
+    function waffleParts(res, pieceNo, pieceName, process = 'LASER') {
       const parts = res.ribs.map(r => {
         const b = wfBounds(r.poly), w = b.maxU - b.minU, h = b.maxZ - b.minZ;
         const d = wfRings(r.poly).map(ring => 'M ' + ring.slice(0, -1).map(([u, z]) => `${P2(u - b.minU)},${P2(b.maxZ - z)}`).join(' L ') + ' Z').join(' ');
@@ -4542,10 +4674,26 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           label: `<text x="${P2(w / 2)}" y="${P2(Math.max(fs + 0.5, h * 0.55))}" text-anchor="middle" font-weight="bold" font-size="${fs.toFixed(2)}">${r.name}</text>` +
             `<path d="M ${P2(Math.min(2, w / 4))},0.35 l 1.1,1.9 l -2.2,0 z" fill="#1E1B18"/>` };
       });
-      const iso = waffleIsoSvg(res, 46, 34);
-      const notes = [`${pieceName} — ASSEMBLY`, `▲ = TOP edge · board ${res.t} mm, not paper`, 'X-ribs: slots from the TOP', `Y-ribs: slots from the BOTTOM · slot ${res.slotWidth.toFixed(2)} mm`];
-      parts.push({ name: 'ASSEMBLY', piece: pieceNo, pieceName, w: Math.max(iso.w, 46), h: iso.h + 2 + notes.length * 2.2, area: 0, isDiagram: true, cut: '', score: '',
-        label: `<g>${iso.svg}</g>` + notes.map((n, i) => `<text x="0" y="${P2(iso.h + 2.4 + i * 2.2)}" font-size="${i ? 1.5 : 1.7}"${i ? ' fill="#5C5343"' : ' font-weight="bold"'}>${escapeXml(n)}</text>`).join('') });
+      const iso = waffleIsoSvg(res, 46, 34), plan = waffleAssemblyPlan(res), sw = fmtMm(res.slotWidth);
+      const lines = [
+        { en: `${pieceName} — ASSEMBLY · ${process}`, b: 1 },
+        { en: `▲ = TOP edge · board ${res.t} mm, not paper · slot ${sw} mm` },
+        { ar: `▲ = الحافة العلوية · كرتون ${res.t} مم، وليس ورقًا · عرض الشق ${sw} مم` },
+        { en: 'X-ribs: slots from the TOP · Y-ribs: slots from the BOTTOM' },
+        { ar: 'أضلاع X: الشقوق من الأعلى · أضلاع Y: الشقوق من الأسفل' },
+        ...plan.steps.flatMap((s, i) => [{ en: `${i + 1}. ${s.en}` }, { ar: `${i + 1}. ${s.ar}` }]),
+        ...(plan.retain.length ? [{ en: `⚠ ${ribRange(plan.retain)} do not reach the floor: glue them`, warn: 1 }, { ar: `⚠ ${ribRange(plan.retain)} لا تصل إلى الأرض: ثبّتها بالغراء`, warn: 1 }] : []),
+        { en: `Finished ≈ ${plan.size.w.toFixed(1)} × ${plan.size.d.toFixed(1)} × ${plan.size.h.toFixed(1)} mm` }];
+      const fsz = l => l.b ? 1.7 : 1.45, est = l => (l.en ? l.en.length * 0.6 : l.ar.length * 0.52) * fsz(l);
+      // notes beside the drawing (compact: the diagram must not cost an extra sheet), or below it on a narrow sheet
+      const notesW = Math.max(...lines.map(est)) + 1, side = iso.w + 3 + notesW <= 190;
+      const nx = side ? iso.w + 3 : 0, ny = side ? 2 : iso.h + 2.4;
+      const W = side ? nx + notesW : Math.max(iso.w, 46, notesW);
+      const txt = lines.map((l, i) => { const y = P2(ny + i * 2.15), fill = l.warn ? ' fill="#B45309"' : l.b ? '' : ' fill="#5C5343"', fw = l.b || l.warn ? ' font-weight="bold"' : '';
+        return l.en ? `<text x="${P2(nx)}" y="${y}" font-size="${fsz(l)}"${fill}${fw}>${escapeXml(l.en)}</text>` : `<text x="${P2(W)}" y="${y}" direction="rtl" unicode-bidi="embed" text-anchor="start" ${AR_FONT} font-size="${(fsz(l) * 1.1).toFixed(2)}"${fill}${fw}>${escapeXml(l.ar)}</text>`; }).join('');
+      parts.push({ name: 'ASSEMBLY', piece: pieceNo, pieceName, w: W, h: Math.max(side ? iso.h : 0, ny + lines.length * 2.15 - 1.2), area: 0, isDiagram: true, cut: '', score: '', plan,
+        label: `<g>${iso.svg}</g>` + txt });
+      parts.push(fitTestPart(res.t + res.k, pieceNo, pieceName, process === 'LASER' ? 'LASER' : 'HAND'));
       return parts;
     }
 
@@ -4561,8 +4709,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           if (s.kind === 'cut') { cut += `<path d="${d}" fill="#FFFFFF"/>`; area += s.closed ? ringArea(pts) : 0; } else score += `<path d="${d}"/>`;
         });
         const fs = Math.max(1.2, Math.min(LABEL_MAX_MM, w / 14));
+        const sd = score ? `<text x="${P2(w / 2)}" y="${P2(Math.min(h - 0.6, h / 2 + fs + 1))}" text-anchor="middle" font-size="1.1" fill="#0055FF">BLUE = STUDENT-DRAWN · NOT CHECKED AS A NET</text>` : '';
         return { name: pc.label, piece: pieceNo, pieceName, w, h, area, cut, score,
-          label: `<text x="${P2(w / 2)}" y="${P2(h / 2)}" text-anchor="middle" font-weight="bold" font-size="${fs.toFixed(2)}">${escapeXml(pc.label)}</text>` };
+          label: `<text x="${P2(w / 2)}" y="${P2(h / 2)}" text-anchor="middle" font-weight="bold" font-size="${fs.toFixed(2)}">${escapeXml(pc.label)}</text>` + sd };
       });
     }
 
@@ -4573,7 +4722,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     }
     function pieceMethod(p) { return isImgP(p) ? (p.imageBuild === 'waffle' ? 'waffle' : 'profile') : p.archetype === 'shelf' ? 'notch' : (p.method || 'fold'); }
     function waffleForPiece(p, cfg) {
-      const k = p.kerf === 'hand' ? WAFFLE_HANDCUT_KERF : 0, t = cfg.thicknessMm, f = 10 / cfg.scale;
+      const k = pieceKerf(p), t = cfg.thicknessMm, f = 10 / cfg.scale;
       let sil;
       if (isImgP(p)) {
         const pc = (p.parts || [])[0]; if (!pc) return null;
@@ -4596,25 +4745,32 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const name = pieceDisplayName(p), qty = Math.max(1, Math.min(20, parseInt(p.qty) || 1));
       let one;
       if (isImgP(p) && pieceMethod(p) !== 'waffle') one = imageParts(p, cfg.scale, pieceNo, name);
-      else if (pieceMethod(p) === 'waffle') { const wf = waffleForPiece(p, cfg); one = wf ? waffleParts(wf.res, pieceNo, name) : []; }
+      else if (pieceMethod(p) === 'waffle') { const wf = waffleForPiece(p, cfg); one = wf ? waffleParts(wf.res, pieceNo, name, p.kerf === 'hand' ? 'HAND-CUT +0.2 mm' : 'LASER') : []; }
       else {
         const [sw, sh] = sheetDims(cfg.sheetSize);
         const AW = sw - 2 * NEST_MARGIN, AH = sh - NEST_TOP - TITLE_BLOCK_H - 3 * PARTS_LINE_H - 3;
         const fits = pt => (pt.w <= AW && pt.h <= AH) || (pt.h <= AW && pt.w <= AH);
         const build = netStyle => splitFoldParts(foldGeometry({ archetype: p.archetype, w: p.w, d: p.d, h: p.h, subH: p.subH, scale: cfg.scale,
-          thicknessMm: cfg.thicknessMm, curveOffsets: p.curveOffsets || [0, 0, 0, 0, 0], joinery: p.archetype === 'shelf' ? 'slot' : 'fold', netStyle }, sw), pieceNo, name);
+          thicknessMm: cfg.thicknessMm, notchW: cfg.thicknessMm + (+p.slotAdj || 0), curveOffsets: p.curveOffsets || [0, 0, 0, 0, 0], joinery: p.archetype === 'shelf' ? 'slot' : 'fold', netStyle }, sw), pieceNo, name);
         one = build('cross');
         // a box whose cross-shaped net is larger than the sheet is drawn as wall strip + top instead (same true scale)
         if (['bed', 'cabinet'].includes(p.archetype) && !one.every(fits)) one = build('strip');
         if (p.archetype === 'shelf') {   // v4.2.3 (P0-2): the bookcase sheet carries its own assembly picture
           const f = 10 / cfg.scale, n = Math.max(2, Math.min(7, Math.round(p.subH))), a = bookcaseAssemblySvg(p.w * f, p.d * f, p.h * f, n, cfg.thicknessMm);
-          const notes = [`${name} — ASSEMBLY`, `No folding: no blue lines · board ${cfg.thicknessMm} mm, not paper`, `V1–V3 stand, slots to the FRONT · H1–H${n} slide in from the front`, `Slot ${cfg.thicknessMm} mm · test-fit one joint first · glue only if loose`];
-          one.push({ name: 'ASSEMBLY', piece: pieceNo, pieceName: name, w: Math.max(a.w, 50), h: a.h + 3 + notes.length * 2.2, area: 0, isDiagram: true, cut: '', score: '',
-            label: `<g transform="translate(0,1.5)">${a.svg}</g>` + notes.map((t, i) => `<text x="0" y="${P2(a.h + 3.4 + i * 2.2)}" font-size="${i ? 1.5 : 1.7}"${i ? ' fill="#5C5343"' : ' font-weight="bold"'}>${escapeXml(t)}</text>`).join('') });
+          const nw = fmtMm(cfg.thicknessMm + (+p.slotAdj || 0));
+          const notes = [{ en: `${name} — ASSEMBLY`, b: 1 }, { en: `No folding: no blue lines · board ${cfg.thicknessMm} mm, not paper · slot ${nw} mm` },
+            { ar: `بدون طيّ: لا خطوط زرقاء · كرتون ${cfg.thicknessMm} مم، وليس ورقًا · عرض الشق ${nw} مم` },
+            { en: `1. V1–V3 stand, slots to the FRONT  2. H1–H${n} slide in from the front` }, { ar: `١. ثبّت V1–V3 والشقوق للأمام  ٢. أدخل H1–H${n} من الأمام` },
+            { en: 'Cut the FIT TEST first · glue only if a joint is loose' }, { ar: 'اقطع شريط الاختبار أولًا · الغراء فقط إذا كانت الوصلة سائبة' }];
+          const fsz = l => l.b ? 1.7 : 1.45, W = Math.max(a.w, 50, ...notes.map(l => (l.en ? l.en.length * 0.6 : l.ar.length * 0.52) * fsz(l))) + 1;
+          one.push({ name: 'ASSEMBLY', piece: pieceNo, pieceName: name, w: W, h: a.h + 3.2 + notes.length * 2.15, area: 0, isDiagram: true, cut: '', score: '',
+            label: `<g transform="translate(0,1.5)">${a.svg}</g>` + notes.map((l, i) => { const y = P2(a.h + 3.4 + i * 2.15);
+              return l.en ? `<text x="0" y="${y}" font-size="${fsz(l)}"${l.b ? ' font-weight="bold"' : ' fill="#5C5343"'}>${escapeXml(l.en)}</text>` : `<text x="${P2(W)}" y="${y}" direction="rtl" unicode-bidi="embed" text-anchor="start" ${AR_FONT} font-size="${(fsz(l) * 1.1).toFixed(2)}" fill="#5C5343">${escapeXml(l.ar)}</text>`; }).join('') });
+          one.push(fitTestPart(cfg.thicknessMm, pieceNo, name, 'BOOKCASE'));
         }
       }
       const all = [];
-      for (let c = 0; c < qty; c++) one.forEach(pt => { if (c > 0 && pt.isDiagram) return; const q = { ...pt, copy: c + 1, qty }; all.push(ids && !pt.isDiagram ? withModelId(q, ids[c]) : q); });
+      for (let c = 0; c < qty; c++) one.forEach(pt => { if (c > 0 && (pt.isDiagram || pt.isTest)) return; const q = { ...pt, copy: c + 1, qty }; all.push(ids && !pt.isDiagram && !pt.isTest ? withModelId(q, ids[c]) : q); });
       return all;
     }
 
@@ -4668,12 +4824,21 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         [10, 20, 30, 40].map(k => `<line x1="${rx + k}" y1="${ry}" x2="${rx + k}" y2="${ry + 3}" stroke="#1E1B18" stroke-width="0.2"/>`).join('') +
         `<text x="${rx + 25}" y="${ry + 4}" text-anchor="middle" font-size="2.2" font-weight="bold">5 cm CHECK RULER (50 mm)</text>`;
     }
+    // v4.3 (P2-9): a second check in the side margins — a vertical 50 mm ruler (right) and an ID-card edge, 85.6 mm (left)
+    function marginChecksSvg(SW) {
+      const vx = SW - 6.6, y0 = 40, cx = 4.6;
+      return `<rect x="${vx}" y="${y0}" width="2" height="50" fill="#F6F3EC" stroke="#1E1B18" stroke-width="0.2"/>` +
+        [10, 20, 30, 40].map(k => `<line x1="${vx}" y1="${y0 + k}" x2="${vx + 1.2}" y2="${y0 + k}" stroke="#1E1B18" stroke-width="0.15"/>`).join('') +
+        `<text transform="translate(${vx + 1.55},${y0 + 25}) rotate(90)" text-anchor="middle" font-size="1.4" font-weight="bold">50 mm</text>` +
+        `<line x1="${cx}" y1="${y0}" x2="${cx}" y2="${y0 + 85.6}" stroke="#1E1B18" stroke-width="0.3"/><line x1="${cx - 0.8}" y1="${y0}" x2="${cx + 0.8}" y2="${y0}" stroke="#1E1B18" stroke-width="0.3"/><line x1="${cx - 0.8}" y1="${y0 + 85.6}" x2="${cx + 0.8}" y2="${y0 + 85.6}" stroke="#1E1B18" stroke-width="0.3"/>` +
+        `<text transform="translate(${cx + 1.6},${y0 + 42.8}) rotate(90)" text-anchor="middle" font-size="1.3">ID-CARD LONG EDGE = 85.6 mm</text>`;
+    }
 
     // Canonical text of what is on one sheet — hashed into that sheet's VERIFY stamp
-    function sheetCanon(sh, idx, total, pieces) {
+    function sheetCanon(sh, idx, total, pieces, t) {
       const per = {};
-      sh.placed.forEach(it => { const p = pieces[it.p.piece - 1]; const key = isImgP(p)
-        ? `image ${vNorm.name(p.label)} ${pieceMethod(p)}` : `${p.archetype} ${[p.w, p.d, p.h, p.subH].map(vNorm.num).join('x')} ${pieceMethod(p)}`;
+      sh.placed.forEach(it => { const p = pieces[it.p.piece - 1], sw0 = t == null ? null : slotWidthFor(p, t); const key = (isImgP(p)
+        ? `image ${vNorm.name(p.label)} ${pieceMethod(p)}` : `${p.archetype} ${[p.w, p.d, p.h, p.subH].map(vNorm.num).join('x')} ${pieceMethod(p)}`) + (sw0 != null ? ` slot${fmtMm(sw0)}` : '');
         per[key] = (per[key] || 0) + 1; });
       return `${idx}/${total}|` + Object.keys(per).sort().map(k => `${k}:${per[k]}`).join(';');
     }
@@ -4696,7 +4861,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const countLine = countsLine(counts, cfg.sheetSize);
       const sheets = nest.sheets.map((sh, k) => {
         const idx = k + 1, used = sh.placed.reduce((s, it) => s + (it.p.area || 0), 0), usePct = 100 * used / (SW * SH);
-        const stamp = computeStamp({ version: cfg.stampVersion || TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces),
+        const stamp = computeStamp({ version: TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces, cfg.thicknessMm),
           scale: cfg.scale, sheet: cfg.sheetSize, thickness: cfg.thicknessMm, joinery: '' });
         let cut = '', score = '', label = '';
         sh.placed.forEach(it => {
@@ -4714,16 +4879,21 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           const ps = byPiece[n], p = pieces[n - 1], names = {};
           ps.filter(q => !q.isDiagram).forEach(q => { const nm = q.name.replace(/^[A-Z]{2}\d+-/, ''); names[nm] = (names[nm] || 0) + 1; });
           const ids = modelIds[n - 1], idTxt = ids.length > 1 ? `${ids[0]}–${ids[ids.length - 1]}` : ids[0];
-          const txt = `${idTxt} ${ps[0].pieceName} · ${pieceMethod(p).toUpperCase()} · ${ids.length} model${ids.length > 1 ? 's' : ''} → ` + Object.entries(names).map(([nm, c]) => c > 1 ? `${nm} ×${c}` : nm).join(', ');
-          return txt.length > maxChars ? txt.slice(0, maxChars - 1) + '…' : txt;
+          const m = pieceMethod(p), proc = m === 'waffle' ? (p.kerf === 'hand' ? ' (HAND-CUT)' : ' (LASER)') : m === 'fold' && cfg.thicknessMm >= 1.5 ? ' (CUT FROM 0.5 mm BRISTOL)' : '';
+          const per1 = parts.filter(q => q.piece === +n && !q.isDiagram && !q.isTest).length / ids.length;
+          const label = { waffle: isImgP(p) ? 'WAFFLE INTERPRETATION' : 'WAFFLE', profile: 'PROFILE STUDY', notch: 'BOOKCASE NOTCHES', fold: 'FOLD & GLUE' }[m] || m.toUpperCase();
+          const txt = `${idTxt} ${ps[0].pieceName} · ${label}${proc} · ${ids.length} model${ids.length > 1 ? 's' : ''}, 1 model = ${Number.isInteger(per1) ? per1 : '≈' + per1.toFixed(1)} parts → ` + Object.entries(names).map(([nm, c]) => '☐ ' + (c > 1 ? `${nm} ×${c}` : nm)).join(' ');
+          const full = txt + (isImgP(p) && p.simplify ? ` · SIMPLIFIED: ${p.simplify}` : '');
+          return full.length > maxChars ? full.slice(0, maxChars - 1) + '…' : full;
         });
         const listY = SH - TITLE_BLOCK_H - lines.length * PARTS_LINE_H;
         const header = `
+          ${typeof PREVIEW_BUILD !== 'undefined' && PREVIEW_BUILD ? `<text x="${SW / 2}" y="7" text-anchor="middle" font-size="2.4" font-weight="bold" fill="#B91C1C">EXPERIMENTAL PREVIEW v${TOOL_VERSION} — NOT FOR COURSEWORK</text>` : ''}
           <text x="12" y="14" font-size="4" font-weight="bold">STUDIO FLAT-PACK SHEET ${idx} / ${total}</text>
           <text x="12" y="19" font-size="2.5" fill="#5C5343">SCALE 1:${cfg.scale} · BOARD ${vNorm.num(cfg.thicknessMm)} mm · ${cfg.sheetSize} · ${sh.placed.filter(it => !it.p.isDiagram).length} CUT-OUT PARTS ON THIS SHEET · MATERIAL USE ≈ ${usePct.toFixed(0)} % (ESTIMATE: PARTS ÷ SHEET AREA)</text>
-          <text x="12" y="24" font-size="2.3" fill="#DC2626" font-weight="bold">● SOLID RED = CUT THROUGH   <tspan fill="#0055FF">- - DASHED BLUE = SCORE &amp; FOLD</tspan></text>
-          ${checkRulerSvg(SW)}
-          ${sh.placed.some(it => pieceMethod(pieces[it.p.piece - 1]) === 'fold') ? foldRuleSvg(SW, 28.6, [...new Set(sh.placed.filter(it => pieceMethod(pieces[it.p.piece - 1]) === 'fold').map(it => pieces[it.p.piece - 1].archetype))]) : ''}
+          <text x="12" y="24" font-size="2.3" fill="#0055FF" font-weight="bold">1 · - - DASHED BLUE = SCORE FIRST, FOLD LATER   <tspan fill="#DC2626">2 · ● SOLID RED = CUT THROUGH</tspan></text>
+          ${checkRulerSvg(SW)}${marginChecksSvg(SW)}
+          ${sh.placed.some(it => pieceMethod(pieces[it.p.piece - 1]) === 'fold') ? foldRuleSvg(SW, 28.6) : ''}
           <text x="${NEST_MARGIN}" y="${P2(listY - 0.6)}" font-size="1.8" font-weight="bold">PARTS ON THIS SHEET · PROJECT: ${escapeXml(countLine.toUpperCase())}</text>
           ${lines.map((l, i) => `<text x="${NEST_MARGIN}" y="${P2(listY + (i + 1) * PARTS_LINE_H - 0.4)}" font-size="1.8" fill="#3E372B">${escapeXml(l)}</text>`).join('')}`;
         const sheetModels = new Set(sh.placed.filter(it => it.p.model).map(it => it.p.model)).size;
@@ -4734,7 +4904,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           `<g id="01_CUT_RED" fill="none" stroke="#DC2626" stroke-width="${PRINT_STROKE.cut}" stroke-linejoin="round">${cut}</g>` +
           `<g id="02_SCORE_BLUE" fill="none" stroke="#0055FF" stroke-width="${PRINT_STROKE.score}" stroke-dasharray="${PRINT_STROKE.scoreDash}">${score}</g>` +
           `<g id="03_LABELS_BLACK" fill="#1E1B18" font-family="'JetBrains Mono', ui-monospace, Consolas, monospace" font-size="2">${header}${label}${tb}</g></svg>`;
-        return { idx, svg, stamp, usePct, parts: sh.placed.length, canon: sheetCanon(sh, idx, total, pieces) };
+        return { idx, svg, stamp, usePct, parts: sh.placed.length, canon: sheetCanon(sh, idx, total, pieces, cfg.thicknessMm) };
       });
       return { sheets, oversize: nest.oversize, parts, total, counts, countLine };
     }
@@ -4781,7 +4951,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
     const isImgPiece = p => p.method === 'image' || p.archetype === 'image';
     const METHOD_ICON = { fold: 'S05', waffle: 'S06', image: 'S07' };
-    const METHOD_NAME = { fold: 'Fold & Glue', waffle: 'Waffle (laser)', image: 'From image', notch: 'Bookcase notches', profile: 'Cut outline' };
+    const METHOD_NAME = { fold: 'Fold & Glue', waffle: 'Waffle', image: 'From image', notch: 'Bookcase notches', profile: 'Profile study' };
 
     // ---------- pictures ----------
     function v4LoadImages(root = document) {
@@ -4799,7 +4969,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     function newPiece(archetype = 'chair', method = 'fold') {
       const a = archetypes[archetype];
       return { archetype, w: a.w, d: a.d, h: a.h, subH: a.subH, qty: 1, method, curveOffsets: [0, 0, 0, 0, 0],
-        spacing: WAFFLE_SPACING_DEFAULT, kerf: 'laser', imageBuild: 'profile', widthCm: 45 };
+        spacing: WAFFLE_SPACING_DEFAULT, kerf: 'laser', imageBuild: 'profile', widthCm: null, widthOk: false, imageType: '', traceOk: false, slotAdj: 0 };
     }
     function applyPieceToState(p) {
       if (!isImgPiece(p) || p.archetype !== 'image') {
@@ -4863,10 +5033,28 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         p.parts = imgState.lastPieces.map(pc => ({ w: +pc.w.toFixed(2), h: +pc.h.toFixed(2), label: pc.label, sub: pc.sub,
           shapes: pc.shapes.map(s => ({ kind: s.kind, closed: s.closed, pts: s.pts.map(q => [+q[0].toFixed(2), +q[1].toFixed(2)]) })) }));
         p.captureScale = imgState.scale; p.label = imgState.label || 'IMAGE PIECE';
+        const sig = JSON.stringify(imgState.shapes.map(s => [s.kind, s.pts.map(q => [Math.round(q[0]), Math.round(q[1])])]));
+        if (p.traceSig !== sig) { p.traceSig = sig; p.traceOk = false; }
         refreshV4Soon();
       }
+      if (v4Ready) renderTraceGate();
     };
 
+    // v4.3 (P1-1/P1-2): the FIT TEST result applies to every slot in the project (stored on each piece for Help Code / verify)
+    function setSlotAdj(v) { state.slotAdj = Math.max(-0.3, Math.min(0.5, +v || 0)); refreshV4(); showToast(`Slot fit ${state.slotAdj >= 0 ? '+' : ''}${state.slotAdj.toFixed(1)} mm applied to every slot`); }
+    // v4.3 (P1-12): the student confirms the traced outline before the parts can print
+    function renderTraceGate() {
+      const g = document.getElementById('img-trace-gate'), p = pieces[activePiece]; if (!g) return;
+      const has = !!(p && isImgPiece(p) && imgState.shapes && imgState.shapes.some(s => s.kind === 'cut'));
+      g.classList.toggle('hidden', !has); if (!has) return;
+      const qa = imgState.traceQA || {}, n = (qa.dropped || []).length;
+      g.classList.toggle('v4-info', !qa.suspect);
+      document.getElementById('img-trace-gate-msg').innerHTML = (qa.suspect
+        ? '⚠ <b>This looks like a room or background, not one piece of furniture</b> (the outline fills the picture or touches its edges). Use a flat elevation on white (H13), or hand-trace only the furniture. <i lang="ar" dir="rtl">يبدو هذا غرفة أو خلفية وليس قطعة أثاث واحدة. استخدم واجهة مسطحة على خلفية بيضاء أو تتبّع القطعة يدويًا.</i>'
+        : 'Check the red outline over your picture.') + (n ? ` ${n} fragment${n > 1 ? 's were' : ' was'} removed (grey boxes).` : '');
+      document.getElementById('img-trace-ok').checked = !!p.traceOk;
+    }
+    function setTraceOk(on) { const p = pieces[activePiece]; if (!p) return; p.traceOk = !!on; refreshV4(); }
     // ---------- pieces list ----------
     function addPiece() { pieces.push(newPiece()); editPiece(pieces.length - 1); }
     function removePiece(i) {
@@ -4909,13 +5097,18 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       });
       document.getElementById('ed-shape').classList.toggle('hidden', m === 'image');
       refreshWaffleLock();
-      if (m === 'image') syncImageToProject();
+      if (m === 'image') { syncImageToProject(); renderTraceGate(); }
       const p = pieces[activePiece];
       if (p && m === 'image') {
         document.getElementById('img-build-profile').classList.toggle('active', p.imageBuild !== 'waffle');
         document.getElementById('img-build-waffle').classList.toggle('active', p.imageBuild === 'waffle');
         document.getElementById('img-waffle-width-wrap').classList.toggle('hidden', p.imageBuild !== 'waffle');
-        document.getElementById('img-waffle-width').value = p.widthCm || 45;
+        const on = IMAGE_OUTPUTS[p.imageBuild === 'waffle' ? 'waffle' : 'profile'];
+        document.getElementById('img-output-note').innerHTML = `${on.en} <i lang="ar" dir="rtl">${on.ar}</i>`;
+        document.getElementById('img-simplify').value = p.simplify || '';
+        document.getElementById('img-waffle-width').value = p.widthCm || '';
+        document.getElementById('img-waffle-type').value = p.imageType || '';
+        document.getElementById('img-waffle-width-ok').checked = !!p.widthOk;
       }
       // a traced image built as a waffle uses the same spacing / kerf / checks panel
       if (p && m === 'image' && p.imageBuild === 'waffle') document.getElementById('ed-waffle').classList.remove('hidden');
@@ -4927,8 +5120,25 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         document.getElementById('wf-kerf-hand').classList.toggle('active', p.kerf === 'hand');
       }
     }
-    function setImageBuild(b) { const p = pieces[activePiece]; if (!p) return; if (b === 'waffle' && state.thicknessMm < WAFFLE_MIN_BOARD) { refreshWaffleLock(); showToast(WAFFLE_LOCK_MSG); return; } p.imageBuild = b; showMethodPanel('image'); refreshV4(); }
-    function setImageWaffleWidth(v) { const p = pieces[activePiece]; if (!p) return; p.widthCm = Math.max(5, +v || 45); refreshV4Soon(); }
+    function setImageBuild(b) {
+      const p = pieces[activePiece]; if (!p) return;
+      if (b === 'waffle' && state.thicknessMm < WAFFLE_MIN_BOARD) { refreshWaffleLock(); showToast(WAFFLE_LOCK_MSG); return; }
+      if (b === 'fold') {   // v4.3 (P2-10): folded approximation = the nearest furniture type as Fold & Glue, at Neufert size
+        const t = p.imageType && archetypes[p.imageType] ? p.imageType : 'chair', a = archetypes[t];
+        Object.assign(p, { method: 'fold', archetype: t, w: a.w, d: a.d, h: a.h, subH: a.subH, parts: null });
+        editPiece(activePiece); showToast(`Folded approximation: ${a.title} at Neufert size — adjust it, then compare with your picture`); return;
+      }
+      p.imageBuild = b; showMethodPanel('image'); refreshV4();
+    }
+    function setImageSimplify(v) { const p = pieces[activePiece]; if (!p) return; p.simplify = String(v || '').slice(0, 90); refreshV4Soon(); }
+    const IMAGE_OUTPUTS = {
+      profile: { en: '<b>Profile study</b> represents one flat silhouette at true scale. Simplified: depth and every other view. Still to design: how it stands and how the pieces join.', ar: 'دراسة المقطع: ظلّ مسطح واحد بالمقياس الحقيقي. المُبسَّط: العمق وباقي المناظر. ما زال للتصميم: كيف يقف وكيف تتصل الأجزاء.' },
+      waffle: { en: '<b>Waffle interpretation</b> represents the side profile as ribs across the chosen width. Simplified: the front is a rectangle; curves become steps. Still to design: soft parts and the front shape.', ar: 'التفسير بالتعشيق: المقطع الجانبي كأضلاع على العرض المختار. المُبسَّط: الواجهة مستطيل والمنحنيات درجات. ما زال للتصميم: الأجزاء اللينة وشكل الواجهة.' }
+    };
+    function setImageWaffleWidth(v) { const p = pieces[activePiece]; if (!p) return; p.widthCm = +v > 0 ? Math.max(5, +v) : null; p.widthOk = false; document.getElementById('img-waffle-width-ok').checked = false; refreshV4Soon(); }
+    // v4.3 (P1-11): the width of a traced Waffle starts from the Neufert width of the chosen furniture, and the student confirms it
+    function setImageWaffleType(t) { const p = pieces[activePiece]; if (!p) return; p.imageType = t; if (t && archetypes[t]) p.widthCm = archetypes[t].w; p.widthOk = false; showMethodPanel('image'); refreshV4(); }
+    function setImageWidthOk(on) { const p = pieces[activePiece]; if (!p) return; p.widthOk = !!on && p.widthCm > 0; if (on && !(p.widthCm > 0)) { document.getElementById('img-waffle-width-ok').checked = false; showToast('Type the real width first / اكتب العرض الحقيقي أولًا'); } refreshV4(); }
     function setWaffleSpacing(v) { const p = pieces[activePiece]; if (!p) return; p.spacing = +v; refreshV4Soon(); }
     function setWaffleKerf(k) { const p = pieces[activePiece]; if (!p) return; p.kerf = k; showMethodPanel('waffle'); refreshV4(); }
 
@@ -4936,7 +5146,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const m = pieceMethod(p);
       const dims = isImgPiece(p) ? (p.parts && p.parts.length ? `${p.parts.length} traced part${p.parts.length > 1 ? 's' : ''}` : 'not traced yet')
         : `${vNorm.num(p.w)}×${vNorm.num(p.d)}×${vNorm.num(p.h)} cm`;
-      return `${METHOD_NAME[m] || m} · ${dims} · ×${p.qty || 1}`;
+      return `${METHOD_NAME[m] || m}${m === 'waffle' ? (p.kerf === 'hand' ? ' · hand-cut' : ' · laser') : ''} · ${dims} · ×${p.qty || 1}`;
     }
     function renderPiecesList() {
       const box = document.getElementById('pieces-list');
@@ -4964,11 +5174,14 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       if (!wf) { counts.textContent = ''; checks.innerHTML = '<li class="err">Trace the image first (From image).</li>'; return; }
       const { res, validation: v } = wf, one = nestAll([{ ...p, qty: 1 }], cfg);
       counts.textContent = `X-ribs ${res.xs.length} · Y-ribs ${res.ys.length} · ${res.ribs.length} parts · crossings ${res.crossings.size} · slot ${res.slotWidth.toFixed(2)} mm · ${one.total} ${cfg.sheetSize} sheet${one.total > 1 ? 's' : ''}`;
-      const ok = [`Slot width = board + kerf = ${res.slotWidth.toFixed(2)} mm (${v.checked} joints measured)`, 'Every crossing: X-rib slot from the top meets Y-rib slot from the bottom at mid-height', 'Every slot reaches the rib edge (no closed slots)', `Web between slots ≥ 2 × board (${(2 * res.t).toFixed(1)} mm)`];
+      const plan = waffleAssemblyPlan(res), depth = waffleMinSlotDepth(res);
+      const ok = [`Geometry check passed — slot width = ${res.slotWidth.toFixed(2)} mm (${v.checked} joints measured)`, 'Every crossing: X-rib slot from the top meets Y-rib slot from the bottom at mid-height', 'Every slot reaches the rib edge (no closed slots)', `Web between slots ≥ 2 × board (${(2 * res.t).toFixed(1)} mm)`];
       const adv = v.errors.length ? waffleFailAdvice(p, v.errors[0]) : null;
       checks.innerHTML = v.errors.length ? `<li class="err"><b>${escapeXml(adv.en)}</b><br><span lang="ar" dir="rtl" class="bi-ar">${adv.ar}</span></li>` + v.errors.slice(0, 6).map(e => `<li class="err">${escapeXml(e)}</li>`).join('') + (v.errors.length > 6 ? `<li class="err">… ${v.errors.length - 6} more</li>` : '')
         : ok.map(t => `<li class="ok">${escapeXml(t)}</li>`).join('');
       checks.innerHTML += v.warnings.slice(0, 3).map(w => `<li class="warn">${escapeXml(w)}</li>`).join('');
+      if (p.kerf === 'hand' && depth < WAFFLE_HAND_MIN_DEPTH) checks.innerHTML += `<li class="warn">${escapeXml(`Hand-cut slots here are only ${depth.toFixed(1)} mm deep — the web under a slot may split. Laser-cut, use 1:10, or Fold & Glue.`)}<br><span lang="ar" dir="rtl" class="bi-ar">الشقوق اليدوية هنا عمقها ${depth.toFixed(1)} مم فقط — قد ينكسر الجزء تحت الشق. استخدم الليزر أو مقياس ١:١٠ أو الطي واللصق.</span></li>`;
+      if (!v.errors.length) checks.innerHTML += `<li class="${plan.retain.length ? 'warn' : 'ok'}">Order: ${escapeXml(plan.steps.map((s, i) => `${i + 1}. ${s.en}`).join(' · '))}${plan.retain.length ? `<br><span lang="ar" dir="rtl" class="bi-ar">⚠ ${ribRange(plan.retain)} لا تصل إلى الأرض: ثبّتها بالغراء</span>` : ''}</li>`;
       const iso = waffleIsoSvg(res, 100, 70);
       document.getElementById('wf-iso').innerHTML = `<g transform="translate(${((100 - iso.w) / 2).toFixed(2)},${((70 - iso.h) / 2).toFixed(2)})">${iso.svg}</g>`;
       document.getElementById('wf-sheet-preview').innerHTML = one.sheets[0] ? one.sheets[0].svg.replace(/width="\d+mm" height="\d+mm"/, 'style="width:100%;height:auto;display:block"') : '';
@@ -4981,6 +5194,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       if (/ribs ×|too thin|No crossings/i.test(err)) return { en: 'The piece is too small for ribs at this scale: use a larger scale for the whole model, or Fold & Glue.', ar: 'القطعة صغيرة جدًا على الأضلاع بهذا المقياس: استخدم مقياسًا أكبر للنموذج كله، أو الطي واللصق.' };
       return { en: 'Change the rib spacing (Advanced) or use Fold & Glue, and send your Help Code to your TA.', ar: 'غيّر المسافة بين الأضلاع (متقدّم) أو استخدم الطي واللصق، وأرسل رمز المساعدة إلى فريق التدريس.' };
     }
+    // v4.3 (P1-6): the shallowest slot of a waffle (half the shared crossing height)
+    const WAFFLE_HAND_MIN_DEPTH = 4;   // mm — below this a hand-cut slot's web tends to split (studio E1 / 1:20 test decides)
+    function waffleMinSlotDepth(res) { let m = Infinity; res.crossings.forEach(ivs => ivs.forEach(([lo, hi]) => { m = Math.min(m, (hi - lo) / 2); })); return m; }
     // ---------- C · check ----------
     function collectV4Checks(cfg, nest) {
       const items = [];
@@ -4991,18 +5207,28 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         if (isImgPiece(p) && !(p.parts && p.parts.length)) items.push({ cls: 'err', en: `${tag}: trace the image first`, ar: 'تتبّع الصورة أولًا', act: `editPiece(${i})`, actLabel: '✎' });
         else if (pieceMethod(p) === 'notch' && state.thicknessMm < WAFFLE_MIN_BOARD) items.push({ cls: 'err', en: `${tag}: the bookcase has slotted shelves — it needs board 1.5 mm or thicker (now ${state.thicknessMm} mm). Set the material in A, or choose another piece`, ar: 'المكتبة برفوف مشقوقة — تحتاج كرتونًا بسماكة ١٫٥ مم أو أكثر. غيّر الخامة في A أو اختر قطعة أخرى', act: `goStep('A')`, actLabel: 'A' });
         else if (pieceMethod(p) === 'waffle' && state.thicknessMm < WAFFLE_MIN_BOARD) items.push({ cls: 'err', en: `${tag}: Waffle needs board 1.5 mm or thicker (now ${state.thicknessMm} mm) — set the material in A, or use Fold & Glue`, ar: 'التعشيق يحتاج كرتونًا بسماكة ١٫٥ مم أو أكثر — غيّر الخامة في A أو استخدم الطي واللصق', act: `goStep('A')`, actLabel: 'A' });
+        else if (isImgPiece(p) && !p.traceOk) items.push({ cls: 'err', en: `${tag}: check the traced outline over your picture and confirm it is ONLY the furniture`, ar: 'راجع الحد المتتبَّع فوق الصورة وأكّد أنه يحتوي قطعة الأثاث فقط', act: `editPiece(${i})`, actLabel: '✎' });
+        else if (isImgPiece(p) && pieceMethod(p) === 'waffle' && !(p.widthCm > 0 && p.widthOk)) items.push({ cls: 'err', en: `${tag}: choose the furniture type and confirm its real width from the Neufert table`, ar: 'اختر نوع القطعة وأكّد عرضها الحقيقي من جدول نويفرت', act: `editPiece(${i})`, actLabel: '✎' });
         else if (pieceMethod(p) === 'waffle') {
           const wf = waffleForPiece(p, cfg);
+          if (wf && wf.validation.ok && p.kerf === 'hand' && waffleMinSlotDepth(wf.res) < WAFFLE_HAND_MIN_DEPTH) items.push({ cls: 'warn', en: `${tag}: hand-cut slots only ${waffleMinSlotDepth(wf.res).toFixed(1)} mm deep — laser-cut, use 1:10, or Fold & Glue`, ar: 'الشقوق اليدوية ضحلة جدًا — استخدم الليزر أو مقياس ١:١٠ أو الطي واللصق', act: `editPiece(${i})`, actLabel: '✎' });
           if (wf && !wf.validation.ok) { const adv = waffleFailAdvice(p, wf.validation.errors[0]); items.push({ cls: 'err', en: `${tag}: waffle check failed — ${wf.validation.errors[0].replace(/\.$/, '')}. ${adv.en}`, ar: 'فحص التعشيق لم ينجح — ' + adv.ar, act: `editPiece(${i})`, actLabel: '✎' }); }
           else if (wf && wf.validation.warnings.length) items.push({ cls: 'warn', en: `${tag}: ${wf.validation.warnings[0]}`, ar: 'تحذير في التعشيق', act: `editPiece(${i})`, actLabel: '✎' });
         }
       });
-      if (nest.oversize.length) items.push({ cls: 'err', en: `${nest.oversize.length} part(s) do not fit ${cfg.sheetSize} at 1:${cfg.scale} — use A3 or a smaller scale (nothing is shrunk)`, ar: 'قطع لا تتسع للورقة — استخدم A3 أو مقياسًا أصغر (لا يُصغَّر شيء)', act: cfg.sheetSize === 'A4' ? `setSheetSize('A3')` : `goStep('A')`, actLabel: cfg.sheetSize === 'A4' ? 'A3' : 'A' });
+      // v4.3 (P1-5): folding board of 1.5 mm or more cracks without V-grooves — always say so, with the fix
+      if (state.thicknessMm >= 1.5) pieces.forEach((p, i) => { if (pieceMethod(p) !== 'fold') return;
+        const same = Math.max(4, state.thicknessMm * 2.5) === 4;
+        items.push({ cls: 'warn', en: `#${i + 1} ${pieceDisplayName(p)}: Fold & Glue on ${state.thicknessMm} mm board cracks at the folds and leaves gaps at the corners. ${same ? 'Cut this piece from 0.5 mm Bristol card — its net is the same.' : 'Use 0.5 mm Bristol card for folded pieces.'}`, ar: same ? 'الطي على كرتون سميك يتشقق عند خطوط الطي. اقطع هذه القطعة من بريستول ٠٫٥ مم — الشبكة نفسها.' : 'الطي على كرتون سميك يتشقق. استخدم بريستول ٠٫٥ مم للقطع المطوية.', act: `editPiece(${i})`, actLabel: '✎' }); });
+      // v4.3 (P2-12): blue lines drawn on a traced outline are the student's own — never a checked net
+      pieces.forEach((p, i) => { if (isImgPiece(p) && (p.parts || []).some(pc => pc.shapes.some(s => s.kind === 'score'))) items.push({ cls: 'warn', en: `#${i + 1} ${pieceDisplayName(p)}: your blue fold lines are student-drawn — the tool has not checked them as a net`, ar: 'خطوط الطي الزرقاء رسمتها بنفسك — لم تتحقق الأداة منها كشبكة طي', act: `editPiece(${i})`, actLabel: '✎' }); });
+      pieces.forEach((p, i) => { if (isImgPiece(p) && p.parts && p.parts.length && !(p.simplify || '').trim()) items.push({ cls: 'warn', en: `#${i + 1} ${pieceDisplayName(p)}: write your simplification (what you keep, what you simplify)`, ar: 'اكتب التبسيط: ما الذي تحتفظ به وما الذي تبسّطه', act: `editPiece(${i})`, actLabel: '✎' }); });
+      if (nest.oversize.length) items.push({ cls: 'err', en: `${nest.oversize.length} part(s) do not fit ${cfg.sheetSize} at 1:${cfg.scale} — use A3, or change the scale of the WHOLE model, furniture and room plan together (nothing is shrunk)`, ar: 'قطع لا تتسع للورقة — استخدم A3 أو غيّر مقياس النموذج كله، الأثاث والمسقط معًا (لا يُصغَّر شيء)', act: cfg.sheetSize === 'A4' ? `setSheetSize('A3')` : `goStep('A')`, actLabel: cfg.sheetSize === 'A4' ? 'A3' : 'A' });
       try {
-        collectWorkflowIssues().filter(is => !/Student Name|Student ID|name|Overflow|do(es)? not fit/i.test(is.title)).forEach(is => items.push({ cls: 'warn',   // v3 single-piece checks: advice only; fit is decided by the nesting
+        collectWorkflowIssues().filter(is => !/Student Name|Student ID|name|Overflow|do(es)? not fit|too thick to fold|Fold & Glue Tabs/i.test(is.title)).forEach(is => items.push({ cls: 'warn',   // v3 single-piece checks: advice only; fit is decided by the nesting
            en: is.title, ar: '', act: is.fixFn ? `${is.fixFn}(); refreshV4()` : '', actLabel: is.fixLabel ? 'Fix' : '' }));
       } catch (e) { /* v3 checks need the editor state */ }
-      if (!items.some(it => it.cls === 'err')) items.unshift({ cls: 'ok', en: `Ready: ${nest.countLine}`, ar: 'جاهز للطباعة' });
+      if (!items.some(it => it.cls === 'err')) items.unshift({ cls: 'ok', en: `Geometry check passed — ready to print: ${nest.countLine}. Physical fit is tested by your FIT TEST strip and your build.`, ar: 'نجح فحص الهندسة — جاهز للطباعة. التركيب الفعلي يُختبر بشريط الاختبار وبالبناء.' });
       return items;
     }
     function renderChecks(items) {
@@ -5047,9 +5273,16 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const used = new Set(pieces.map(pieceMethod));
       const strip = (title, ar, keys, note) => `<div><div class="v4-strip-title">${title} <span lang="ar" dir="rtl">${ar}</span></div><div class="v4-strip">${keys.map(k => `<figure>${biFigureHtml(k)}</figure>`).join('')}</div>${note ? `<p class="v4-note">${note}</p>` : ''}</div>`;
       let html = '';
-      if (['fold', 'profile'].some(m => used.has(m))) html += strip('Fold &amp; Glue strip', 'طيّ ولصق', ['H07', 'H08', 'H09', 'H10', 'H12']);
+      if (['fold', 'profile'].some(m => used.has(m))) html += strip('Fold &amp; Glue strip', 'طيّ ولصق', ['H07', 'H08', 'H09', 'H10', 'H12'],
+        pieces.some(p => pieceMethod(p) === 'fold' && ['chair', 'sofa'].includes(p.archetype)) ? '<b>Chair / sofa:</b> the back A1 is a separate panel. Fold its two side tabs away from the print, then glue them inside the tall posts of B1 and B2, printed side to the rear. <i lang="ar" dir="rtl">الكرسي والكنبة: الظهر A1 لوح منفصل. اطوِ لسانيه بعيدًا عن الطباعة ثم ألصقهما داخل القائمين الطويلين في B1 وB2، والوجه المطبوع للخلف.</i>' : '');
       if (used.has('notch')) html += strip('Bookcase strip', 'المكتبة', ['H07', 'H09', 'BK1', 'H12'], 'The assembly picture of YOUR bookcase is printed on its sheet. <i lang="ar" dir="rtl">صورة تجميع مكتبتك مطبوعة على لوحتها.</i>');
-      if (used.has('waffle')) html += strip('Waffle strip', 'تعشيق', ['H09', 'H11'], 'The assembly picture of YOUR piece is printed on its sheet. Laser layers: 01 cut · 02 score · 03 labels. <i lang="ar" dir="rtl">صورة تجميع قطعتك مطبوعة على لوحتها.</i>');
+      if (used.has('waffle')) {
+        const cfg = v4Cfg(), rows = [];
+        pieces.forEach((p, i) => { if (pieceMethod(p) !== 'waffle') return; const wf = waffleForPiece(p, cfg); if (!wf) return; const pl = waffleAssemblyPlan(wf.res);
+          rows.push(`#${i + 1} ${escapeXml(pieceDisplayName(p))}: ${pl.mode === 'upside-down' ? '<b>upside down</b>' : 'upright'}${pl.retain.length ? ` · <b>glue ${ribRange(pl.retain)}</b>` : ' · no glue needed'}`); });
+        const keys = ['H07', 'H09', ...(pieces.some(p => pieceMethod(p) === 'waffle' && p.kerf === 'hand') ? ['HC1'] : []), ...(pieces.some(p => { if (pieceMethod(p) !== 'waffle') return false; const wf = waffleForPiece(p, cfg); return wf && waffleAssemblyPlan(wf.res).mode === 'upside-down'; }) ? ['UD1'] : []), 'H11'];
+        html += strip('Waffle strip', 'تعشيق', keys, `<b>Your pieces:</b> ${rows.join(' · ')}<br>The assembly order of YOUR piece is printed on its sheet. Laser layers: 01 cut · 02 score · 03 labels. <i lang="ar" dir="rtl">ترتيب تجميع قطعتك مطبوع على لوحتها.</i>`);
+      }
       const box = document.getElementById('build-strips'); box.innerHTML = html || '<p class="v4-note">Add a piece first.</p>'; v4LoadImages(box);
     }
 
@@ -5135,6 +5368,8 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     function refreshV4() {
       clearTimeout(v4Timer);
       if (!v4Ready) return;
+      pieces.forEach(q => { q.slotAdj = state.slotAdj || 0; });
+      { const w = document.getElementById('slot-adj-wrap'); if (w) w.classList.toggle('hidden', !projectUsesWaffle()); const s = document.getElementById('select-slot-adj'); if (s && document.activeElement !== s) s.value = String(state.slotAdj || 0); }
       const cfg = v4Cfg();
       v4Nest = nestAll(pieces, cfg);
       const items = collectV4Checks(cfg, v4Nest);
@@ -5144,7 +5379,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       if (p) {
         document.getElementById('ed-title').textContent = `#${activePiece + 1} ${pieceDisplayName(p)}`;
         const one = nestAll([p], cfg);
-        document.getElementById('ed-fit').textContent = one.oversize.length ? `${one.oversize.length} part(s) do not fit ${cfg.sheetSize} — use A3 or a smaller scale` : `This piece: ${one.countLine}`;
+        document.getElementById('ed-fit').textContent = one.oversize.length ? `${one.oversize.length} part(s) do not fit ${cfg.sheetSize} — use A3, or a smaller scale for the whole model` : `This piece: ${one.countLine}`;
         if (!document.getElementById('ed-waffle').classList.contains('hidden')) renderWafflePanel(p, cfg);
       }
       if (p) { try { runPrePrintDiagnostics(); v4PreviewFitNote(); } catch (e) { /* v3 panel not built yet */ } }
@@ -5162,7 +5397,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       try { const raw = document.getElementById('inp-restore-code').value.trim(); const m = raw.match(/STUDIO-HELP:\[([A-Za-z0-9+/=]+)\]/);
         pc = JSON.parse(decodeURIComponent(escape(atob(m ? m[1] : raw)))).pc; } catch (e) { /* the v3 loader reports the error */ }
       _v3LoadHelp();
-      if (Array.isArray(pc) && pc.length) { pieces = pc.map(p => ({ ...newPiece(p.archetype === 'image' ? 'chair' : p.archetype), ...p })); closeEditor(); refreshV4(); }
+      if (Array.isArray(pc) && pc.length) { pieces = pc.map(p => ({ ...newPiece(p.archetype === 'image' ? 'chair' : p.archetype), ...p })); state.slotAdj = +pieces[0].slotAdj || 0; closeEditor(); refreshV4(); }
     };
     const _v3FillHelp = verifyFillFromHelp;
     verifyFillFromHelp = function () {
@@ -5179,10 +5414,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const val = id => document.getElementById(id).value;
       const printed = val('vf-stamp').toUpperCase().replace(/[^A-Z2-7]/g, '').replace(/^(.{4})(.{4}).*$/, '$1-$2');
       if (!printed) return ok;
-      const ver = vNorm.version(val('vf-ver')), okVer = STAMP_COMPATIBLE.map(v => vNorm.version(v)).includes(ver) ? STAMP_COMPATIBLE.find(v => vNorm.version(v) === ver) : null;
-      const n = okVer ? nestAll(window.__vfPieces, { scale: +val('vf-scale'), sheetSize: val('vf-sheet'), thicknessMm: +val('vf-th'), name: val('vf-name'), id: val('vf-id'), course: state.courseCode, stampVersion: okVer }) : null;
-      const hit = n ? n.sheets.find(s => s.stamp === printed) : null;
+      const n = nestAll(window.__vfPieces, { scale: +val('vf-scale'), sheetSize: val('vf-sheet'), thicknessMm: +val('vf-th'), name: val('vf-name'), id: val('vf-id'), course: state.courseCode });
+      const hit = STAMP_COMPATIBLE.map(v => vNorm.version(v)).includes(vNorm.version(val('vf-ver'))) ? n.sheets.find(s => s.stamp === printed) : null;
       if (hit) { const out = document.getElementById('vf-result'); out.textContent = `✔ MATCH — ${printed} is sheet ${hit.idx} of ${n.total} of this student's pieces.`; out.style.color = '#166534'; return true; }
+      if (/^4\.2\./.test(vNorm.version(val('vf-ver')))) { const out = document.getElementById('vf-result');
+        out.innerHTML = 'This sheet was made with v' + escapeXml(vNorm.version(val('vf-ver'))) + '. Verify it in the previous version: <a href="v4.2.4/" style="text-decoration:underline">v4.2.4</a>. · <span lang="ar" dir="rtl">هذه اللوحة من إصدار سابق؛ تحقّق منها في الإصدار v4.2.4.</span>'; out.style.color = '#92400E'; }
       return ok;
     };
     function openShareSupportModal() { switchMainTab('help'); const d = document.getElementById('share-support-modal'); d.open = true; d.classList.remove('hidden'); d.scrollIntoView({ block: 'start' }); }

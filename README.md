@@ -2,24 +2,24 @@
 
 A single, self-contained HTML tool that works offline. First-year interior-design students at AASTMT use it to make true-scale maquette sheets: they list their furniture pieces, pack all the parts onto A4/A3 sheets (a shelf packer, not a guaranteed minimum), and print them at 100 % or export layered laser SVGs (`01_CUT_RED`, `02_SCORE_BLUE`, `03_LABELS_BLACK`).
 
-## Two versions
+## Versions
 
-| | Student release | Testing version |
-|---|---|---|
-| URL | https://reham-abdelwahab.github.io/rir2101-flatpack/ | https://reham-abdelwahab.github.io/rir2101-flatpack/testing/ |
-| Version | **v4.2.4** (`index.html`) | **v4.3.0-preview.2** (`testing/index.html`) |
-| Use | coursework | studio trials only — red "Experimental — not for coursework production" banner (EN/AR) and the same warning on every printed sheet |
-| Regression | `tests/regress.html` — 104 / 104 | `testing/tests/regress.html` — 112 / 112, incl. the net-folding verifier |
-| Handout | `RIR2101_FlatPack_Student_Handout_v4_0_1.pdf` | `testing/RIR2101_FlatPack_Student_Handout_PREVIEW.pdf` |
-| Browser setting key | `bi-guide-hidden` | `preview:bi-guide-hidden` (no student projects are stored in the browser; the Help Code holds them) |
+| | Student release | Previous version (kept) | Testing version |
+|---|---|---|---|
+| URL | https://reham-abdelwahab.github.io/rir2101-flatpack/ | https://reham-abdelwahab.github.io/rir2101-flatpack/v4.2.4/ | https://reham-abdelwahab.github.io/rir2101-flatpack/testing/ |
+| Version | **v4.3.0** (`index.html`) | **v4.2.4** (`v4.2.4/index.html`) | **v4.3.1-preview.0** (`testing/index.html`) |
+| Use | coursework from 25 Oct 2026 | TAs verify sheets printed before 25 Oct; fallback | next features only — red "Experimental" banner (EN/AR) and sheet warning |
+| Regression | `tests/regress.html` — 116 / 116, incl. the net-folding verifier | `v4.2.4/tests/regress.html` — 104 / 104 | `testing/tests/regress.html` — 112 / 112 |
+| Handout | `RIR2101_FlatPack_Student_Handout_v4_3_0.pdf` (same content also under the old name `…_v4_0_1.pdf`) | `v4.2.4/RIR2101_FlatPack_Student_Handout_v4_2_4.pdf` | `testing/RIR2101_FlatPack_Student_Handout_PREVIEW.pdf` |
+| Browser setting key | `bi-guide-hidden` | `bi-guide-hidden` | `preview:bi-guide-hidden` |
 
-Both suites were re-run headless (Chromium 153, Linux) on 24 Oct 2026: 104 / 104 and 112 / 112.
+All three suites were re-run headless (Chromium 153, Linux) on 24 Oct 2026.
 
-**Fold exceptions in the student release (v4.2.4).** The net-folding verifier passes 8 of 22 v4.2.x nets: bed and cabinet are correct. Since v4.2.4 every chair, sofa and table Fold & Glue sheet prints the exception in red beside the legend (EN/AR): **chair/sofa — the back and its side tabs fold TOWARD you**; **table — glue only the top of each leg tab, trim the rest**. Packing, sheet counts and VERIFY stamps are unchanged, and v4.2.3 sheets still verify. The proper fix (separate back panel, tabs on the aprons) is in the testing version. See [docs/VALIDATION.md](docs/VALIDATION.md) §2a.
+**What v4.3.0 is proven for, and what it is not.** Geometry is proven: every one of the 22 Fold & Glue nets folds to its target size with mountain folds only (v4.2.x: 8 of 22), and all 20 Waffle assembly plans reach the target size. The physical gates B2–B11 (FIT TEST, E1 table, class trial, curved backs, glue timing, usability, image path, template transfer, score coupon) have **not** been run. On 24 Oct 2026 the instructor decided to promote v4.3.0 before them, because the geometry of v4.2.4 is known to be wrong for chair, sofa and table nets. The physical gates are now post-release checks in [docs/PROGRESS_PLAN.md](docs/PROGRESS_PLAN.md) (Track B). Any ❌ there becomes a v4.3.x patch.
 
-**Promotion.** The testing version replaces the root only when the gates in [docs/PROGRESS_PLAN.md](docs/PROGRESS_PLAN.md) are closed: geometry (done), physical builds (E1, FIT TEST, class trial, curved backs) and a first-year usability test.
+**Stamps.** Only v4.3.0 sheets verify in the current version: v4.2.x chair, sofa and table nets differ, so their stamps are not listed in `STAMP_COMPATIBLE`. If a TA types a v4.2.x version into the verify box, the tool points to `v4.2.4/`, where those sheets still verify.
 
-Open either version in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md). Sections below marked **(v4.3, testing only)** are not in the student release.
+Open either version in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md).
 
 Course team: Dr. Reham Ahmed Abdelwahab (Instructor) · Eng. Mariam Thamarat, MSc. · Eng. Mariam Emad, BSc. (TAs).
 
@@ -46,9 +46,9 @@ There are three tabs, each with an English and an Arabic label. Every step shows
 - Since v4.2 the sofa uses the exact sections of its boxes (seat, arms, back). Validation also checks drop assembly: every Y-rib can be lowered onto the standing X-ribs, there are no windows, the X-ribs stand on the floor, and the grid is one connected piece.
 - Validation must pass before printing. It checks that every slot is board + kerf wide, that the web between slots is at least 2 × board, that every crossing has its top/bottom slot pair meeting at mid-height, that every slot reaches the rib edge (no closed slots), and that rib count × board fits inside the piece.
 - The bookcase keeps its notched shelves (board ≥ 1.5 mm, like Waffle).
-- **(v4.3, testing only)** Every Waffle and bookcase sheet carries a **FIT TEST** strip (slots A–D at base − 0.1, base, base + 0.1, base + 0.2 mm, matching the four Slot fit choices). Students cut it first and set the result in A ("Slot fit"); the correction moves every slot and is part of the VERIFY stamp. Each Waffle sheet prints an explicit **assembly order** for every rib (upright or upside down, chosen by the fewest glued parts), the ribs that need glue, and the finished size, in English and Arabic.
+- Every Waffle and bookcase sheet carries a **FIT TEST** strip (slots A–D at base − 0.1, base, base + 0.1, base + 0.2 mm, matching the four Slot fit choices). Students cut it first and set the result in A ("Slot fit"); the correction moves every slot and is part of the VERIFY stamp. Each Waffle sheet prints an explicit **assembly order** for every rib (upright or upside down, chosen by the fewest glued parts), the ribs that need glue, and the finished size, in English and Arabic.
 
-**Fold rule:** printed on every Fold & Glue sheet and under picture H08, in English and Arabic: *printed side out · score on the print · all blue lines fold away from you*. **(v4.3, testing only)** Every fold in the nets is a mountain fold — proven by the net-folding verifier (`testing/tests/fold_verify.js`), which folds the exported sheets in 3D. It found that the v4.2 chair/sofa back was a valley fold; in v4.3 the back is a separate panel glued to the posts, printed side to the rear. In the student release v4.2.4 the sheets print that exception (see above).
+**Fold rule:** printed on every Fold & Glue sheet and under picture H08, in English and Arabic: *printed side out · score on the print · all blue lines fold away from you*. Every fold in the nets is a mountain fold — proven by the net-folding verifier (`tests/fold_verify.js`), which folds the exported sheets in 3D. It found that the v4.2 chair/sofa back was a valley fold; in v4.3 the back is a separate panel glued to the posts, printed side to the rear. The previous version v4.2.4 prints that exception on its sheets instead.
 
 **Counts:** for example "2 furniture types · 5 models · 13 cut-out parts · 1 A4 sheet". Every part carries its model's id (CH1-A1, TB1-…).
 
@@ -69,11 +69,12 @@ To check a sheet, a TA opens **Help → I · Instructor → Verify a Printed She
 ## Regression checks
 
 The laptop has no Python or Node, so the tests run in a browser.
-- **Student release:** `tests/regress.html` (104 checks against the hosted v3.4 baseline).
-- **Testing version:** `testing/tests/regress.html` (112 checks, including the fold verifier).
+- **Student release v4.3.0:** `tests/regress.html` (116 checks against the hosted v3.4 baseline, including the fold verifier and the promotion checks).
+- **Previous version v4.2.4:** `v4.2.4/tests/regress.html` (104 checks).
+- **Testing version:** `testing/tests/regress.html` (112 checks).
 - Online, prefix either with https://reham-abdelwahab.github.io/rir2101-flatpack/. Offline, start `pwsh -NoProfile -File tests/serve.ps1` (port 8765, or `$env:PORT`). `?base=` (empty) runs the self-checks only.
 
-Validation for the paper (geometry, assembly, physical) is in [docs/VALIDATION.md](docs/VALIDATION.md). Studio test prints are in `testing/tests/prints/`.
+Validation for the paper (geometry, assembly, physical) is in [docs/VALIDATION.md](docs/VALIDATION.md). Studio test prints are in `testing/tests/prints/`. The tool comparison (Export Paper Model, PolyZamboni, Lamina, VTracer) is in [research/](research/).
 
 The page runs these checks:
 - **v3 behaviour:** the archetype × scale × sheet sweep must match the baseline exactly for bed, cabinet and bookcase; chair, sofa and table changed on purpose in v4.3 and are proven by the fold verifier. It also covers fit, ruler, stamp, Help Code and verify box, the image trace, offline loading and the icons.

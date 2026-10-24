@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.3.0 — 2026-10-24 (student release: v4.3 promoted to the site root)
+- **Why:** the net-folding verifier proves that v4.2.x chair, sofa and table nets break the printed fold rule (8 of 22 nets pass), while v4.3 passes 22 of 22. Students start new Fold & Glue work on Sun 25 Oct. The instructor decided on 24 Oct to promote v4.3 before the physical gates (B2–B11), which become post-release checks.
+- **What:** `testing/index.html` (v4.3.0-preview.2 code) → `index.html`, with the experimental banner and sheet watermark removed (`PREVIEW_BUILD = false`), `TOOL_VERSION = '4.3.0'`, the student browser key `bi-guide-hidden`, and the student page title. `STAMP_COMPATIBLE = ['4.3.0']`: v4.2.x stamps are not listed because chair, sofa and table sheets differ. If a TA types a v4.2.x version, the verify box points (EN/AR) to the kept page.
+- **Previous version kept:** v4.2.4 moved unchanged to `v4.2.4/` with its tests (`v4.2.4/tests/`, 104/104) and handout. It has a bilingual "previous version" banner and no other change.
+- **Tests:** `testing/tests/` merged into `tests/` (fold verifier and fixtures; studio prints stay in `testing/tests/prints/`). 4 new promotion checks: no banner, title or watermark; honest stamp list; v4.2.x verify pointer; previous version reachable. Root 116/116 · testing 112/112 · v4.2.4 104/104.
+- **Handout:** regenerated headless, 3 A4 pages, reads v4.3.0: `RIR2101_FlatPack_Student_Handout_v4_3_0.pdf` (also copied to the old filename `…_v4_0_1.pdf` so existing links show the current handout).
+- **Testing version:** `testing/` is now **v4.3.1-preview.0** (code identical to v4.3.0 plus banner and watermark) for the next preview.
+
 ## Two versions from 24 Oct 2026
 - **Student release** (site root): **v4.2.4** (v4.2.3 + printed fold exceptions).
 - **Testing version** (`testing/`): **v4.3.0-preview.2**, red "EXPERIMENTAL — not for coursework production" banner, the same warning printed on every sheet, its own browser setting key, its own tests (`testing/tests/`) and handout. It is promoted to the root only after the gates in `docs/PROGRESS_PLAN.md` close (geometry ✅; physical builds and a first-year usability test pending).

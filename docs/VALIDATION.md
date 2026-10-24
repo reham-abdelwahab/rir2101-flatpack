@@ -1,6 +1,8 @@
-# Validation — Studio Flat-Pack Maker v4.3.0-preview.2 (testing version)
+# Validation — Studio Flat-Pack Maker v4.3.0 (student release since 24 Oct 2026)
 
 *RIR2101 Interior Design 1 · 24 October 2026 · for the paper on the tool*
+
+**Release status.** The code validated here as v4.3.0-preview.2 was promoted unchanged to the student release v4.3.0 on 24 Oct 2026 (banner and watermark removed only). Proofs 1 and 2 hold for v4.3.0. Proof 3 was **not** done before the release, so it is recorded as post-release evidence (section 3). The verifier now lives in `tests/fold_verify.js` (copy kept in `testing/tests/`).
 
 A convincing picture proves nothing on its own. Each build method needs three separate proofs. This file states what is proven, how, and what is still open.
 
@@ -8,7 +10,7 @@ A convincing picture proves nothing on its own. Each build method needs three se
 |---|---|---|---|
 | **1 · Geometry** | score lines inside material; nets fit the sheet; 1:1 print | no interference, no closed slots, slot = board + kerf + fit, connected parts | ✅ both |
 | **2 · Assembly** | the **exported** net folds to the target W × D × H; every tab lands on a face; no overlap; one fold rule | an insertion order for every rib; every part that would hang has a retention method; finished size | ✅ both (zero board thickness) |
-| **3 · Physical build** | students build the printed sheet without corrective cuts | E1, FIT TEST, lift-and-place cycles | 🧪 studio tests pending |
+| **3 · Physical build** | students build the printed sheet without corrective cuts | E1, FIT TEST, lift-and-place cycles | 🧪 studio tests pending (post-release) |
 
 ## 1. Geometry (unchanged method, re-run on v4.3)
 - Waffle: 20 cases (chair, sofa, table, bed, cabinet × 1:10 / 1:20 × laser / hand-cut). `waffleValidate` plus the independent drop-assembly check in `testing/tests/regress.html` (polygon-clipping only): 0 interference, 0 holes, one connected grid, X-parts on the floor. Rib geometry is byte-identical to v4.2.2 in 20 / 20 cases.
