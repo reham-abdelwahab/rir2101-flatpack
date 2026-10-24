@@ -1590,7 +1590,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.2.3';
+    const TOOL_VERSION = '4.2.4';
+    // v4.2.4 changes printed notes only (no parts, packing or sheet content), so v4.2.3 nested-sheet stamps still verify
+    const STAMP_COMPATIBLE = ['4.2.3', '4.2.4'];
 
     // =========================================================================
     // LINE WEIGHTS (v4 · C3) — mm on paper. The screen preview may stay thicker;
@@ -1603,9 +1605,24 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // v4.1 (audit B): every blue line on a Fold & Glue net is a mountain fold — printed side out
     const FOLD_RULE = { en: 'FOLD RULE: printed side out · score on the print · all blue lines fold away from you',
                         ar: 'الوجه المطبوع للخارج · خطّ التحزيز على الطباعة · كل الخطوط الزرقاء تُطوى بعيداً عنك' };
-    function foldRuleSvg(sheetW, y) {
+    // v4.2.4: the v4.3 net-folding verifier showed two exceptions in these nets; they are printed beside the legend
+    // (free band x 92–202 mm, y 20–24.6 mm), so packing, sheet counts and VERIFY stamps do not change.
+    const FOLD_EXCEPTIONS = {
+      back:  { en: 'EXCEPT chair/sofa BACK + side tabs: fold TOWARD you', ar: 'إلا ظهر الكرسي أو الكنبة وألسنته: تُطوى نحوك' },
+      table: { en: 'TABLE: glue only the top of each leg tab, trim the rest', ar: 'الطاولة: الصق أعلى كل لسان فقط وقصّ الباقي' } };
+    // stacked (single-piece sheet, longer legend): one type only, English over Arabic at the right edge (x ≥ 130 mm)
+    function foldExceptionsSvg(sheetW, types, stacked) {
+      const keys = [];
+      if (types.some(t => t === 'chair' || t === 'sofa')) keys.push('back');
+      if (types.includes('table')) keys.push('table');
+      const T = (x, y, txt, ar) => `<text class="fold-rule" x="${x}" y="${y}"${x === sheetW - 8 ? ' text-anchor="end"' : ''}${ar ? ' font-family="Segoe UI, Tahoma, Arial, sans-serif"' : ''} font-size="1.6" font-weight="bold" fill="#B91C1C">${txt}</text>`;
+      if (stacked) return keys.slice(0, 1).map(k => T(sheetW - 8, 21.6, FOLD_EXCEPTIONS[k].en) + T(sheetW - 8, 24.0, FOLD_EXCEPTIONS[k].ar, true)).join('');
+      return keys.map((k, i) => { const y = 21.6 + i * 2.4, e = FOLD_EXCEPTIONS[k]; return T(92, y, e.en) + T(sheetW - 8, y, e.ar, true); }).join('');
+    }
+    function foldRuleSvg(sheetW, y, types = [], stacked = false) {
       return `<text class="fold-rule" x="12" y="${y}" font-size="1.8" font-weight="bold" fill="#0055FF">${FOLD_RULE.en}</text>` +
-        `<text class="fold-rule" x="${sheetW - 8}" y="${y}" text-anchor="end" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="2.1" font-weight="bold" fill="#0055FF">${FOLD_RULE.ar}</text>`;
+        `<text class="fold-rule" x="${sheetW - 8}" y="${y}" text-anchor="end" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="2.1" font-weight="bold" fill="#0055FF">${FOLD_RULE.ar}</text>` +
+        foldExceptionsSvg(sheetW, types, stacked);
     }
 
     // Laser files: hairline cut + score, score as a continuous line (score = low laser power)
@@ -3466,7 +3483,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       // =======================================================================
       // 4. ARCHITECTURAL STUDENT TITLE BLOCK STAMP AT BOTTOM OF SHEET
       // =======================================================================
-      if (state.archetype !== 'shelf' && state.fitsOnPage) labelLayer += foldRuleSvg(sheetW, 28.8);
+      if (state.archetype !== 'shelf' && state.fitsOnPage) labelLayer += foldRuleSvg(sheetW, 28.8, [state.archetype], true);
       const tbY = sheetH - 25;
       const tbW = sheetW - 12;
       state.stamp = computeStamp(sheetStampFields());
@@ -4679,7 +4696,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const countLine = countsLine(counts, cfg.sheetSize);
       const sheets = nest.sheets.map((sh, k) => {
         const idx = k + 1, used = sh.placed.reduce((s, it) => s + (it.p.area || 0), 0), usePct = 100 * used / (SW * SH);
-        const stamp = computeStamp({ version: TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces),
+        const stamp = computeStamp({ version: cfg.stampVersion || TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces),
           scale: cfg.scale, sheet: cfg.sheetSize, thickness: cfg.thicknessMm, joinery: '' });
         let cut = '', score = '', label = '';
         sh.placed.forEach(it => {
@@ -4706,7 +4723,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           <text x="12" y="19" font-size="2.5" fill="#5C5343">SCALE 1:${cfg.scale} · BOARD ${vNorm.num(cfg.thicknessMm)} mm · ${cfg.sheetSize} · ${sh.placed.filter(it => !it.p.isDiagram).length} CUT-OUT PARTS ON THIS SHEET · MATERIAL USE ≈ ${usePct.toFixed(0)} % (ESTIMATE: PARTS ÷ SHEET AREA)</text>
           <text x="12" y="24" font-size="2.3" fill="#DC2626" font-weight="bold">● SOLID RED = CUT THROUGH   <tspan fill="#0055FF">- - DASHED BLUE = SCORE &amp; FOLD</tspan></text>
           ${checkRulerSvg(SW)}
-          ${sh.placed.some(it => pieceMethod(pieces[it.p.piece - 1]) === 'fold') ? foldRuleSvg(SW, 28.6) : ''}
+          ${sh.placed.some(it => pieceMethod(pieces[it.p.piece - 1]) === 'fold') ? foldRuleSvg(SW, 28.6, [...new Set(sh.placed.filter(it => pieceMethod(pieces[it.p.piece - 1]) === 'fold').map(it => pieces[it.p.piece - 1].archetype))]) : ''}
           <text x="${NEST_MARGIN}" y="${P2(listY - 0.6)}" font-size="1.8" font-weight="bold">PARTS ON THIS SHEET · PROJECT: ${escapeXml(countLine.toUpperCase())}</text>
           ${lines.map((l, i) => `<text x="${NEST_MARGIN}" y="${P2(listY + (i + 1) * PARTS_LINE_H - 0.4)}" font-size="1.8" fill="#3E372B">${escapeXml(l)}</text>`).join('')}`;
         const sheetModels = new Set(sh.placed.filter(it => it.p.model).map(it => it.p.model)).size;
@@ -5162,8 +5179,9 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const val = id => document.getElementById(id).value;
       const printed = val('vf-stamp').toUpperCase().replace(/[^A-Z2-7]/g, '').replace(/^(.{4})(.{4}).*$/, '$1-$2');
       if (!printed) return ok;
-      const n = nestAll(window.__vfPieces, { scale: +val('vf-scale'), sheetSize: val('vf-sheet'), thicknessMm: +val('vf-th'), name: val('vf-name'), id: val('vf-id'), course: state.courseCode });
-      const hit = vNorm.version(val('vf-ver')) === TOOL_VERSION ? n.sheets.find(s => s.stamp === printed) : null;
+      const ver = vNorm.version(val('vf-ver')), okVer = STAMP_COMPATIBLE.map(v => vNorm.version(v)).includes(ver) ? STAMP_COMPATIBLE.find(v => vNorm.version(v) === ver) : null;
+      const n = okVer ? nestAll(window.__vfPieces, { scale: +val('vf-scale'), sheetSize: val('vf-sheet'), thicknessMm: +val('vf-th'), name: val('vf-name'), id: val('vf-id'), course: state.courseCode, stampVersion: okVer }) : null;
+      const hit = n ? n.sheets.find(s => s.stamp === printed) : null;
       if (hit) { const out = document.getElementById('vf-result'); out.textContent = `✔ MATCH — ${printed} is sheet ${hit.idx} of ${n.total} of this student's pieces.`; out.style.color = '#166534'; return true; }
       return ok;
     };

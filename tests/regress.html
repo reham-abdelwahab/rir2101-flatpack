@@ -614,6 +614,37 @@ function overlapCheck(w, svgId) {
     log(w2.__errors.length === 0, 'P0 checks: no console errors', w2.__errors.join(' | '));
   }
 
+  // ---------------- v4.2.4 · fold exceptions found by the v4.3 net-folding verifier ----------------
+  {
+    const f3 = document.createElement('iframe'); f3.style.display = 'none'; document.body.appendChild(f3);
+    const w3 = await load(f3, CAND); await sleep(300);
+    const cfg = { scale: 20, sheetSize: 'A4', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' };
+    const sv = list => w3.nestAll(list.map(([a, m]) => w3.newPiece(a, m)), cfg).sheets.map(x => x.svg).join('');
+    const mix = sv([['chair', 'fold'], ['table', 'fold'], ['sofa', 'fold']]), bc = sv([['bed', 'fold'], ['cabinet', 'fold']]);
+    const wf = w3.nestAll([{ ...w3.newPiece('chair', 'waffle') }], { ...cfg, scale: 10, thicknessMm: 1.5 }).sheets.map(x => x.svg).join('');
+    log(/EXCEPT chair\/sofa BACK \+ side tabs: fold TOWARD you/.test(mix) && /إلا ظهر الكرسي أو الكنبة وألسنته: تُطوى نحوك/.test(mix) && /TABLE: glue only the top of each leg tab, trim the rest/.test(mix) && /الطاولة: الصق أعلى كل لسان فقط وقصّ الباقي/.test(mix),
+      'v4.2.4 Chair, sofa and table Fold & Glue sheets print the two fold exceptions (EN/AR)');
+    log(!/EXCEPT chair|TABLE: glue only/.test(bc) && !/EXCEPT chair|TABLE: glue only/.test(wf), 'v4.2.4 Bed/cabinet and Waffle-only sheets carry no exception (their nets pass the verifier)');
+    const host = document.createElement("div"); host.innerHTML = w3.nestAll([w3.newPiece('chair', 'fold'), w3.newPiece('table', 'fold')], cfg).sheets[0].svg; document.body.appendChild(host);
+    const bb = [...host.querySelectorAll('text')].map(t => ({ t: t.textContent, b: t.getBBox() }));
+    const ex = bb.filter(o => /EXCEPT|TABLE: glue|إلا ظهر|الطاولة/.test(o.t)), others = bb.filter(o => !ex.includes(o) && o.b.y < 31);
+    const hit = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+    log(ex.length === 4 && ex.every(o => o.b.x >= 91 && o.b.x + o.b.width <= 202.5 && o.b.y >= 19.6 && o.b.y + o.b.height <= 31) && !ex.some(a => others.some(o => hit(a.b, o.b))) && !ex.some(a => ex.some(c => c !== a && hit(a.b, c.b))),
+      'v4.2.4 Exception lines sit in the free band beside the legend: no overlap with the header, ruler, fold rule or each other', ex.map(o => `${o.t.slice(0, 12)} ${o.b.x.toFixed(1)}–${(o.b.x + o.b.width).toFixed(1)}`).join(' | '));
+    const a = w3.nestAll([w3.newPiece('chair', 'fold'), w3.newPiece('table', 'fold')], cfg), b = w3.nestAll([w3.newPiece('chair', 'fold'), w3.newPiece('table', 'fold')], { ...cfg, stampVersion: '4.2.3' });
+    log(w3.eval('STAMP_COMPATIBLE').includes('4.2.3') && a.sheets.length === b.sheets.length && a.sheets.every((x, i) => x.stamp !== b.sheets[i].stamp && x.svg.length > 0), 'v4.2.4 Same packing as v4.2.3; v4.2.3 nested-sheet stamps are still accepted by the TA verify box');
+    host.remove();
+    // single-piece sheet (longer legend): exception stacked at the right edge, clear of the legend
+    for (const ar of ['chair', 'table']) {
+      w3.selectArchetype(ar); await sleep(250);
+      const h2 = document.createElement('div'); h2.innerHTML = w3.document.getElementById('a4-cut-svg').outerHTML; document.body.appendChild(h2);
+      const b2 = [...h2.querySelectorAll('text')].map(t => ({ t: t.textContent, b: t.getBBox() })), e2 = b2.filter(o => /EXCEPT|TABLE: glue|إلا ظهر|الطاولة/.test(o.t)), o2 = b2.filter(o => !e2.includes(o) && o.b.y < 31 && o.b.width > 0);
+      log(e2.length === 2 && !e2.some(a => o2.some(o => hit(a.b, o.b))) && !hit(e2[0].b, e2[1].b), `v4.2.4 Single-piece ${ar} sheet: exception (EN over AR) clear of the legend and ruler`, e2.map(o => `${o.b.x.toFixed(1)}–${(o.b.x + o.b.width).toFixed(1)} y${o.b.y.toFixed(1)}`).join(' | '));
+      h2.remove();
+    }
+    log(w3.__errors.length === 0, 'v4.2.4 checks: no console errors', w3.__errors.join(' | '));
+  }
+
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));
   window.REGRESS ={ pass: results.every(r => r.ok), results };
   out.insertAdjacentHTML('beforeend', `\n\n<b>${window.REGRESS.pass ? 'ALL PASS' : 'FAILURES'}</b> (${results.filter(r => r.ok).length}/${results.length})`);

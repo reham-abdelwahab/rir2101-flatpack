@@ -1,4 +1,4 @@
-# Validation — Studio Flat-Pack Maker v4.3.0-preview.1 (testing version)
+# Validation — Studio Flat-Pack Maker v4.3.0-preview.2 (testing version)
 
 *RIR2101 Interior Design 1 · 24 October 2026 · for the paper on the tool*
 
@@ -20,7 +20,7 @@ A convincing picture proves nothing on its own. Each build method needs three se
 
 **Results.** 22 nets: 5 types × 1:10 / 1:20, plus arched and sloped tops for chair, sofa and bed.
 
-| Net | Parts | Hinges | Tabs mated | Assembled size (mm) | v4.3 | v4.2.3 (same test) |
+| Net | Parts | Hinges | Tabs mated | Assembled size (mm) | v4.3 | v4.2.x (same test) |
 |---|---|---|---|---|---|---|
 | chair 1:10 · flat | 4 | 7 | 6/6 | 45 × 45 × 85 | ✅ | ❌ A1 BACK: BACK–SEAT; A1 BACK tab on BACK → B1 LEFT |
 | chair 1:10 · arched | 4 | 7 | 6/6 | 45 × 45 × 105 | ✅ | ❌ A1 BACK: BACK–SEAT; A1 BACK tab on BACK → B1 LEFT |
@@ -45,7 +45,7 @@ A convincing picture proves nothing on its own. Each build method needs three se
 | cabinet 1:10 · flat | 1 | 8 | 4/4 | 120 × 50 × 80 | ✅ | ✅ |
 | cabinet 1:20 · flat | 1 | 8 | 4/4 | 60 × 25 × 40 | ✅ | ✅ |
 
-v4.3: **22 / 22** pass (162 hinges, 110 / 110 tabs). v4.2.3: **8 / 22** pass.
+v4.3: **22 / 22** pass (162 hinges, 110 / 110 tabs). v4.2.x: **8 / 22** pass; since v4.2.4 the student sheets print the two exceptions (chair/sofa back folds toward you; table tabs: glue the top, trim the rest) until v4.3 is promoted.
 
 **What the verifier found and what changed.**
 1. *Chair and sofa back.* Folding the back up from the seat is a valley fold, so the printed rule ("all blue lines fold away from you") was false for every chair and sofa, and the back's tabs had to fold toward the print. → The back is now a separate panel A1, drawn mirrored and glued with its printed side to the rear; its side tabs fold away from the print onto the posts.
@@ -86,7 +86,7 @@ Every part has a step; every part that would hang has a stated retention method;
 ## 3. Physical validity — still open (studio)
 | Test | Answers | Sheet |
 |---|---|---|
-| **FIT TEST strip** (every Waffle / bookcase sheet) | which slot (−0.1 / 0 / +0.1 mm) fits the real board and cutter | on the sheet |
+| **FIT TEST strip** (every Waffle / bookcase sheet) | which slot A–D (−0.1 / 0 / +0.1 / +0.2 mm) fits the real board and cutter | on the sheet |
 | **E1** table 1:10, laser and hand-cut; upside down; turn upright; 5 lift-and-place cycles | do glued X2–X13 hold? real kerf? | `testing/tests/prints/E1_table_1-10_waffle_*_v4_3.pdf` |
 | **1:20 hand-cut** table / chair | does the web under a 3 mm slot split? (sets the 4 mm threshold) | from the tool |
 | **Class trial** 4 chairs + 1 table, 1:20, 0.5 mm Bristol | do students build the new chair back and the table tabs without corrective cuts? | `testing/tests/prints/TRIAL_4chairs_1table_1-20_fold_v4_3.pdf` |

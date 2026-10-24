@@ -626,10 +626,10 @@ function overlapCheck(w, svgId) {
     const d3 = id => w3.document.getElementById(id), A = w3.eval('archetypes');
     const mk = (a, o = {}) => ({ archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty: 1, method: 'waffle', curveOffsets: [0, 0, 0, 0, 0], spacing: 10, kerf: 'laser', ...o });
     const cfg = { scale: 10, sheetSize: 'A4', thicknessMm: 1.5, name: 'T', id: '1', course: 'RIR2101' };
-    // P1-1 FIT TEST strip: laser 1.40/1.50/1.60, hand 1.60/1.70/1.80, bookcase 1.40/1.50/1.60
+    // P1-1 FIT TEST strip: laser 1.40/1.50/1.60/1.70, hand 1.60/1.70/1.80/1.90, bookcase 1.40/1.50/1.60/1.70
     const fit = n => n.parts.find(p => p.isTest);
     const fl = fit(w3.nestAll([mk('table')], cfg)), fh = fit(w3.nestAll([mk('table', { kerf: 'hand' })], cfg)), fb = fit(w3.nestAll([mk('shelf', { method: 'fold' })], { ...cfg, scale: 20 }));
-    log(fl && /1\.40.*1\.50.*1\.60/s.test(fl.label) && fh && /1\.60.*1\.70.*1\.80/s.test(fh.label) && fb && /1\.40.*1\.50.*1\.60/s.test(fb.label) && /M 0,0 L 8\.30,0/.test(fl.cut), 'P1-1 FIT TEST strip on Waffle (laser/hand) and bookcase sheets: slots base − 0.1, base, base + 0.1');
+    log(fl && /1\.40.*1\.50.*1\.60.*1\.70/s.test(fl.label) && />D</.test(fl.label) && fh && /1\.60.*1\.70.*1\.80.*1\.90/s.test(fh.label) && fb && /1\.40.*1\.50.*1\.60.*1\.70/s.test(fb.label) && /M 0,0 L 8\.30,0/.test(fl.cut), 'P1-1 FIT TEST strip on Waffle (laser/hand) and bookcase sheets: slots A–D at base − 0.1, base, base + 0.1, base + 0.2');
     // P1-2 the measured correction moves every slot, and the stamp (P3-4) changes with it
     const r0 = w3.waffleForPiece(mk('table'), cfg).res, r1 = w3.waffleForPiece(mk('table', { slotAdj: 0.1 }), cfg).res;
     const st = o => w3.nestAll([mk('table', o)], cfg).sheets.map(s => s.stamp).join();

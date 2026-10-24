@@ -1,9 +1,19 @@
 # Changelog
 
 ## Two versions from 24 Oct 2026
-- **Student release** (site root): **v4.2.3**. Unchanged by the preview below.
-- **Testing version** (`testing/`): **v4.3.0-preview.1**, red "EXPERIMENTAL — not for coursework production" banner, the same warning printed on every sheet, its own browser setting key, its own tests (`testing/tests/`) and handout. It is promoted to the root only after the gates in `docs/PROGRESS_PLAN.md` close (geometry ✅; physical builds and a first-year usability test pending).
-- Both suites re-run headless at `b972c85` (24 Oct, Chromium 153): student 97/97, testing 112/112.
+- **Student release** (site root): **v4.2.4** (v4.2.3 + printed fold exceptions).
+- **Testing version** (`testing/`): **v4.3.0-preview.2**, red "EXPERIMENTAL — not for coursework production" banner, the same warning printed on every sheet, its own browser setting key, its own tests (`testing/tests/`) and handout. It is promoted to the root only after the gates in `docs/PROGRESS_PLAN.md` close (geometry ✅; physical builds and a first-year usability test pending).
+- Both suites re-run headless (24 Oct, Chromium 153): student 104/104, testing 112/112.
+
+## v4.3.0-preview.2 — 2026-10-24 (testing/ only)
+- **FIT TEST strip has four slots A–D** (base − 0.1, base, base + 0.1, base + 0.2 mm). The Slot fit list already offered "D · looser (+0.2 mm)", but the strip printed only A–C, so a student could not test the value they were offered (modification list: slot coupon t + 0.2). Regression check P1-1 now requires all four.
+- E1 test prints (`testing/tests/prints/E1_*`) and the preview handout regenerated. 112/112.
+
+## v4.2.4 — 2026-10-24 (student release: fold exceptions printed on the sheet)
+- Why: the v4.3 net-folding verifier showed that in v4.2.x chair and sofa nets the back (and its side tabs) folds toward the print, and table leg tabs meet the apron only near the top, so the printed rule "all blue lines fold away from you" is not true for those lines.
+- Every Fold & Glue sheet with a chair or sofa prints, in red beside the legend, **"EXCEPT chair/sofa BACK + side tabs: fold TOWARD you"** / «إلا ظهر الكرسي أو الكنبة وألسنته: تُطوى نحوك»; with a table, **"TABLE: glue only the top of each leg tab, trim the rest"** / «الطاولة: الصق أعلى كل لسان فقط وقصّ الباقي». Nested sheets use the free band right of the legend; the single-piece sheet stacks English over Arabic at the right edge. Bed, cabinet, bookcase and Waffle sheets are unchanged.
+- No change to parts, nets, packing, sheet counts or sheet canon. `STAMP_COMPATIBLE = ['4.2.3', '4.2.4']`: the TA verify box still accepts v4.2.3 nested-sheet stamps.
+- Tests: 7 new checks (texts EN/AR, no note on bed/cabinet/Waffle, no overlap with header, ruler or fold rule on nested and single-piece sheets, same packing and v4.2.3 stamp acceptance). 104/104. Handout regenerated (3 A4 pages, now reads v4.2.4).
 
 ## v4.3.0-preview.1 — 2026-10-24 (testing/ only: modification list P1–P4 closed in code; physical values left to the studio)
 **Fold & Glue — proven by folding the exported nets (P4-2)**

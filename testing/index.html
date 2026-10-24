@@ -361,7 +361,7 @@
 
 <body class="bg-paper-100 text-paper-900 font-sans min-h-screen flex flex-col print-mode-sheet sheet-a4 selection:bg-amber-200">
   <div id="preview-banner" class="no-print" role="alert" style="background:#B91C1C;color:#fff;font:600 14px/1.4 system-ui,sans-serif;padding:8px 16px;text-align:center">
-    EXPERIMENTAL TESTING VERSION (v4.3.0-preview.1) — not for coursework production. Students: use the <a href="../" style="color:#fff;text-decoration:underline">student version</a>.
+    EXPERIMENTAL TESTING VERSION (v4.3.0-preview.2) — not for coursework production. Students: use the <a href="../" style="color:#fff;text-decoration:underline">student version</a>.
     <span lang="ar" dir="rtl" style="display:block">نسخة تجريبية للاختبار — لا تُستخدم لأعمال المقرر. الطلاب: استخدموا نسخة الطلاب.</span>
   </div>
 
@@ -1626,7 +1626,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.3.0-preview.1';
+    const TOOL_VERSION = '4.3.0-preview.2';
     const PREVIEW_BUILD = true;   // testing/ only: experimental build, not for coursework production
 
     // =========================================================================
@@ -4602,13 +4602,13 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       names.forEach(n => { const m = /^([A-Z])(\d+)$/.exec(n); if (m && run && run.p === m[1] && +m[2] === run.b + 1) run.b = +m[2]; else { flush(); if (m) run = { p: m[1], a: +m[2], b: +m[2] }; else out.push(n); } });
       flush(); return out.join(', ');
     }
-    // FIT TEST strip: three slots at base − 0.1, base, base + 0.1 (base = board + hand-cut clearance)
+    // FIT TEST strip: four slots A–D at base − 0.1, base, base + 0.1, base + 0.2 (base = board + hand-cut clearance) — matches the A–D Slot fit choices
     function fitTestPart(base, pieceNo, pieceName, process) {
-      const w = 40, h = 12, depth = 5, xs = [9, 20, 31], vals = [base - 0.1, base, base + 0.1];
+      const w = 51, h = 12, depth = 5, xs = [9, 20, 31, 42], vals = [base - 0.1, base, base + 0.1, base + 0.2];
       let d = `M 0,0`;
       xs.forEach((x, i) => { const a = x - vals[i] / 2, b = x + vals[i] / 2; d += ` L ${P2(a)},0 L ${P2(a)},${depth} L ${P2(b)},${depth} L ${P2(b)},0`; });
       d += ` L ${w},0 L ${w},${h} L 0,${h} Z`;
-      const lab = xs.map((x, i) => `<text x="${x}" y="${P2(depth + 2.2)}" text-anchor="middle" font-size="1.4" font-weight="bold">${'ABC'[i]}</text><text x="${x}" y="${P2(depth + 3.9)}" text-anchor="middle" font-size="1.1">${fmtMm(vals[i])}</text>`).join('');
+      const lab = xs.map((x, i) => `<text x="${x}" y="${P2(depth + 2.2)}" text-anchor="middle" font-size="1.4" font-weight="bold">${'ABCD'[i]}</text><text x="${x}" y="${P2(depth + 3.9)}" text-anchor="middle" font-size="1.1">${fmtMm(vals[i])}</text>`).join('');
       return { name: 'FIT TEST', piece: pieceNo, pieceName, w, h, area: w * h, isTest: true,
         cut: `<path d="${d}" fill="#FFFFFF"/>`, score: '',
         label: lab + `<text x="1" y="${h - 1}" font-size="1.2" font-weight="bold">FIT TEST · ${process} · cut first</text>` };
