@@ -1,0 +1,11 @@
+{
+ "case": "room_h14",
+ "source": "index.html v4.3.0, inlined image map key 'H14' (handout figure: 'Wrong: perspective, room and shadows.')",
+ "sha256": "0c9e8f7b6857839f9e71ef9e08180f2cb55b3d93c188fc4bbb210a01199c71a9",
+ "image_px": [
+  800,
+  800
+ ],
+ "ground_truth": null,
+ "expected": "a responsible pipeline stops / warns instead of returning a room outline as furniture"
+}

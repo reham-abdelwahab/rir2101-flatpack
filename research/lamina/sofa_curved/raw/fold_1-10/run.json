@@ -1,0 +1,46 @@
+{
+ "tool": "Lamina (lamina3d)",
+ "commit": "bed1c9a",
+ "source": "/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/tools/lamina",
+ "model": "/root/rir2101-flatpack/research/models/sofa_curved_fold.stl",
+ "mode": "folded",
+ "params_set": {
+  "joint": "tab",
+  "thickness": 0.5,
+  "material": "card",
+  "sheet": [
+   297,
+   420
+  ],
+  "project": "sofa_curved_fold_1-10"
+ },
+ "seconds_build": 0.113,
+ "seconds_export": 0.002,
+ "seconds_total": 0.114,
+ "files": [
+  "sofa_curved_fold_1-10_v1.0 sheet1 card.svg",
+  "sofa_curved_fold_1-10_v1.0 assembly-key.txt"
+ ],
+ "cli_output": [
+  "folded: 1 slices, 1 parts, 1 sheet(s) (34% used), 0 errors, 0 warnings",
+  "  note  open surface (not a closed solid): panelled as it is — its boundary edges stay open and carry no joints, and a hole in the surface stays a hole",
+  "  note  unfolded 21 triangles into 1 panel(s), 0 seams"
+ ],
+ "counts": {
+  "slices": 1,
+  "parts": 1,
+  "errors": 0,
+  "warnings": 0,
+  "faces": 21
+ },
+ "sheets": 1,
+ "sheet_usage": 0.34268719030784023,
+ "coverage": 1.0,
+ "notes": [
+  "open surface (not a closed solid): panelled as it is — its boundary edges stay open and carry no joints, and a hole in the surface stays a hole",
+  "unfolded 21 triangles into 1 panel(s), 0 seams"
+ ],
+ "errors": [],
+ "fixes": [],
+ "slices": []
+}

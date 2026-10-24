@@ -12,7 +12,7 @@ Find out, with measurements, whether established open-source tools make better m
 - RQ4 — Which of these differences survive a physical build by first-year students?
 
 ## 2. Status on 24 Oct 2026
-**Nothing has been run.** The four tools were chosen from their documentation only (ChatGPT review, 24 Oct). No tool installed, no case generated, no output scored, no code integrated. The testing site `/testing/` (v4.3.0-preview.2) is where integrated templates would appear; today it contains only our own v4.3 work.
+**Update 19:40: D0–D7 and D9 done — see [research/RESULTS.md](../research/RESULTS.md).** Earlier the same day: nothing had been run. The four tools were chosen from their documentation only (ChatGPT review, 24 Oct). No tool installed, no case generated, no output scored, no code integrated. The testing site `/testing/` (v4.3.0-preview.2) is where integrated templates would appear; today it contains only our own v4.3 work.
 
 ## 3. Candidates (facts to verify in step D1 — do not quote as checked)
 | Tool | Repo | Role here | Expected input → output | Known limits (from its docs) | Check before use |
@@ -63,17 +63,17 @@ A tool's output is adopted for one furniture case only if it is **no worse than 
 ## 8. Step tracker
 | # | Step | Output | Status |
 |---|---|---|---|
-| D0 | Agree this protocol and the decision rule (section 6) | Reham's yes | ⬜ |
-| D1 | Install and pin the four tools (cloud container: Blender headless / `bpy`, `pip install vtracer`, Lamina as documented); check licences | `research/TOOLS.md` | ⬜ |
-| D2 | Build the 3 dimensioned models (Rhino) | `research/models/*.obj` | ⬜ |
-| D3 | Adapter + signed-fold extension of `fold_verify.js`; re-run our 22 nets to prove nothing changed | adapter + tests green | ⬜ |
-| D4 | Export Paper Model: chair, table, curved sofa × 1:10/1:20 → scored | rows in RESULTS | ⬜ |
-| D5 | PolyZamboni: same, focus curved sofa/chair | rows | ⬜ |
-| D6 | Lamina vs our Waffle: same cases | rows | ⬜ |
-| D7 | VTracer vs our tracer: 3 image cases | rows | ⬜ |
-| D8 | Studio builds of the passing nets (links to B5/B8) | physical columns | ⬜ |
-| D9 | Decision per case (section 6); integrate adopted templates (section 7) | `/testing/` preview | ⬜ |
-| D10 | Paper: methods, results table, limits | draft in project docs | ⬜ |
+| D0 | Agree this protocol and the decision rule (section 6) | Reham's yes | ✅ 24 Oct: approved with two amendments (generic judge before scoring; TA build may serve as physical proof) |
+| D1 | Install and pin the four tools (cloud container: Blender headless / `bpy`, `pip install vtracer`, Lamina as documented); check licences | `research/TOOLS.md` | ✅ `research/TOOLS.md` (GPL-3.0 ×2, AGPL-3.0, MIT) |
+| D2 | Build the 3 dimensioned models (Rhino) | `research/models/*.obj` | ✅ `research/models/` — from our v4.3.0 nets (not Rhino), hand-checked areas |
+| D3 | Adapter + signed-fold extension of `fold_verify.js`; re-run our 22 nets to prove nothing changed | adapter + tests green | ✅ new generic judge `research/net_judge.py` + `waffle_judge.py` (fold_verify.js could not read other nets); validated on v4.2.4; found F2 |
+| D4 | Export Paper Model: chair, table, curved sofa × 1:10/1:20 → scored | rows in RESULTS | ✅ 5/6 nets; sofa 1:10 no A3 output (add-on split option crashes) |
+| D5 | PolyZamboni: same, focus curved sofa/chair | rows | ✅ 4/6 on A3 (pass); table & sofa 1:10 only on A2 |
+| D6 | Lamina vs our Waffle: same cases | rows | ✅ Lamina = ours at 1:10 chair/table; fails 1:20 and sofa 1:10 |
+| D7 | VTracer vs our tracer: 3 image cases | rows | ✅ `research/vtracer/` — VTracer slightly more accurate on clean images; neither stops on H14 (F3) |
+| D8 | Studio builds of the passing nets (links to B5/B8) | physical columns | ⬜ studio |
+| D9 | Decision per case (section 6); integrate adopted templates (section 7) | `/testing/` preview | ✅ decision: keep ours for every case (no tool better on a physical metric; ties keep ours); nothing to integrate |
+| D10 | Paper: methods, results table, limits | draft in project docs | ⬜ draft from `research/RESULTS.md` |
 
 **Open question to Reham:** start D1–D4 with Export Paper Model on the chair, table and curved sofa?
 

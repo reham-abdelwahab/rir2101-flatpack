@@ -1,0 +1,363 @@
+{
+ "note": "instrumentation of Lamina internals (core.modes.folded.Folded.build); not a Lamina output",
+ "mesh_faces": 21,
+ "mesh_area_mm2": 2745.0,
+ "refold_error_mm": 1.1374233532693354e-14,
+ "panels": [
+  {
+   "label": "P-1",
+   "faces": 21,
+   "panel_area_mm2": 2744.9999939253935,
+   "lines": [
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       31.8198,
+       0.0
+      ],
+      [
+       -0.0,
+       0.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": true,
+     "coords": [
+      [
+       31.8198,
+       0.0
+      ],
+      [
+       15.9099,
+       -15.9099
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       42.6385,
+       -10.8187
+      ],
+      [
+       15.9099,
+       -15.9099
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       42.6385,
+       -10.8187
+      ],
+      [
+       26.7286,
+       -26.7286
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       42.6385,
+       -10.8187
+      ],
+      [
+       31.8198,
+       -31.8198
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": true,
+     "coords": [
+      [
+       42.6385,
+       -10.8187
+      ],
+      [
+       31.8198,
+       0.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       42.6385,
+       -10.8187
+      ],
+      [
+       47.7297,
+       15.9099
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       47.7297,
+       -15.9099
+      ],
+      [
+       47.7297,
+       15.9099
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": true,
+     "coords": [
+      [
+       15.9099,
+       -15.9099
+      ],
+      [
+       26.7286,
+       -26.7286
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       15.9099,
+       -15.9099
+      ],
+      [
+       15.9099,
+       -47.7297
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       26.7286,
+       -26.7286
+      ],
+      [
+       15.9099,
+       -47.7297
+      ]
+     ]
+    },
+    {
+     "style": "dashed",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": false,
+     "coords": [
+      [
+       31.8198,
+       -31.8198
+      ],
+      [
+       47.7297,
+       -15.9099
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       31.8198,
+       -31.8198
+      ],
+      [
+       49.9394,
+       -41.9845
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       47.7297,
+       -15.9099
+      ],
+      [
+       49.9394,
+       -41.9845
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       47.7297,
+       -15.9099
+      ],
+      [
+       53.9169,
+       -38.007
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       47.7297,
+       -15.9099
+      ],
+      [
+       57.8944,
+       -34.0295
+      ]
+     ]
+    },
+    {
+     "style": "dashed",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": false,
+     "coords": [
+      [
+       31.8198,
+       -31.8198
+      ],
+      [
+       45.9619,
+       -45.9619
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       31.8198,
+       -31.8198
+      ],
+      [
+       41.5072,
+       -50.4167
+      ]
+     ]
+    },
+    {
+     "style": "dashed",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": false,
+     "coords": [
+      [
+       47.7297,
+       -15.9099
+      ],
+      [
+       61.8718,
+       -30.052
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       52.8209,
+       -10.8187
+      ],
+      [
+       61.8718,
+       -30.052
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "tab_hinge",
+     "coords": [
+      [
+       14.6371,
+       -14.6371
+      ],
+      [
+       1.2728,
+       -1.2728
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "tab_hinge",
+     "coords": [
+      [
+       30.547,
+       1.2728
+      ],
+      [
+       17.1827,
+       14.6371
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

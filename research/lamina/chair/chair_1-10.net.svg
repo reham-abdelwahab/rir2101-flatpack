@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="420mm" viewBox="0 0 297 420" data-tool="Lamina 0.3.0 (bed1c9a)" data-case="chair" data-scale="1-10" data-sheets="1">
+<rect class="no-export" x="0" y="0" width="297" height="420" fill="#ffffff"/>
+<rect class="no-export sheet" x="0" y="0" width="297" height="420" fill="none" stroke="#bbbbbb" stroke-width="0.3"/>
+<g id="01_CUT_RED" fill="none" stroke="#dc2626" stroke-width="0.25">
+<path data-part="P-1" d="M96.8478,371.6000 L106.8478,377.3735 L106.8478,403.6265 L96.8478,409.4000 L96.8478,413.0000 L51.8478,413.0000 L51.8478,409.4000 L41.8478,403.6265 L41.8478,377.3735 L51.8478,371.6000 L51.8478,368.0000 L6.8478,368.0000 L6.8478,323.0000 L37.4478,323.0000 L39.2478,283.0000 L51.8478,283.0000 L63.0978,283.0000 L85.5978,283.0000 L96.8478,283.0000 L109.4478,283.0000 L111.2478,323.0000 L141.8478,323.0000 L141.8478,368.0000 L96.8478,368.0000 Z"/>
+</g>
+<g id="02_SCORE_BLUE" fill="none" stroke="#2563eb" stroke-width="0.25">
+<line x1="51.8478" y1="368.0000" x2="96.8478" y2="413.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="368.0000" x2="96.8478" y2="368.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="51.8478" y1="337.4000" x2="96.8478" y2="368.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="337.4000" x2="96.8478" y2="337.4000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="337.4000" x2="96.8478" y2="323.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="337.4000" x2="51.8478" y2="368.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="51.8478" y1="337.4000" x2="6.8478" y2="368.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="323.0000" x2="6.8478" y2="368.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="96.8478" y1="368.0000" x2="96.8478" y2="337.4000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="96.8478" y1="368.0000" x2="141.8478" y2="323.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="96.8478" y1="337.4000" x2="141.8478" y2="323.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="96.8478" y1="323.0000" x2="51.8478" y2="323.0000" data-fold="valley" data-kind="fold" data-lamina-style="dashed" data-dihedral-deg="90"/>
+<line x1="96.8478" y1="323.0000" x2="85.5978" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="323.0000" x2="85.5978" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="323.0000" x2="74.3478" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="323.0000" x2="63.0978" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="96.8478" y1="323.0000" x2="96.8478" y2="283.0000" data-fold="valley" data-kind="fold" data-lamina-style="dashed" data-dihedral-deg="90"/>
+<line x1="96.8478" y1="323.0000" x2="109.4478" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="51.8478" y1="323.0000" x2="51.8478" y2="283.0000" data-fold="valley" data-kind="fold" data-lamina-style="dashed" data-dihedral-deg="90"/>
+<line x1="37.4478" y1="323.0000" x2="51.8478" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="96.8478" y1="371.6000" x2="96.8478" y2="409.4000" data-fold="mountain" data-kind="tab_hinge" data-lamina-style="solid"/>
+<line x1="51.8478" y1="371.6000" x2="51.8478" y2="409.4000" data-fold="mountain" data-kind="tab_hinge" data-lamina-style="solid"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000000" font-family="sans-serif">
+<text x="99.328" y="390.500" font-size="2.4" text-anchor="middle" transform="rotate(45 99.328 390.500)">1</text>
+<text x="119.348" y="364.320" font-size="2.4" text-anchor="middle" transform="rotate(-45 119.348 364.320)">1</text>
+<text x="49.368" y="390.500" font-size="2.4" text-anchor="middle" transform="rotate(45 49.368 390.500)">2</text>
+<text x="29.348" y="364.320" font-size="2.4" text-anchor="middle" transform="rotate(-45 29.348 364.320)">2</text>
+<text x="74.109" y="340.613" font-size="4" text-anchor="middle">CF11 P-1</text>
+</g>
+</svg>

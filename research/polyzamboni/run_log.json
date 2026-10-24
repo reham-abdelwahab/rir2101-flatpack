@@ -1,0 +1,680 @@
+{
+ "chair": {
+  "case": "chair",
+  "edges_total": 23,
+  "edges_interior": 8,
+  "init_checks": {
+   "manifold": true,
+   "normals_ok": false,
+   "multi_touching_faces": 0,
+   "non_triangulatable_faces": 0,
+   "max_planarity_score": 0.0
+  },
+  "refused_by_init_check": true,
+  "init_refusal_dialog": "Something went wrong D: / Bad normals! Try \"Recalculate Outside\" (Shift-N)",
+  "manual_edge_split": [
+   [
+    [
+     0.0,
+     0.0,
+     45.0
+    ],
+    [
+     45.0,
+     0.0,
+     45.0
+    ]
+   ]
+  ],
+  "init_checks_after_split": {
+   "normals_ok": true,
+   "manifold": true
+  },
+  "components": 1,
+  "component_faces": [
+   [
+    0,
+    1,
+    2,
+    3,
+    4
+   ]
+  ],
+  "cyclic_components": [],
+  "overlapping_components": [],
+  "glue_flap_collisions": {},
+  "edge_constraints": {
+   "1": "auto",
+   "5": "auto",
+   "17": "auto"
+  },
+  "build_steps": {
+   "0": 1
+  },
+  "seconds_init_autocut_buildsteps": 0.1094,
+  "exports": {
+   "1-10": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 4.9498,
+    "pages": 1,
+    "files": [
+     "raw_1-10_page1.svg"
+    ],
+    "paper_size": "A3",
+    "target_model_height_BU": 0.08500000089406967,
+    "sizing_scale": 0.0010000000474974513,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Greedy Auto Cuts total time: 0.09514951705932617",
+     "POLYZAMBONI INFO: Init time: 0.01s (5.3%)",
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   },
+   "1-20": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 1.5197,
+    "pages": 1,
+    "files": [
+     "raw_1-20_page1.svg"
+    ],
+    "paper_size": "A3",
+    "target_model_height_BU": 0.042500000447034836,
+    "sizing_scale": 0.0005000000237487257,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!",
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   }
+  },
+  "print_data_debug": [
+   {
+    "tri_signed_area_signs": [
+     1
+    ],
+    "faces": 21,
+    "cut_edges": 20,
+    "fold_edges": [
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ]
+    ],
+    "flap_folds": [
+     [
+      true,
+      89.999995674289,
+      5
+     ],
+     [
+      true,
+      89.999995674289,
+      1
+     ],
+     [
+      true,
+      89.999995674289,
+      17
+     ]
+    ],
+    "glue_flaps": 3
+   }
+  ],
+  "settings_used": {
+   "general": {
+    "use_custom_layout": false,
+    "paper_size": "A3",
+    "custom_page_width": 0.20999999344348907,
+    "custom_page_height": 0.296999990940094,
+    "page_margin": 0.004999999888241291,
+    "space_between_components": 0.0024999999441206455,
+    "one_material_per_page": true,
+    "target_model_height": 0.042500000447034836,
+    "show_step_numbers": true,
+    "show_edge_numbers": true,
+    "edge_number_font_size": 6,
+    "build_steps_font_size": 12,
+    "edge_number_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "steps_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "print_on_inside": false,
+    "scaling_mode": "HEIGHT",
+    "sizing_scale": 0.0005000000237487257
+   },
+   "line": {
+    "line_width": 0.5,
+    "hide_fold_edge_angle_th": 0.01745329238474369,
+    "cut_edge_ls": "-",
+    "convex_fold_edge_ls": "..",
+    "concave_fold_edge_ls": "--.",
+    "glue_flap_ls": "-",
+    "lines_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "convex_fold_edges_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "concave_fold_edges_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "edge_number_offset": 0.0005000000237487257
+   },
+   "texture": {
+    "apply_textures": true,
+    "apply_glue_flap_color": true,
+    "print_two_sided": false,
+    "apply_textures_back": true,
+    "apply_glue_flap_color_back": true,
+    "glue_flap_color": [
+     0.800000011920929,
+     0.800000011920929,
+     0.800000011920929
+    ],
+    "texture_quality": "super"
+   },
+   "mesh": {
+    "glue_flap_height": 5.0,
+    "glue_flap_angle": 0.7853981852531433,
+    "prefer_alternating_flaps": true,
+    "smart_trim_glue_flaps": true
+   }
+  },
+  "stdout": [
+   "POLYZAMBONI INFO: Greedy Auto Cuts total time: 0.09514951705932617",
+   "POLYZAMBONI INFO: Init time: 0.01s (5.3%)",
+   "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!",
+   "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!"
+  ]
+ },
+ "table": {
+  "case": "table",
+  "edges_total": 16,
+  "edges_interior": 8,
+  "init_checks": {
+   "manifold": true,
+   "normals_ok": true,
+   "multi_touching_faces": 0,
+   "non_triangulatable_faces": 0,
+   "max_planarity_score": 0.0
+  },
+  "refused_by_init_check": false,
+  "components": 1,
+  "component_faces": [
+   [
+    0,
+    1,
+    2,
+    3,
+    4
+   ]
+  ],
+  "cyclic_components": [],
+  "overlapping_components": [],
+  "glue_flap_collisions": {},
+  "edge_constraints": {
+   "6": "auto",
+   "11": "auto",
+   "12": "auto",
+   "14": "auto"
+  },
+  "build_steps": {
+   "0": 1
+  },
+  "seconds_init_autocut_buildsteps": 0.0448,
+  "exports": {
+   "1-10": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 4.187,
+    "pages": 2,
+    "files": [
+     "raw_1-10_page1.svg",
+     "raw_1-10_page2.svg"
+    ],
+    "paper_size": "A3",
+    "target_model_height_BU": 0.07500000298023224,
+    "sizing_scale": 0.0010000000474974513,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Init time: 0.00s (11.8%)",
+     "POLYZAMBONI WARNING: Unfolded connected component does not fit on one page!",
+     "POLYZAMBONI INFO: Paper model instruction fits on 2 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   },
+   "1-20": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 2.1529,
+    "pages": 1,
+    "files": [
+     "raw_1-20_page1.svg"
+    ],
+    "paper_size": "A3",
+    "target_model_height_BU": 0.03750000149011612,
+    "sizing_scale": 0.0005000000237487257,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Paper model instruction fits on 2 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!",
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   },
+   "1-10_A2": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 2.5325,
+    "pages": 1,
+    "files": [
+     "raw_1-10_A2_page1.svg"
+    ],
+    "paper_size": "A2",
+    "target_model_height_BU": 0.07500000298023224,
+    "sizing_scale": 0.0010000000474974513,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!",
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   }
+  },
+  "print_data_debug": [
+   {
+    "tri_signed_area_signs": [
+     1
+    ],
+    "faces": 14,
+    "cut_edges": 12,
+    "fold_edges": [
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ]
+    ],
+    "flap_folds": [
+     [
+      true,
+      89.999995674289,
+      11
+     ],
+     [
+      true,
+      89.999995674289,
+      6
+     ],
+     [
+      true,
+      89.999995674289,
+      12
+     ],
+     [
+      true,
+      89.999995674289,
+      14
+     ]
+    ],
+    "glue_flaps": 4
+   }
+  ],
+  "settings_used": {
+   "general": {
+    "use_custom_layout": false,
+    "paper_size": "A2",
+    "custom_page_width": 0.20999999344348907,
+    "custom_page_height": 0.296999990940094,
+    "page_margin": 0.004999999888241291,
+    "space_between_components": 0.0024999999441206455,
+    "one_material_per_page": true,
+    "target_model_height": 0.07500000298023224,
+    "show_step_numbers": true,
+    "show_edge_numbers": true,
+    "edge_number_font_size": 6,
+    "build_steps_font_size": 12,
+    "edge_number_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "steps_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "print_on_inside": false,
+    "scaling_mode": "HEIGHT",
+    "sizing_scale": 0.0010000000474974513
+   },
+   "line": {
+    "line_width": 0.5,
+    "hide_fold_edge_angle_th": 0.01745329238474369,
+    "cut_edge_ls": "-",
+    "convex_fold_edge_ls": "..",
+    "concave_fold_edge_ls": "--.",
+    "glue_flap_ls": "-",
+    "lines_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "convex_fold_edges_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "concave_fold_edges_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "edge_number_offset": 0.0005000000237487257
+   },
+   "texture": {
+    "apply_textures": true,
+    "apply_glue_flap_color": true,
+    "print_two_sided": false,
+    "apply_textures_back": true,
+    "apply_glue_flap_color_back": true,
+    "glue_flap_color": [
+     0.800000011920929,
+     0.800000011920929,
+     0.800000011920929
+    ],
+    "texture_quality": "super"
+   },
+   "mesh": {
+    "glue_flap_height": 5.0,
+    "glue_flap_angle": 0.7853981852531433,
+    "prefer_alternating_flaps": true,
+    "smart_trim_glue_flaps": true
+   }
+  },
+  "stdout": [
+   "POLYZAMBONI INFO: Greedy Auto Cuts total time: 0.035916805267333984",
+   "POLYZAMBONI INFO: Init time: 0.00s (11.8%)",
+   "POLYZAMBONI WARNING: Unfolded connected component does not fit on one page!",
+   "POLYZAMBONI INFO: Paper model instruction fits on 2 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!",
+   "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!",
+   "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!"
+  ]
+ },
+ "sofa_curved": {
+  "case": "sofa_curved",
+  "edges_total": 25,
+  "edges_interior": 6,
+  "init_checks": {
+   "manifold": true,
+   "normals_ok": false,
+   "multi_touching_faces": 0,
+   "non_triangulatable_faces": 0,
+   "max_planarity_score": 0.0
+  },
+  "refused_by_init_check": true,
+  "init_refusal_dialog": "Something went wrong D: / Bad normals! Try \"Recalculate Outside\" (Shift-N)",
+  "manual_edge_split": [
+   [
+    [
+     0.0,
+     0.0,
+     42.0
+    ],
+    [
+     180.0,
+     0.0,
+     42.0
+    ]
+   ]
+  ],
+  "init_checks_after_split": {
+   "normals_ok": true,
+   "manifold": true
+  },
+  "components": 1,
+  "component_faces": [
+   [
+    0,
+    1,
+    2,
+    3,
+    4
+   ]
+  ],
+  "cyclic_components": [],
+  "overlapping_components": [],
+  "glue_flap_collisions": {},
+  "edge_constraints": {
+   "19": "auto"
+  },
+  "build_steps": {
+   "0": 1
+  },
+  "seconds_init_autocut_buildsteps": 0.0787,
+  "exports": {
+   "1-10": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 3.5552,
+    "pages": 2,
+    "files": [
+     "raw_1-10_page1.svg",
+     "raw_1-10_page2.svg"
+    ],
+    "paper_size": "A3",
+    "target_model_height_BU": 0.10000000149011612,
+    "sizing_scale": 0.0010000000474974513,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Init time: 0.00s (4.9%)",
+     "POLYZAMBONI WARNING: Unfolded connected component does not fit on one page!",
+     "POLYZAMBONI INFO: Paper model instruction fits on 2 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   },
+   "1-20": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 0.9713,
+    "pages": 1,
+    "files": [
+     "raw_1-20_page1.svg"
+    ],
+    "paper_size": "A3",
+    "target_model_height_BU": 0.05000000074505806,
+    "sizing_scale": 0.0005000000237487257,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Paper model instruction fits on 2 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!",
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   },
+   "1-10_A2": {
+    "result": [
+     "FINISHED"
+    ],
+    "seconds_export": 1.153,
+    "pages": 1,
+    "files": [
+     "raw_1-10_A2_page1.svg"
+    ],
+    "paper_size": "A2",
+    "target_model_height_BU": 0.10000000149011612,
+    "sizing_scale": 0.0010000000474974513,
+    "stdout_tail": [
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!",
+     "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+     "POLYZAMBONI INFO: Paper model instructions successfully created!"
+    ]
+   }
+  },
+  "print_data_debug": [
+   {
+    "tri_signed_area_signs": [
+     1
+    ],
+    "faces": 21,
+    "cut_edges": 22,
+    "fold_edges": [
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ],
+     [
+      true,
+      89.999995674289
+     ]
+    ],
+    "flap_folds": [
+     [
+      true,
+      89.999995674289,
+      19
+     ]
+    ],
+    "glue_flaps": 1
+   }
+  ],
+  "settings_used": {
+   "general": {
+    "use_custom_layout": false,
+    "paper_size": "A2",
+    "custom_page_width": 0.20999999344348907,
+    "custom_page_height": 0.296999990940094,
+    "page_margin": 0.004999999888241291,
+    "space_between_components": 0.0024999999441206455,
+    "one_material_per_page": true,
+    "target_model_height": 0.10000000149011612,
+    "show_step_numbers": true,
+    "show_edge_numbers": true,
+    "edge_number_font_size": 6,
+    "build_steps_font_size": 12,
+    "edge_number_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "steps_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "print_on_inside": false,
+    "scaling_mode": "HEIGHT",
+    "sizing_scale": 0.0010000000474974513
+   },
+   "line": {
+    "line_width": 0.5,
+    "hide_fold_edge_angle_th": 0.01745329238474369,
+    "cut_edge_ls": "-",
+    "convex_fold_edge_ls": "..",
+    "concave_fold_edge_ls": "--.",
+    "glue_flap_ls": "-",
+    "lines_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "convex_fold_edges_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "concave_fold_edges_color": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "edge_number_offset": 0.0005000000237487257
+   },
+   "texture": {
+    "apply_textures": true,
+    "apply_glue_flap_color": true,
+    "print_two_sided": false,
+    "apply_textures_back": true,
+    "apply_glue_flap_color_back": true,
+    "glue_flap_color": [
+     0.800000011920929,
+     0.800000011920929,
+     0.800000011920929
+    ],
+    "texture_quality": "super"
+   },
+   "mesh": {
+    "glue_flap_height": 5.0,
+    "glue_flap_angle": 0.7853981852531433,
+    "prefer_alternating_flaps": true,
+    "smart_trim_glue_flaps": true
+   }
+  },
+  "stdout": [
+   "POLYZAMBONI INFO: Greedy Auto Cuts total time: 0.06687164306640625",
+   "POLYZAMBONI INFO: Init time: 0.00s (4.9%)",
+   "POLYZAMBONI WARNING: Unfolded connected component does not fit on one page!",
+   "POLYZAMBONI INFO: Paper model instruction fits on 2 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!",
+   "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!",
+   "POLYZAMBONI INFO: Paper model instruction fits on 1 pages.",
+   "POLYZAMBONI INFO: Paper model instructions successfully created!"
+  ]
+ }
+}

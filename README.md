@@ -74,7 +74,7 @@ The laptop has no Python or Node, so the tests run in a browser.
 - **Testing version:** `testing/tests/regress.html` (113 checks).
 - Online, prefix either with https://reham-abdelwahab.github.io/rir2101-flatpack/. Offline, start `pwsh -NoProfile -File tests/serve.ps1` (port 8765, or `$env:PORT`). `?base=` (empty) runs the self-checks only.
 
-Validation for the paper (geometry, assembly, physical) is in [docs/VALIDATION.md](docs/VALIDATION.md). Studio test prints are in `testing/tests/prints/`. The tool comparison (Export Paper Model, PolyZamboni, Lamina, VTracer) is in [research/](research/).
+Validation for the paper (geometry, assembly, physical) is in [docs/VALIDATION.md](docs/VALIDATION.md). Studio test prints are in `testing/tests/prints/`. The tool comparison (Export Paper Model, PolyZamboni, Lamina, VTracer) is in [research/](research/): results in [research/RESULTS.md](research/RESULTS.md) — no tool beat ours, so nothing was integrated.
 
 The page runs these checks:
 - **v3 behaviour:** the archetype × scale × sheet sweep must match the baseline exactly for bed, cabinet and bookcase; chair, sofa and table changed on purpose in v4.3 and are proven by the fold verifier. It also covers fit, ruler, stamp, Help Code and verify box, the image trace, offline loading and the icons.

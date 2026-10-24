@@ -1,0 +1,28 @@
+sofa_curved_waffle_1-20 v1.0 — assembly key
+===========================================
+interlocked · 13 slices · 13 parts · 1 sheet(s)
+
+How the labels read
+  X-2 = the 2nd slice of the X family, Y-4 = the 4th of the Y family, each counted from the low end (a slice auto-fix added is numbered after the family's own)
+  the two families cross at right angles and half-lap into each other: X slots drop in from one side, Y from the other
+  Every label starts with SCW1, short for sofa_curved_waffle_1-20: parts of two models cut together are never mixed up.
+  A part too big for the sheet is cut into pieces and the piece number comes last: Z-3-2 is the second piece of Z-3.
+  Each label is engraved on its own part where it fits, else beside it on the sheet with a line pointing at it.
+  A small part may carry its name without the short name in front: that was all it had room for.
+
+Build order — the order the 3D view plays on the steps slider. Centres are in mm from the middle of the model.
+
+step  part        what                centre                  goes onto
+   1  X-1         X slice             (-40, 0, 0)             Y-1, Y-2, Y-3, Y-4
+   2  X-2         X slice             (-30, 0, 0)             Y-1, Y-2, Y-3, Y-4
+   3  X-3         X slice             (-20, 0, 0)             Y-1, Y-2, Y-3, Y-4
+   4  X-4         X slice             (-10, 0, 0)             Y-1, Y-2, Y-3, Y-4
+   5  X-5         X slice             (0, 0, 0)               Y-1, Y-2, Y-3, Y-4
+   6  X-6         X slice             (10, 0, 0)              Y-1, Y-2, Y-3, Y-4
+   7  X-7         X slice             (20, 0, 0)              Y-1, Y-2, Y-3, Y-4
+   8  X-8         X slice             (30, 0, 0)              Y-1, Y-2, Y-3, Y-4
+   9  X-9         X slice             (40, 0, 0)              Y-1, Y-2, Y-3, Y-4
+  10  Y-1         Y slice             (0, -16, 0)             X-1, X-2, X-3, X-4, X-5, X-6, X-7, X-8, X-9
+  11  Y-2         Y slice             (0, -5, 0)              X-1, X-2, X-3, X-4, X-5, X-6, X-7, X-8, X-9
+  12  Y-3         Y slice             (0, 5, 0)               X-1, X-2, X-3, X-4, X-5, X-6, X-7, X-8, X-9
+  13  Y-4         Y slice             (0, 16, 0)              X-1, X-2, X-3, X-4, X-5, X-6, X-7, X-8, X-9

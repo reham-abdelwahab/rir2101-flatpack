@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="297mm" height="420mm" viewBox="0 0 297 420"
+     data-tool="Export Paper Model 1.4.2 (d688dcd)" data-pages="1" data-printed-side="viewer">
+<g id="00_PAGES"><rect x="0" y="0" width="297" height="420" fill="none" stroke="#bbb" stroke-width="0.2"/></g>
+<g id="01_CUT_RED" fill="none" stroke="#e00000" stroke-width="0.25">
+<path data-part="1" data-page="1" d="M 108.6127 258.3501 L 95.7296 284.2197 L 105.1764 290.8234 L 99.8717 301.4756 L 96.1076 324.7367 L 88.7629 346.2148 L 76.0474 365.0181 L 59.7514 382.0384 L 54.4466 392.6905 L 43.4841 389.1304 L 30.6011 415 L 23.798 411.6121 L 18.985 414.8009 L 5.3551 408.0132 L 5 402.2507 L 23.9457 364.2071 L 42.7437 373.5685 L 42.988 361.8616 L 73.6682 300.2548 L 82.8639 293.0057 L 64.066 283.6443 L 83.0116 245.6008 L 123.1319 165.038 L 141.9299 174.3994 L 179.9734 193.3451 L 139.8532 273.9079 L 101.8096 254.9622 Z"/>
+</g>
+<g id="02_SCORE_BLUE" stroke="#0050ff" stroke-width="0.25">
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="83.0116" y1="245.6008" x2="101.8096" y2="254.9622"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="101.8096" y1="254.9622" x2="141.9299" y2="174.3994"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="82.8639" y1="293.0057" x2="99.8717" y2="301.4756"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="42.7437" y1="373.5685" x2="59.7514" y2="382.0384"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="5" y1="402.2507" x2="23.798" y2="411.6121"/>
+<line data-part="1" data-fold="valley" data-kind="tab-hinge" data-raw-class="concave" x1="82.8639" y1="293.0057" x2="42.7437" y2="373.5685"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000">
+<text transform="matrix(0.4458 -0.8951 0.8951 0.4458 159.0182 233.1807)" font-size="5" text-anchor="middle">1</text>
+<text transform="matrix(0.4458 -0.8951 0.8951 0.4458 61.9982 332.8859)" font-size="4.5" text-anchor="middle">1</text>
+<text transform="matrix(-0.8951 -0.4458 0.4458 -0.8951 132.0851 170.6138)" font-size="5" text-anchor="middle">2</text>
+<text transform="matrix(-0.8951 -0.4458 0.4458 -0.8951 13.9978 407.737)" font-size="4.5" text-anchor="middle">2</text>
+</g>
+</svg>

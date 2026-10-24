@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="297mm" height="420mm" viewBox="0 0 297 420"
+     data-tool="Export Paper Model 1.4.2 (d688dcd)" data-pages="1" data-printed-side="viewer">
+<g id="00_PAGES"><rect x="0" y="0" width="297" height="420" fill="none" stroke="#bbb" stroke-width="0.2"/></g>
+<g id="01_CUT_RED" fill="none" stroke="#e00000" stroke-width="0.25">
+<path data-part="1" data-page="1" d="M 95 320 L 95 365 L 95 410 L 50 410 L 32.2222 415 L 14.4444 415 L 10 410 L 10 397.4 L 50 395.6 L 45 392.2 L 50 365 L 19.4 365 L 5 365 L 5 320 L 19.4 320 L 50 320 L 50 289.4 L 10 287.6 L 10 275 L 10 263.75 L 10 252.5 L 10 241.25 L 10 230 L 50 230 L 55 245.625 L 55 259.375 L 50 275 L 95 275 Z"/>
+</g>
+<g id="02_SCORE_BLUE" stroke="#0050ff" stroke-width="0.25">
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="50" y1="365" x2="95" y2="365"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="95" y1="320" x2="50" y2="320"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="50" y1="320" x2="50" y2="365"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="50" y1="365" x2="50" y2="395.6"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="10" y1="410" x2="50" y2="410"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="50" y1="275" x2="10" y2="275"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="50" y1="289.4" x2="50" y2="320"/>
+<line data-part="1" data-fold="valley" data-kind="tab-hinge" data-raw-class="concave" x1="50" y1="275" x2="50" y2="230"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000">
+<text transform="matrix(0 1 -1 0 6 342.5)" font-size="5" text-anchor="middle">1</text>
+<text transform="matrix(0 1 -1 0 50.9 252.5)" font-size="4.5" text-anchor="middle">1</text>
+<text transform="matrix(-1 0 0 -1 30 231)" font-size="5" text-anchor="middle">2</text>
+<text transform="matrix(-1 0 0 -1 30 410.9)" font-size="4.5" text-anchor="middle">2</text>
+</g>
+</svg>

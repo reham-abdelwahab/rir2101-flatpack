@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="297mm" height="420mm" viewBox="0 0 297 420"
+     data-tool="PolyZamboni 1.3.1 (a6b880e)" data-pages="1" data-printed-side="viewer">
+<g id="00_PAGES"><rect x="0" y="0" width="297" height="420" fill="none" stroke="#bbb" stroke-width="0.2"/></g>
+<g id="01_CUT_RED" fill="none" stroke="#e00000" stroke-width="0.25">
+<path data-part="1" data-page="1" d="M 81 345 L 112.5 345 L 112.5 305 L 81 305 L 81 235 L 112.5 235 L 112.5 195 L 81 195 L 78.5 192.5 L 77.5 192.5 L 75 195 L 72.5 197.5 L 72.5 232.5 L 75 235 L 75 305 L 72.5 302.5 L 7.5 302.5 L 5 305 L 5 345 L 75 345 L 72.5 347.5 L 72.5 412.5 L 75 415 L 81 415 Z"/>
+</g>
+<g id="02_SCORE_BLUE" stroke="#0050ff" stroke-width="0.25">
+<line data-page="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="75" y1="345" x2="81" y2="345"/>
+<line data-page="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="81" y1="305" x2="75" y2="305"/>
+<line data-page="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="75" y1="305" x2="75" y2="345"/>
+<line data-page="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="75" y1="235" x2="81" y2="235"/>
+<line data-page="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="81" y1="195" x2="75" y2="195"/>
+<line data-page="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="75" y1="195" x2="75" y2="235"/>
+<line data-page="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="75" y1="345" x2="75" y2="415"/>
+<line data-page="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="75" y1="305" x2="5" y2="305"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000">
+<text transform="translate(38.6533 326.0997) rotate(0)" font-size="4.2333" text-anchor="middle" dominant-baseline="central">1</text>
+<text transform="translate(76.6533 414.5) rotate(0)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">11</text>
+<text transform="translate(75.5 268.6533) rotate(-270)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">14</text>
+<text transform="translate(5.5 323.9903) rotate(-270)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">6.</text>
+<text transform="translate(38.6533 344.5) rotate(0)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">12</text>
+<text transform="translate(79.3467 195.5) rotate(-180)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">11</text>
+<text transform="translate(75.5 213.9903) rotate(-270)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">6.</text>
+<text transform="translate(75.5 378.6533) rotate(-270)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">12</text>
+<text transform="translate(41.3467 305.5) rotate(-180)" font-size="2.1167" text-anchor="middle" dominant-baseline="central">14</text>
+</g>
+</svg>

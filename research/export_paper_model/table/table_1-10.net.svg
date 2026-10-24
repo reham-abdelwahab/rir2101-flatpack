@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="297mm" height="420mm" viewBox="0 0 297 420"
+     data-tool="Export Paper Model 1.4.2 (d688dcd)" data-pages="1" data-printed-side="viewer">
+<g id="00_PAGES"><rect x="0" y="0" width="297" height="420" fill="none" stroke="#bbb" stroke-width="0.2"/></g>
+<g id="01_CUT_RED" fill="none" stroke="#e00000" stroke-width="0.25">
+<path data-part="1" data-page="1" d="M 17 340 L 5 340 L 5 200 L 5.0011 199.9981 L 17 200 L 17 188 L 17 125 L 97 125 L 97 188 L 97 200 L 108.9989 199.9981 L 109 200 L 109 340 L 106.1133 345 L 97 340 L 97 352 L 97 415 L 17 415 L 17 352 Z"/>
+</g>
+<g id="02_SCORE_BLUE" stroke="#0050ff" stroke-width="0.25">
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="97" y1="340" x2="109" y2="340"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="109" y1="200" x2="97" y2="200"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="97" y1="200" x2="97" y2="340"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="17" y1="340" x2="97" y2="340"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="97" y1="200" x2="17" y2="200"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="17" y1="200" x2="17" y2="340"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="17" y1="200" x2="5" y2="200"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="5" y1="340" x2="17" y2="340"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000">
+
+</g>
+</svg>

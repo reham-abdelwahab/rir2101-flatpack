@@ -1,0 +1,70 @@
+{
+ "case": "chair_clean",
+ "source": "research/models/targets_from_v4_3_0.json :: chair :: B1 LEFT",
+ "source_P3_xyz": [
+  [
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   85
+  ],
+  [
+   0,
+   12.6,
+   85
+  ],
+  [
+   0,
+   14.4,
+   45
+  ],
+  [
+   0,
+   45,
+   45
+  ],
+  [
+   0,
+   45,
+   0
+  ]
+ ],
+ "mapping": "x_img_mm = y - ymin + 15; y_img_mm = zmax - z + 15; px = mm * 10",
+ "px_per_mm": 10,
+ "image_px": [
+  750,
+  1150
+ ],
+ "polygon_img_mm": [
+  [
+   15,
+   100
+  ],
+  [
+   15,
+   15
+  ],
+  [
+   27.6,
+   15
+  ],
+  [
+   29.4,
+   55
+  ],
+  [
+   60,
+   55
+  ],
+  [
+   60,
+   100
+  ]
+ ],
+ "area_mm2": 2565.0,
+ "render": "exact area coverage, ink 30, white 255"
+}

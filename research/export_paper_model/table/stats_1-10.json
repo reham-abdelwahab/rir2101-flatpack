@@ -1,0 +1,37 @@
+{
+ "pages": 1,
+ "parts": 1,
+ "outline_loops": 1,
+ "folds": {
+  "mountain": 8,
+  "valley": 0,
+  "unmarked": 0
+ },
+ "tab_count": 4,
+ "degenerate_tabs": 1,
+ "outline_area_mm2": 26590.02537099636,
+ "tab_area_mm2": 30.02251099623885,
+ "fold_lengths_mm": [
+  12.0,
+  12.0,
+  140.0,
+  80.0,
+  80.0,
+  140.0,
+  12.0,
+  12.0
+ ],
+ "folds_by_kind": {
+  "tab-hinge": {
+   "mountain": 4,
+   "valley": 0,
+   "unmarked": 0
+  },
+  "panel": {
+   "mountain": 4,
+   "valley": 0,
+   "unmarked": 0
+  }
+ },
+ "panel_area_mm2": 26560.002860000124
+}

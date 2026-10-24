@@ -1,0 +1,504 @@
+{
+ "chair_1-10": {
+  "fold": {
+   "parts": 1,
+   "outline_area_mm2": 11620.529999999999,
+   "panel_area_mm2": 10979.99995998612,
+   "folds": {
+    "mountain": 19,
+    "valley": 3,
+    "unmarked": 0
+   },
+   "flat_folds_0deg": {
+    "mountain": 14,
+    "valley": 0
+   },
+   "real_folds": {
+    "mountain": 3,
+    "valley": 3
+   },
+   "tab_hinges": {
+    "mountain": 2,
+    "valley": 0
+   },
+   "fold_length_check_max_mm": 5.137675449162771e-05,
+   "mesh_area_mm2_lamina": 10980.0,
+   "refold_error_mm": 2.2748467065386707e-14,
+   "sheets": 1,
+   "scale_check_bar_omitted": true
+  },
+  "waffle": {
+   "ribs_x_planes": 4,
+   "ribs_y_planes": 4,
+   "x_offsets": [
+    5.625,
+    16.875,
+    28.125,
+    39.375
+   ],
+   "y_offsets": [
+    5.625,
+    16.875,
+    28.125,
+    39.375
+   ],
+   "bbox_rib_midplanes_mm": [
+    45.0,
+    45.0,
+    85.0
+   ],
+   "bbox_with_board_thickness_mm": [
+    45.0,
+    45.0,
+    85.0
+   ],
+   "bbox_min_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bbox_max_mm": [
+    45.0,
+    45.0,
+    85.0
+   ],
+   "solid_bbox_mm": [
+    45.0,
+    45.0,
+    85.0
+   ],
+   "sheets": 1,
+   "parts": 8,
+   "slot_widths_in_export": {
+    "1.500": 32,
+    "4.875": 10,
+    "0.625": 8
+   }
+  }
+ },
+ "chair_1-20": {
+  "fold": {
+   "parts": 1,
+   "outline_area_mm2": 3001.112082,
+   "panel_area_mm2": 2744.9999939253935,
+   "folds": {
+    "mountain": 19,
+    "valley": 3,
+    "unmarked": 0
+   },
+   "flat_folds_0deg": {
+    "mountain": 14,
+    "valley": 0
+   },
+   "real_folds": {
+    "mountain": 3,
+    "valley": 3
+   },
+   "tab_hinges": {
+    "mountain": 2,
+    "valley": 0
+   },
+   "fold_length_check_max_mm": 5.0379563454328036e-05,
+   "mesh_area_mm2_lamina": 2745.0,
+   "refold_error_mm": 1.1374233532693354e-14,
+   "sheets": 1,
+   "scale_check_bar_omitted": true
+  },
+  "waffle": {
+   "ribs_x_planes": 2,
+   "ribs_y_planes": 2,
+   "x_offsets": [
+    5.625,
+    16.875
+   ],
+   "y_offsets": [
+    5.625,
+    16.875
+   ],
+   "bbox_rib_midplanes_mm": [
+    22.5,
+    22.5,
+    22.75
+   ],
+   "bbox_with_board_thickness_mm": [
+    22.5,
+    22.5,
+    22.75
+   ],
+   "bbox_min_mm": [
+    0.0,
+    0.0,
+    19.75
+   ],
+   "bbox_max_mm": [
+    22.5,
+    22.5,
+    42.5
+   ],
+   "solid_bbox_mm": [
+    22.5,
+    22.5,
+    42.5
+   ],
+   "sheets": 1,
+   "parts": 4,
+   "slot_widths_in_export": {
+    "2.750": 6,
+    "3.500": 2
+   }
+  }
+ },
+ "table_1-10": {
+  "fold": {
+   "parts": 1,
+   "outline_area_mm2": 27875.621199999998,
+   "panel_area_mm2": 26560.0,
+   "folds": {
+    "mountain": 17,
+    "valley": 0,
+    "unmarked": 0
+   },
+   "flat_folds_0deg": {
+    "mountain": 9,
+    "valley": 0
+   },
+   "real_folds": {
+    "mountain": 4,
+    "valley": 0
+   },
+   "tab_hinges": {
+    "mountain": 4,
+    "valley": 0
+   },
+   "fold_length_check_max_mm": 2.842170943040401e-14,
+   "mesh_area_mm2_lamina": 26560.0,
+   "refold_error_mm": 4.0194366942304644e-14,
+   "sheets": 1,
+   "scale_check_bar_omitted": true
+  },
+  "waffle": {
+   "ribs_x_planes": 14,
+   "ribs_y_planes": 8,
+   "x_offsets": [
+    5.0,
+    15.0,
+    25.0,
+    35.0,
+    45.0,
+    55.0,
+    65.0,
+    75.0,
+    85.0,
+    95.0,
+    105.0,
+    115.0,
+    125.0,
+    135.0
+   ],
+   "y_offsets": [
+    5.0,
+    15.0,
+    25.0,
+    35.0,
+    45.0,
+    55.0,
+    65.0,
+    75.0
+   ],
+   "bbox_rib_midplanes_mm": [
+    140.0,
+    80.0,
+    75.0
+   ],
+   "bbox_with_board_thickness_mm": [
+    140.0,
+    80.0,
+    75.0
+   ],
+   "bbox_min_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bbox_max_mm": [
+    140.0,
+    80.0,
+    75.0
+   ],
+   "solid_bbox_mm": [
+    140.0,
+    80.0,
+    75.0
+   ],
+   "sheets": 1,
+   "parts": 22,
+   "slot_widths_in_export": {
+    "1.500": 224,
+    "4.250": 44,
+    "1.250": 4
+   }
+  }
+ },
+ "table_1-20": {
+  "fold": {
+   "parts": 1,
+   "outline_area_mm2": 7218.3027999999995,
+   "panel_area_mm2": 6640.0,
+   "folds": {
+    "mountain": 17,
+    "valley": 0,
+    "unmarked": 0
+   },
+   "flat_folds_0deg": {
+    "mountain": 9,
+    "valley": 0
+   },
+   "real_folds": {
+    "mountain": 4,
+    "valley": 0
+   },
+   "tab_hinges": {
+    "mountain": 4,
+    "valley": 0
+   },
+   "fold_length_check_max_mm": 1.4210854715202004e-14,
+   "mesh_area_mm2_lamina": 6640.0,
+   "refold_error_mm": 2.0097183471152322e-14,
+   "sheets": 1,
+   "scale_check_bar_omitted": true
+  },
+  "waffle": {
+   "ribs_x_planes": 7,
+   "ribs_y_planes": 4,
+   "x_offsets": [
+    5.0,
+    15.0,
+    25.0,
+    35.0,
+    45.0,
+    55.0,
+    65.0
+   ],
+   "y_offsets": [
+    5.0,
+    15.0,
+    25.0,
+    35.0
+   ],
+   "bbox_rib_midplanes_mm": [
+    70.0,
+    40.0,
+    6.0
+   ],
+   "bbox_with_board_thickness_mm": [
+    70.0,
+    40.0,
+    6.0
+   ],
+   "bbox_min_mm": [
+    0.0,
+    0.0,
+    31.5
+   ],
+   "bbox_max_mm": [
+    70.0,
+    40.0,
+    37.5
+   ],
+   "solid_bbox_mm": [
+    70.0,
+    40.0,
+    37.5
+   ],
+   "sheets": 1,
+   "parts": 11,
+   "slot_widths_in_export": {
+    "1.500": 56
+   }
+  }
+ },
+ "sofa_curved_1-10": {
+  "fold": {
+   "parts": 1,
+   "outline_area_mm2": 42746.799999999996,
+   "panel_area_mm2": 42746.80011899999,
+   "folds": {
+    "mountain": 17,
+    "valley": 3,
+    "unmarked": 0
+   },
+   "flat_folds_0deg": {
+    "mountain": 14,
+    "valley": 0
+   },
+   "real_folds": {
+    "mountain": 3,
+    "valley": 3
+   },
+   "tab_hinges": {
+    "mountain": 0,
+    "valley": 0
+   },
+   "fold_length_check_max_mm": 1.4210854715202004e-14,
+   "mesh_area_mm2_lamina": 42746.800090789795,
+   "refold_error_mm": 3.1776437161565096e-14,
+   "sheets": 1,
+   "scale_check_bar_omitted": true
+  },
+  "waffle": {
+   "ribs_x_planes": 18,
+   "ribs_y_planes": 8,
+   "x_offsets": [
+    5.0,
+    15.0,
+    25.0,
+    35.0,
+    45.0,
+    55.0,
+    65.0,
+    75.0,
+    85.0,
+    95.0,
+    105.0,
+    115.0,
+    125.0,
+    135.0,
+    145.0,
+    155.0,
+    165.0,
+    175.0
+   ],
+   "y_offsets": [
+    5.3125,
+    15.9375,
+    26.5625,
+    37.1875,
+    47.8125,
+    58.4375,
+    69.0625,
+    79.6875
+   ],
+   "bbox_rib_midplanes_mm": [
+    180.0,
+    85.0,
+    80.0
+   ],
+   "bbox_with_board_thickness_mm": [
+    180.0,
+    85.0,
+    80.0
+   ],
+   "bbox_min_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bbox_max_mm": [
+    180.0,
+    85.0,
+    80.0
+   ],
+   "solid_bbox_mm": [
+    180.0,
+    85.0,
+    80.0
+   ],
+   "sheets": 3,
+   "parts": 26,
+   "slot_widths_in_export": {
+    "1.500": 294,
+    "4.562": 22,
+    "4.250": 16,
+    "4.563": 13,
+    "3.312": 11,
+    "3.313": 7
+   }
+  }
+ },
+ "sofa_curved_1-20": {
+  "fold": {
+   "parts": 1,
+   "outline_area_mm2": 10686.700000000003,
+   "panel_area_mm2": 10686.7,
+   "folds": {
+    "mountain": 17,
+    "valley": 3,
+    "unmarked": 0
+   },
+   "flat_folds_0deg": {
+    "mountain": 14,
+    "valley": 0
+   },
+   "real_folds": {
+    "mountain": 3,
+    "valley": 3
+   },
+   "tab_hinges": {
+    "mountain": 0,
+    "valley": 0
+   },
+   "fold_length_check_max_mm": 7.105427357601002e-15,
+   "mesh_area_mm2_lamina": 10686.700022697449,
+   "refold_error_mm": 1.5888218580782548e-14,
+   "sheets": 1,
+   "scale_check_bar_omitted": true
+  },
+  "waffle": {
+   "ribs_x_planes": 9,
+   "ribs_y_planes": 4,
+   "x_offsets": [
+    5.0,
+    15.0,
+    25.0,
+    35.0,
+    45.0,
+    55.0,
+    65.0,
+    75.0,
+    85.0
+   ],
+   "y_offsets": [
+    5.3125,
+    15.9375,
+    26.5625,
+    37.1875
+   ],
+   "bbox_rib_midplanes_mm": [
+    90.0,
+    42.5,
+    40.0
+   ],
+   "bbox_with_board_thickness_mm": [
+    90.0,
+    42.5,
+    40.0
+   ],
+   "bbox_min_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bbox_max_mm": [
+    90.0,
+    42.5,
+    40.0
+   ],
+   "solid_bbox_mm": [
+    90.0,
+    42.5,
+    40.0
+   ],
+   "sheets": 1,
+   "parts": 13,
+   "slot_widths_in_export": {
+    "1.500": 71,
+    "4.562": 11,
+    "4.250": 8,
+    "4.563": 7,
+    "3.937": 5,
+    "3.938": 4,
+    "1.499": 1
+   }
+  }
+ }
+}

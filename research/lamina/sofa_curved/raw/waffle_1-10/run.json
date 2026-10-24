@@ -1,0 +1,144 @@
+{
+ "tool": "Lamina (lamina3d)",
+ "commit": "bed1c9a",
+ "source": "/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/tools/lamina",
+ "model": "/root/rir2101-flatpack/research/models/sofa_curved_waffle_solid.stl",
+ "mode": "interlocked",
+ "params_set": {
+  "distribution": "distance",
+  "spacing": 10,
+  "thickness": 1.5,
+  "kerf": 0.0,
+  "compensate": false,
+  "slot_offset": 0.0,
+  "up": "z",
+  "sheet": [
+   297,
+   420
+  ],
+  "project": "sofa_curved_waffle_1-10"
+ },
+ "seconds_build": 1.078,
+ "seconds_export": 0.01,
+ "seconds_total": 1.088,
+ "files": [
+  "sofa_curved_waffle_1-10_v1.0 sheet1.svg",
+  "sofa_curved_waffle_1-10_v1.0 sheet2.svg",
+  "sofa_curved_waffle_1-10_v1.0 sheet3.svg",
+  "sofa_curved_waffle_1-10_v1.0 assembly-key.txt"
+ ],
+ "cli_output": [
+  "interlocked: 26 slices, 26 parts, 3 sheet(s) (39% used), 24 errors, 0 warnings",
+  "  ERROR X-2: Y-1 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-1 (offset), lower the notch ratio, or delete Y-1",
+  "  ERROR X-2: Y-2 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-2 (offset), lower the notch ratio, or delete Y-2",
+  "  ERROR X-2: Y-3 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-3 (offset), lower the notch ratio, or delete Y-3",
+  "  ERROR X-2: Y-4 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-4 (offset), lower the notch ratio, or delete Y-4",
+  "  ERROR X-2: Y-5 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-5 (offset), lower the notch ratio, or delete Y-5",
+  "  ERROR X-2: Y-6 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-6 (offset), lower the notch ratio, or delete Y-6",
+  "  ERROR X-17: Y-1 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-1 (offset), lower the notch ratio, or delete Y-1",
+  "  ERROR X-17: Y-2 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-2 (offset), lower the notch ratio, or delete Y-2",
+  "  ERROR X-17: Y-3 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-3 (offset), lower the notch ratio, or delete Y-3",
+  "  ERROR X-17: Y-4 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-4 (offset), lower the notch ratio, or delete Y-4",
+  "  ERROR X-17: Y-5 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-5 (offset), lower the notch ratio, or delete Y-5",
+  "  ERROR X-17: Y-6 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-6 (offset), lower the notch ratio, or delete Y-6",
+  "  ERROR Y-1: X-2 cannot slide into its slot: Y-1's material is in its path (21 mm of it) — the crossing line meets Y-1 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+  "  ERROR Y-1: X-17 cannot slide into its slot: Y-1's material is in its path (44 mm of it) — the crossing line meets Y-1 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17",
+  "  ERROR Y-2: X-2 cannot slide into its slot: Y-2's material is in its path (21 mm of it) — the crossing line meets Y-2 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+  "  ERROR Y-2: X-17 cannot slide into its slot: Y-2's material is in its path (44 mm of it) — the crossing line meets Y-2 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17",
+  "  ERROR Y-3: X-2 cannot slide into its slot: Y-3's material is in its path (21 mm of it) — the crossing line meets Y-3 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+  "  ERROR Y-3: X-17 cannot slide into its slot: Y-3's material is in its path (44 mm of it) — the crossing line meets Y-3 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17",
+  "  ERROR Y-4: X-2 cannot slide into its slot: Y-4's material is in its path (21 mm of it) — the crossing line meets Y-4 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+  "  ERROR Y-4: X-17 cannot slide into its slot: Y-4's material is in its path (44 mm of it) — the crossing line meets Y-4 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17",
+  "  ERROR Y-5: X-2 cannot slide into its slot: Y-5's material is in its path (21 mm of it) — the crossing line meets Y-5 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+  "  ERROR Y-5: X-17 cannot slide into its slot: Y-5's material is in its path (44 mm of it) — the crossing line meets Y-5 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17",
+  "  ERROR Y-6: X-2 cannot slide into its slot: Y-6's material is in its path (21 mm of it) — the crossing line meets Y-6 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+  "  ERROR Y-6: X-17 cannot slide into its slot: Y-6's material is in its path (44 mm of it) — the crossing line meets Y-6 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17"
+ ],
+ "counts": {
+  "slices": 26,
+  "parts": 26,
+  "errors": 24,
+  "warnings": 0,
+  "faces": 50
+ },
+ "sheets": 3,
+ "sheet_usage": 0.3936568047194904,
+ "coverage": 1.0,
+ "notes": [],
+ "errors": [],
+ "fixes": [],
+ "slices": [
+  {
+   "label": "X-2",
+   "errors": [
+    "Y-1 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-1 (offset), lower the notch ratio, or delete Y-1",
+    "Y-2 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-2 (offset), lower the notch ratio, or delete Y-2",
+    "Y-3 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-3 (offset), lower the notch ratio, or delete Y-3",
+    "Y-4 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-4 (offset), lower the notch ratio, or delete Y-4",
+    "Y-5 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-5 (offset), lower the notch ratio, or delete Y-5",
+    "Y-6 cannot slide into its slot: X-2's material is in its path (21 mm of it) — the crossing line meets X-2 twice (a hollow or concave section): move Y-6 (offset), lower the notch ratio, or delete Y-6"
+   ],
+   "warnings": []
+  },
+  {
+   "label": "X-17",
+   "errors": [
+    "Y-1 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-1 (offset), lower the notch ratio, or delete Y-1",
+    "Y-2 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-2 (offset), lower the notch ratio, or delete Y-2",
+    "Y-3 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-3 (offset), lower the notch ratio, or delete Y-3",
+    "Y-4 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-4 (offset), lower the notch ratio, or delete Y-4",
+    "Y-5 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-5 (offset), lower the notch ratio, or delete Y-5",
+    "Y-6 cannot slide into its slot: X-17's material is in its path (36 mm of it) — the crossing line meets X-17 twice (a hollow or concave section): move Y-6 (offset), lower the notch ratio, or delete Y-6"
+   ],
+   "warnings": []
+  },
+  {
+   "label": "Y-1",
+   "errors": [
+    "X-2 cannot slide into its slot: Y-1's material is in its path (21 mm of it) — the crossing line meets Y-1 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+    "X-17 cannot slide into its slot: Y-1's material is in its path (44 mm of it) — the crossing line meets Y-1 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17"
+   ],
+   "warnings": []
+  },
+  {
+   "label": "Y-2",
+   "errors": [
+    "X-2 cannot slide into its slot: Y-2's material is in its path (21 mm of it) — the crossing line meets Y-2 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+    "X-17 cannot slide into its slot: Y-2's material is in its path (44 mm of it) — the crossing line meets Y-2 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17"
+   ],
+   "warnings": []
+  },
+  {
+   "label": "Y-3",
+   "errors": [
+    "X-2 cannot slide into its slot: Y-3's material is in its path (21 mm of it) — the crossing line meets Y-3 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+    "X-17 cannot slide into its slot: Y-3's material is in its path (44 mm of it) — the crossing line meets Y-3 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17"
+   ],
+   "warnings": []
+  },
+  {
+   "label": "Y-4",
+   "errors": [
+    "X-2 cannot slide into its slot: Y-4's material is in its path (21 mm of it) — the crossing line meets Y-4 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+    "X-17 cannot slide into its slot: Y-4's material is in its path (44 mm of it) — the crossing line meets Y-4 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17"
+   ],
+   "warnings": []
+  },
+  {
+   "label": "Y-5",
+   "errors": [
+    "X-2 cannot slide into its slot: Y-5's material is in its path (21 mm of it) — the crossing line meets Y-5 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+    "X-17 cannot slide into its slot: Y-5's material is in its path (44 mm of it) — the crossing line meets Y-5 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17"
+   ],
+   "warnings": []
+  },
+  {
+   "label": "Y-6",
+   "errors": [
+    "X-2 cannot slide into its slot: Y-6's material is in its path (21 mm of it) — the crossing line meets Y-6 twice (a hollow or concave section): move X-2 (offset), lower the notch ratio, or delete X-2",
+    "X-17 cannot slide into its slot: Y-6's material is in its path (44 mm of it) — the crossing line meets Y-6 twice (a hollow or concave section): move X-17 (offset), lower the notch ratio, or delete X-17"
+   ],
+   "warnings": []
+  }
+ ]
+}

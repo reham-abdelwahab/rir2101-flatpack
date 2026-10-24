@@ -1,0 +1,24 @@
+# table Fold & Glue target, from v4.3.0 nets folded by tests/fold_verify.js; spec {'W': 140, 'D': 80, 'H': 75, 'sub': 12, 'curve': [0, 0, 0, 0, 0]}
+# units: mm at 1:10 (= cm real); one planar n-gon per panel; printed side = face normal
+v 0.0000 0.0000 75.0000
+v 0.0000 0.0000 0.0000
+v 0.0000 80.0000 0.0000
+v 0.0000 80.0000 75.0000
+v 140.0000 80.0000 75.0000
+v 140.0000 80.0000 0.0000
+v 140.0000 0.0000 0.0000
+v 140.0000 0.0000 75.0000
+v 0.0000 80.0000 63.0000
+v 140.0000 80.0000 63.0000
+v 140.0000 0.0000 63.0000
+v 0.0000 0.0000 63.0000
+g LEFT_LEG
+f 4 9 3 2 12 1
+g RIGHT_LEG
+f 8 11 7 6 10 5
+g TABLE_TOP_(140.0×80.0_mm)_APRON
+f 5 10 9 4
+g TABLE_TOP_(140.0×80.0_mm)_APRON
+f 1 12 11 8
+g TABLE_TOP
+f 8 5 4 1

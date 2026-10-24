@@ -1,0 +1,64 @@
+{
+ "fold": {
+  "chair": {
+   "bbox_mm": [
+    45.0,
+    45.0,
+    85.0
+   ],
+   "panels": 5,
+   "vertices": 17,
+   "area_mm2": 10980.0
+  },
+  "table": {
+   "bbox_mm": [
+    140.0,
+    80.0,
+    75.0
+   ],
+   "panels": 5,
+   "vertices": 12,
+   "area_mm2": 26560.0
+  },
+  "sofa_curved": {
+   "bbox_mm": [
+    180.0,
+    85.0,
+    100.0
+   ],
+   "panels": 5,
+   "vertices": 19,
+   "area_mm2": 42746.8
+  }
+ },
+ "waffle": {
+  "chair": {
+   "bbox_mm": [
+    45.0,
+    45.0,
+    85.0
+   ],
+   "watertight": true,
+   "volume_mm3": 31479.5
+  },
+  "table": {
+   "bbox_mm": [
+    140.0,
+    80.0,
+    75.0
+   ],
+   "watertight": true,
+   "volume_mm3": 146748.0
+  },
+  "sofa_curved": {
+   "bbox_mm": [
+    180.0,
+    85.0,
+    80.0
+   ],
+   "watertight": true,
+   "volume_mm3": 812745.0
+  },
+  "note": "sofa Waffle solid has no arched back (our Waffle sofa is boxes); the arched back applies to Fold & Glue only"
+ }
+}

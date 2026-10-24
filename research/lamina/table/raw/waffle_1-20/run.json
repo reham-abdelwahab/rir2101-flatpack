@@ -1,0 +1,49 @@
+{
+ "tool": "Lamina (lamina3d)",
+ "commit": "bed1c9a",
+ "source": "/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/tools/lamina",
+ "model": "/root/rir2101-flatpack/research/models/table_waffle_solid.stl",
+ "mode": "interlocked",
+ "params_set": {
+  "distribution": "distance",
+  "spacing": 10,
+  "thickness": 1.5,
+  "kerf": 0.0,
+  "compensate": false,
+  "slot_offset": 0.0,
+  "up": "z",
+  "sheet": [
+   297,
+   420
+  ],
+  "scale": 0.5,
+  "project": "table_waffle_1-20"
+ },
+ "seconds_build": 0.408,
+ "seconds_export": 0.004,
+ "seconds_total": 0.411,
+ "files": [
+  "table_waffle_1-20_v1.0 sheet1.svg",
+  "table_waffle_1-20_v1.0 assembly-key.txt"
+ ],
+ "cli_output": [
+  "interlocked: 11 slices, 11 parts, 1 sheet(s) (2% used), 0 errors, 0 warnings",
+  "  note  model coverage 82%: parts of the model have no geometry — more slices (count / spacing), a different axis, or round/thicken thin features"
+ ],
+ "counts": {
+  "slices": 11,
+  "parts": 11,
+  "errors": 0,
+  "warnings": 0,
+  "faces": 60
+ },
+ "sheets": 1,
+ "sheet_usage": 0.024915824915824916,
+ "coverage": 0.8173333333333334,
+ "notes": [
+  "model coverage 82%: parts of the model have no geometry — more slices (count / spacing), a different axis, or round/thicken thin features"
+ ],
+ "errors": [],
+ "fixes": [],
+ "slices": []
+}

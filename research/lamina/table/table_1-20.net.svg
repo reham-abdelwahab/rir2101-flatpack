@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="420mm" viewBox="0 0 297 420" data-tool="Lamina 0.3.0 (bed1c9a)" data-case="table" data-scale="1-20" data-sheets="1">
+<rect class="no-export" x="0" y="0" width="297" height="420" fill="#ffffff"/>
+<rect class="no-export sheet" x="0" y="0" width="297" height="420" fill="none" stroke="#bbbbbb" stroke-width="0.3"/>
+<g id="01_CUT_RED" fill="none" stroke="#dc2626" stroke-width="0.25">
+<path data-part="P-1" d="M6.9170,364.5424 L6.9170,363.5344 L10.5170,361.5184 L10.5170,329.5384 L50.5170,329.5384 L50.5170,361.0384 L120.5170,361.0384 L120.5170,329.5384 L160.5170,329.5384 L160.5170,361.5184 L164.1170,363.5344 L164.1170,364.5424 L160.5170,366.5584 L160.5170,367.0384 L157.3170,367.0384 L151.5435,377.0384 L129.4905,377.0384 L123.7170,367.0384 L120.5170,367.0384 L120.5170,413.0384 L50.5170,413.0384 L50.5170,367.0384 L47.3170,367.0384 L41.5435,377.0384 L19.4905,377.0384 L13.7170,367.0384 L10.5170,367.0384 L10.5170,366.5584 Z"/>
+</g>
+<g id="02_SCORE_BLUE" fill="none" stroke="#2563eb" stroke-width="0.25">
+<line x1="50.5170" y1="367.0384" x2="120.5170" y2="407.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="50.5170" y1="407.0384" x2="120.5170" y2="407.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="50.5170" y1="407.0384" x2="120.5170" y2="413.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="50.5170" y1="367.0384" x2="120.5170" y2="367.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="50.5170" y1="361.0384" x2="120.5170" y2="367.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="50.5170" y1="367.0384" x2="50.5170" y2="361.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="10.5170" y1="361.0384" x2="50.5170" y2="367.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="10.5170" y1="361.0384" x2="50.5170" y2="361.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="10.5170" y1="361.0384" x2="50.5170" y2="329.5384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="120.5170" y1="361.0384" x2="120.5170" y2="367.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="120.5170" y1="361.0384" x2="160.5170" y2="367.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="120.5170" y1="361.0384" x2="160.5170" y2="361.0384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="120.5170" y1="361.0384" x2="160.5170" y2="329.5384" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="10.5170" y1="361.5184" x2="10.5170" y2="366.5584" data-fold="mountain" data-kind="tab_hinge" data-lamina-style="solid"/>
+<line x1="13.7170" y1="367.0384" x2="47.3170" y2="367.0384" data-fold="mountain" data-kind="tab_hinge" data-lamina-style="solid"/>
+<line x1="123.7170" y1="367.0384" x2="157.3170" y2="367.0384" data-fold="mountain" data-kind="tab_hinge" data-lamina-style="solid"/>
+<line x1="160.5170" y1="366.5584" x2="160.5170" y2="361.5184" data-fold="mountain" data-kind="tab_hinge" data-lamina-style="solid"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000000" font-family="sans-serif">
+<text x="14.197" y="364.038" font-size="2.4" text-anchor="middle" transform="rotate(-0 14.197 364.038)">1</text>
+<text x="54.197" y="410.038" font-size="2.4" text-anchor="middle" transform="rotate(-0 54.197 410.038)">1</text>
+<text x="30.517" y="369.518" font-size="2.4" text-anchor="middle" transform="rotate(90 30.517 369.518)">2</text>
+<text x="54.197" y="387.038" font-size="2.4" text-anchor="middle" transform="rotate(-0 54.197 387.038)">2</text>
+<text x="140.517" y="369.518" font-size="2.4" text-anchor="middle" transform="rotate(-90 140.517 369.518)">3</text>
+<text x="116.837" y="387.038" font-size="2.4" text-anchor="middle" transform="rotate(-0 116.837 387.038)">3</text>
+<text x="156.837" y="364.038" font-size="2.4" text-anchor="middle" transform="rotate(-0 156.837 364.038)">4</text>
+<text x="116.837" y="410.038" font-size="2.4" text-anchor="middle" transform="rotate(-0 116.837 410.038)">4</text>
+<text x="85.173" y="377.757" font-size="4" text-anchor="middle">TF12 P-1</text>
+</g>
+</svg>

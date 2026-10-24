@@ -1,0 +1,60 @@
+{
+ "pages": 1,
+ "empty_pages": 0,
+ "parts": 1,
+ "folds": {
+  "mountain": 5,
+  "valley": 0,
+  "unmarked": 0
+ },
+ "folds_by_kind": {
+  "panel": {
+   "mountain": 4,
+   "valley": 0,
+   "unmarked": 0
+  },
+  "tab-hinge": {
+   "mountain": 1,
+   "valley": 0,
+   "unmarked": 0
+  }
+ },
+ "glue_flaps": 1,
+ "outline_area_mm2": 42911.80135643332,
+ "flap_area_mm2": 164.99999934166703,
+ "fold_lengths_mm": [
+  180.0,
+  42.0,
+  42.0,
+  38.0,
+  38.0
+ ],
+ "cut_edge_lengths_mm": [
+  85.0,
+  180.0,
+  85.0,
+  180.0,
+  42.0,
+  23.8,
+  23.0521,
+  57.8,
+  15.2,
+  85.0,
+  15.2,
+  57.8,
+  23.0521,
+  23.8,
+  42.0,
+  85.0,
+  180.0,
+  38.0,
+  47.1275,
+  45.3982,
+  45.3982,
+  47.1275
+ ],
+ "labels": 3,
+ "mirrored": false,
+ "refused": null,
+ "panel_area_mm2": 42746.80135709166
+}

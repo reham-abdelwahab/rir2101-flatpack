@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="420mm" viewBox="0 0 297 420" data-tool="Lamina 0.3.0 (bed1c9a)" data-case="sofa_curved" data-scale="1-10" data-sheets="1">
+<rect class="no-export" x="0" y="0" width="297" height="420" fill="#ffffff"/>
+<rect class="no-export sheet" x="0" y="0" width="297" height="420" fill="none" stroke="#bbbbbb" stroke-width="0.3"/>
+<g id="01_CUT_RED" fill="none" stroke="#dc2626" stroke-width="0.25">
+<path data-part="P-1" d="M149.2000,120.8000 L172.0000,124.2000 L172.0000,148.0000 L186.0000,193.0000 L192.0000,238.0000 L186.0000,283.0000 L172.0000,328.0000 L172.0000,351.8000 L149.2000,355.2000 L149.2000,413.0000 L134.0000,413.0000 L134.0000,328.0000 L49.0000,328.0000 L49.0000,413.0000 L7.0000,413.0000 L7.0000,328.0000 L7.0000,148.0000 L7.0000,63.0000 L49.0000,63.0000 L49.0000,148.0000 L134.0000,148.0000 L134.0000,63.0000 L149.2000,63.0000 Z"/>
+</g>
+<g id="02_SCORE_BLUE" fill="none" stroke="#2563eb" stroke-width="0.25">
+<line x1="134.0000" y1="148.0000" x2="49.0000" y2="328.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="49.0000" y1="148.0000" x2="49.0000" y2="328.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="49.0000" y1="148.0000" x2="7.0000" y2="328.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="148.0000" x2="134.0000" y2="328.0000" data-fold="valley" data-kind="fold" data-lamina-style="dashed" data-dihedral-deg="90"/>
+<line x1="134.0000" y1="328.0000" x2="186.0000" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="148.0000" x2="186.0000" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="172.0000" y1="148.0000" x2="186.0000" y2="283.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="186.0000" y1="283.0000" x2="186.0000" y2="193.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="49.0000" y1="328.0000" x2="7.0000" y2="328.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="49.0000" y1="328.0000" x2="7.0000" y2="413.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="49.0000" y1="148.0000" x2="7.0000" y2="148.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="90"/>
+<line x1="49.0000" y1="63.0000" x2="7.0000" y2="148.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="328.0000" x2="172.0000" y2="328.0000" data-fold="valley" data-kind="fold" data-lamina-style="dashed" data-dihedral-deg="90"/>
+<line x1="134.0000" y1="328.0000" x2="172.0000" y2="351.8000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="328.0000" x2="149.2000" y2="355.2000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="328.0000" x2="149.2000" y2="413.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="148.0000" x2="172.0000" y2="148.0000" data-fold="valley" data-kind="fold" data-lamina-style="dashed" data-dihedral-deg="90"/>
+<line x1="134.0000" y1="148.0000" x2="172.0000" y2="124.2000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="148.0000" x2="149.2000" y2="120.8000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+<line x1="134.0000" y1="148.0000" x2="149.2000" y2="63.0000" data-fold="mountain" data-kind="fold" data-lamina-style="solid" data-dihedral-deg="0"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000000" font-family="sans-serif">
+<text x="98.899" y="237.666" font-size="4" text-anchor="middle">SCF1 P-1</text>
+</g>
+</svg>

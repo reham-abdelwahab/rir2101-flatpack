@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="117.00mm" height="326.00mm" viewBox="0 0 117.00 326.00">
+<!-- Studio Flat-Pack Maker v4.2.4 table 1:10, A3, 1 sheet(s); printed rule: all blue lines fold away from you -->
+<g id="01_CUT_RED">
+<path d="M 112.0000,106.0000 L 112.0000,246.0000 L 100.0000,246.0000 L 104.0000,249.2000 L 104.0000,317.8000 L 100.0000,321.0000 L 20.0000,321.0000 L 16.0000,317.8000 L 16.0000,249.2000 L 20.0000,246.0000 L 8.0000,246.0000 L 8.0000,106.0000 L 20.0000,106.0000 L 16.0000,102.8000 L 16.0000,34.2000 L 20.0000,31.0000 L 100.0000,31.0000 L 104.0000,34.2000 L 104.0000,102.8000 L 100.0000,106.0000 Z"/>
+</g><g id="02_SCORE_BLUE">
+<line x1="100.0000" y1="246.0000" x2="100.0000" y2="321.0000" data-fold="unmarked"/>
+<line x1="20.0000" y1="321.0000" x2="20.0000" y2="246.0000" data-fold="unmarked"/>
+<line x1="20.0000" y1="106.0000" x2="20.0000" y2="31.0000" data-fold="unmarked"/>
+<line x1="100.0000" y1="31.0000" x2="100.0000" y2="106.0000" data-fold="unmarked"/>
+<line x1="100.0000" y1="106.0000" x2="20.0000" y2="106.0000" data-fold="unmarked"/>
+<line x1="100.0000" y1="246.0000" x2="20.0000" y2="246.0000" data-fold="unmarked"/>
+<line x1="100.0000" y1="106.0000" x2="100.0000" y2="246.0000" data-fold="unmarked"/>
+<line x1="20.0000" y1="106.0000" x2="20.0000" y2="246.0000" data-fold="unmarked"/>
+</g><g id="03_LABELS_BLACK">
+<text x="60.60" y="176.00">TB1-TABLE TOP (140.0×80.0 mm)</text>
+<text x="60.60" y="68.50">LEFT LEG</text>
+<text x="60.60" y="283.50">RIGHT LEG</text>
+</g></svg>

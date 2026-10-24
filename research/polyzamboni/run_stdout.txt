@@ -1,0 +1,31 @@
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+POLYZAMBONI INFO: Greedy Auto Cuts total time: 0.09514951705932617
+POLYZAMBONI INFO: Init time: 0.01s (5.3%)
+POLYZAMBONI INFO: Paper model instruction fits on 1 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+POLYZAMBONI INFO: Paper model instruction fits on 1 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+POLYZAMBONI INFO: Greedy Auto Cuts total time: 0.035916805267333984
+POLYZAMBONI INFO: Init time: 0.00s (11.8%)
+POLYZAMBONI WARNING: Unfolded connected component does not fit on one page!
+POLYZAMBONI INFO: Paper model instruction fits on 2 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+POLYZAMBONI INFO: Paper model instruction fits on 1 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+POLYZAMBONI INFO: Paper model instruction fits on 1 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+POLYZAMBONI INFO: Greedy Auto Cuts total time: 0.06687164306640625
+POLYZAMBONI INFO: Init time: 0.00s (4.9%)
+POLYZAMBONI WARNING: Unfolded connected component does not fit on one page!
+POLYZAMBONI INFO: Paper model instruction fits on 2 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+POLYZAMBONI INFO: Paper model instruction fits on 1 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+POLYZAMBONI INFO: Paper model instruction fits on 1 pages.
+POLYZAMBONI INFO: Paper model instructions successfully created!
+done
+OBJ import of 'chair_fold.obj' took 0.60 ms
+OBJ import of 'table_fold.obj' took 0.20 ms
+OBJ import of 'sofa_curved_fold.obj' took 0.24 ms

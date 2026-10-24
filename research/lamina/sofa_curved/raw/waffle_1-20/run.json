@@ -1,0 +1,46 @@
+{
+ "tool": "Lamina (lamina3d)",
+ "commit": "bed1c9a",
+ "source": "/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/tools/lamina",
+ "model": "/root/rir2101-flatpack/research/models/sofa_curved_waffle_solid.stl",
+ "mode": "interlocked",
+ "params_set": {
+  "distribution": "distance",
+  "spacing": 10,
+  "thickness": 1.5,
+  "kerf": 0.0,
+  "compensate": false,
+  "slot_offset": 0.0,
+  "up": "z",
+  "sheet": [
+   297,
+   420
+  ],
+  "scale": 0.5,
+  "project": "sofa_curved_waffle_1-20"
+ },
+ "seconds_build": 0.299,
+ "seconds_export": 0.003,
+ "seconds_total": 0.302,
+ "files": [
+  "sofa_curved_waffle_1-20_v1.0 sheet1.svg",
+  "sofa_curved_waffle_1-20_v1.0 assembly-key.txt"
+ ],
+ "cli_output": [
+  "interlocked: 13 slices, 13 parts, 1 sheet(s) (15% used), 0 errors, 0 warnings"
+ ],
+ "counts": {
+  "slices": 13,
+  "parts": 13,
+  "errors": 0,
+  "warnings": 0,
+  "faces": 50
+ },
+ "sheets": 1,
+ "sheet_usage": 0.1481926400749007,
+ "coverage": 1.0,
+ "notes": [],
+ "errors": [],
+ "fixes": [],
+ "slices": []
+}

@@ -1,0 +1,70 @@
+{
+ "case": "sofa_clean",
+ "source": "research/models/targets_from_v4_3_0.json :: sofa_curved :: B1 LEFT",
+ "source_P3_xyz": [
+  [
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   80
+  ],
+  [
+   0,
+   23.8,
+   80
+  ],
+  [
+   0,
+   27.2,
+   57.2
+  ],
+  [
+   0,
+   85,
+   57.2
+  ],
+  [
+   0,
+   85,
+   0
+  ]
+ ],
+ "mapping": "x_img_mm = y - ymin + 15; y_img_mm = zmax - z + 15; px = mm * 10",
+ "px_per_mm": 10,
+ "image_px": [
+  1150,
+  1100
+ ],
+ "polygon_img_mm": [
+  [
+   15,
+   95
+  ],
+  [
+   15,
+   15
+  ],
+  [
+   38.8,
+   15
+  ],
+  [
+   42.2,
+   37.8
+  ],
+  [
+   100,
+   37.8
+  ],
+  [
+   100,
+   95
+  ]
+ ],
+ "area_mm2": 5443.4,
+ "render": "exact area coverage, ink 30, white 255"
+}

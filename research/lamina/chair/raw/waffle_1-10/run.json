@@ -1,0 +1,98 @@
+{
+ "tool": "Lamina (lamina3d)",
+ "commit": "bed1c9a",
+ "source": "/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/tools/lamina",
+ "model": "/root/rir2101-flatpack/research/models/chair_waffle_solid.stl",
+ "mode": "interlocked",
+ "params_set": {
+  "distribution": "distance",
+  "spacing": 10,
+  "thickness": 1.5,
+  "kerf": 0.0,
+  "compensate": false,
+  "slot_offset": 0.0,
+  "up": "z",
+  "sheet": [
+   297,
+   420
+  ],
+  "project": "chair_waffle_1-10"
+ },
+ "seconds_build": 0.224,
+ "seconds_export": 0.002,
+ "seconds_total": 0.226,
+ "files": [
+  "chair_waffle_1-10_v1.0 sheet1.svg",
+  "chair_waffle_1-10_v1.0 assembly-key.txt"
+ ],
+ "cli_output": [
+  "interlocked: 8 slices, 8 parts, 1 sheet(s) (5% used), 0 errors, 8 warnings",
+  "  warn  X-1: part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 41 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model",
+  "  warn  X-1: part has a bridge thinner than 2.0 mm (splits into 2 pieces when eroded) — fragile: thicken / round the model, move the slice (offset), or accept and handle with care",
+  "  warn  X-2: part has 1 thin spot(s) — a tip or sliver thinner than the material can take for 23 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model",
+  "  warn  X-3: part has 1 thin spot(s) — a tip or sliver thinner than the material can take for 23 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model",
+  "  warn  X-4: part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 41 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model",
+  "  warn  X-4: part has a bridge thinner than 2.0 mm (splits into 2 pieces when eroded) — fragile: thicken / round the model, move the slice (offset), or accept and handle with care",
+  "  warn  Y-1: part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 23 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model",
+  "  warn  Y-4: part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 40 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model"
+ ],
+ "counts": {
+  "slices": 8,
+  "parts": 8,
+  "errors": 0,
+  "warnings": 8,
+  "faces": 68
+ },
+ "sheets": 1,
+ "sheet_usage": 0.052132435465768796,
+ "coverage": 1.0,
+ "notes": [],
+ "errors": [],
+ "fixes": [],
+ "slices": [
+  {
+   "label": "X-1",
+   "errors": [],
+   "warnings": [
+    "part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 41 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model",
+    "part has a bridge thinner than 2.0 mm (splits into 2 pieces when eroded) — fragile: thicken / round the model, move the slice (offset), or accept and handle with care"
+   ]
+  },
+  {
+   "label": "X-2",
+   "errors": [],
+   "warnings": [
+    "part has 1 thin spot(s) — a tip or sliver thinner than the material can take for 23 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model"
+   ]
+  },
+  {
+   "label": "X-3",
+   "errors": [],
+   "warnings": [
+    "part has 1 thin spot(s) — a tip or sliver thinner than the material can take for 23 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model"
+   ]
+  },
+  {
+   "label": "X-4",
+   "errors": [],
+   "warnings": [
+    "part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 41 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model",
+    "part has a bridge thinner than 2.0 mm (splits into 2 pieces when eroded) — fragile: thicken / round the model, move the slice (offset), or accept and handle with care"
+   ]
+  },
+  {
+   "label": "Y-1",
+   "errors": [],
+   "warnings": [
+    "part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 23 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model"
+   ]
+  },
+  {
+   "label": "Y-4",
+   "errors": [],
+   "warnings": [
+    "part has 2 thin spot(s) — a tip or sliver thinner than the material can take for 40 mm, which would break off: trim thin spots (the part ends blunt there), move the slice (offset), or thicken / round the model"
+   ]
+  }
+ ]
+}

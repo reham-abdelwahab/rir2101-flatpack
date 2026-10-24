@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50.00mm" height="95.00mm" viewBox="0 0 50.00 95.00">
+<!-- negative control: v4.2 chair strip back-seat-front, printed rule says mountain -->
+<g id="01_CUT_RED">
+<path d="M 0.0000,90.0000 L 0.0000,50.0000 L 0.0000,45.0000 L 0.0000,0.0000 L 45.0000,0.0000 L 45.0000,45.0000 L 45.0000,50.0000 L 45.0000,90.0000 Z"/>
+</g><g id="02_SCORE_BLUE">
+<line x1="0.0000" y1="45.0000" x2="45.0000" y2="45.0000" data-fold="unmarked"/>
+<line x1="0.0000" y1="50.0000" x2="45.0000" y2="50.0000" data-fold="unmarked"/>
+</g><g id="03_LABELS_BLACK">
+</g></svg>

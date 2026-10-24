@@ -1,0 +1,39 @@
+{
+ "parts": 1,
+ "faces": 19,
+ "hinges": 22,
+ "unmatched_scores": 0,
+ "unplaced_faces": 5,
+ "unplaced_parts": 0,
+ "printed_inward_faces": 0,
+ "notes": [],
+ "size_mm": [
+  22.5,
+  22.5,
+  45.0
+ ],
+ "target_mm": [
+  22.5,
+  22.5,
+  42.5
+ ],
+ "M1_size_error_mm": 2.5,
+ "coverage_pct": 72.74,
+ "missing_panels": [
+  0,
+  2,
+  3,
+  4
+ ],
+ "folds_counted": 6,
+ "flat_score_lines": 7,
+ "M2_fold_direction_ok_pct": 83.3,
+ "fold_direction_faults": [
+  "part 1: marked valley, needs mountain (90 deg)"
+ ],
+ "tabs": 1,
+ "tabs_mated": 1,
+ "M3_tabs_land_pct": 100.0,
+ "M4_overlapping_panels": 2,
+ "ok": false
+}

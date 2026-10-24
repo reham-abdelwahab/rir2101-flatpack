@@ -1,0 +1,49 @@
+{
+ "pages": 2,
+ "empty_pages": 1,
+ "parts": 0,
+ "folds": {
+  "mountain": 3,
+  "valley": 0,
+  "unmarked": 0
+ },
+ "folds_by_kind": {
+  "panel": {
+   "mountain": 3,
+   "valley": 0,
+   "unmarked": 0
+  }
+ },
+ "glue_flaps": 0,
+ "outline_area_mm2": 0.0,
+ "flap_area_mm2": 0.0,
+ "fold_lengths_mm": [
+  150.3528,
+  42.0,
+  38.0
+ ],
+ "cut_edge_lengths_mm": [
+  85.0,
+  150.3528,
+  150.3528,
+  42.0,
+  23.8,
+  23.0521,
+  57.8,
+  15.2,
+  85.0,
+  180.0,
+  38.0,
+  47.1275,
+  45.3982,
+  45.3982,
+  47.1275
+ ],
+ "labels": 3,
+ "mirrored": false,
+ "refused": [
+  "sofa_curved/raw_1-10_page2.svg: geometry reaches beyond the page (matplotlib clipped it at the page edge; 12 line segment(s) written without path data)",
+  "sofa_curved/raw_1-10_page2.svg: 2 open outline chain(s), cut outline does not close"
+ ],
+ "panel_area_mm2": 0.0
+}

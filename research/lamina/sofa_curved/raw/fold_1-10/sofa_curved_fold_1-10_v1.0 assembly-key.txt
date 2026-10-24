@@ -1,0 +1,19 @@
+sofa_curved_fold_1-10 v1.0 — assembly key
+=========================================
+folded · 1 slices · 1 parts · 1 sheet(s)
+
+How the labels read
+  P-7 = the 7th panel
+  every seam has a number, engraved on the tab (or beside the edge) on one panel and beside the matching edge on the other: find the same number on two parts and those two edges go together, the number reading along its edge
+  a cut edge with no number is an outside edge or one whose number had no room (the other side of the seam still carries it)
+  S-n = the connecting strip for seam n, R-n = the angle rib for seam n
+  on the score layer a solid line is a mountain fold, a dashed line a valley fold; the short score across a tab's base is where the tab folds, the rest of the outline is cut
+  Every label starts with SCF1, short for sofa_curved_fold_1-10: parts of two models cut together are never mixed up.
+  A part too big for the sheet is cut into pieces and the piece number comes last: Z-3-2 is the second piece of Z-3.
+  Each label is engraved on its own part where it fits, else beside it on the sheet with a line pointing at it.
+  A small part may carry its name without the short name in front: that was all it had room for.
+
+Build order — the order the 3D view plays on the steps slider. Centres are in mm from the middle of the model.
+
+step  part        what                centre                  goes onto
+   1  P-1         folded panel        (90, -42, -8)           

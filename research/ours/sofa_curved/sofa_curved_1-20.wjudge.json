@@ -1,0 +1,37 @@
+{
+ "ribs_x": 9,
+ "ribs_y": 4,
+ "parts": 13,
+ "board_mm": 1.5,
+ "kerf_mm": 0.0,
+ "size_mm": [
+  90.0,
+  42.5,
+  40.0
+ ],
+ "target_mm": [
+  90.0,
+  42.5,
+  40.0
+ ],
+ "size_error_mm": 0.0,
+ "material_outside_solid_mm2": 0.0,
+ "section_left_out_pct": 7.15,
+ "crossings": 36,
+ "interference": 0,
+ "slot_width_mm": [
+  1.5,
+  1.5
+ ],
+ "slot_width_target_mm": 1.5,
+ "shallowest_slot_mm": 10.5,
+ "drop_assembly_pct": 100.0,
+ "order_counts": {
+  "x_below": 36,
+  "y_below": 0,
+  "mixed": 0
+ },
+ "windows": 0,
+ "loose_parts": 0,
+ "ok": true
+}

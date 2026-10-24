@@ -1,0 +1,32 @@
+{
+ "parts": 1,
+ "faces": 6,
+ "hinges": 5,
+ "unmatched_scores": 0,
+ "unplaced_faces": 0,
+ "unplaced_parts": 0,
+ "printed_inward_faces": 0,
+ "notes": [],
+ "size_mm": [
+  90.0,
+  42.5,
+  50.0
+ ],
+ "target_mm": [
+  90.0,
+  42.5,
+  50.0
+ ],
+ "M1_size_error_mm": 0.0,
+ "coverage_pct": 100.0,
+ "missing_panels": [],
+ "folds_counted": 5,
+ "flat_score_lines": 0,
+ "M2_fold_direction_ok_pct": 100.0,
+ "fold_direction_faults": [],
+ "tabs": 1,
+ "tabs_mated": 1,
+ "M3_tabs_land_pct": 100.0,
+ "M4_overlapping_panels": 0,
+ "ok": true
+}

@@ -1,0 +1,131 @@
+{
+ "chair_1-10": {
+  "case": "chair",
+  "scale": "1-10",
+  "divisor": 1000.0,
+  "unfold_result": [
+   "FINISHED"
+  ],
+  "export_result": [
+   "FINISHED"
+  ],
+  "seconds": 0.0062,
+  "islands": 1,
+  "island_names": [
+   "[I1] Island 1 (5 faces)"
+  ],
+  "seams": 4,
+  "files": [
+   "raw_1-10.svg"
+  ]
+ },
+ "chair_1-20": {
+  "case": "chair",
+  "scale": "1-20",
+  "divisor": 2000.0,
+  "unfold_result": [
+   "FINISHED"
+  ],
+  "export_result": [
+   "FINISHED"
+  ],
+  "seconds": 0.0055,
+  "islands": 1,
+  "island_names": [
+   "[I1] Island 1 (5 faces)"
+  ],
+  "seams": 4,
+  "files": [
+   "raw_1-20.svg"
+  ]
+ },
+ "table_1-10": {
+  "case": "table",
+  "scale": "1-10",
+  "divisor": 1000.0,
+  "unfold_result": [
+   "FINISHED"
+  ],
+  "export_result": [
+   "FINISHED"
+  ],
+  "seconds": 0.004,
+  "islands": 1,
+  "island_names": [
+   "[I1] Island 1 (5 faces)"
+  ],
+  "seams": 4,
+  "files": [
+   "raw_1-10.svg"
+  ]
+ },
+ "table_1-20": {
+  "case": "table",
+  "scale": "1-20",
+  "divisor": 2000.0,
+  "unfold_result": [
+   "FINISHED"
+  ],
+  "export_result": [
+   "FINISHED"
+  ],
+  "seconds": 0.0044,
+  "islands": 1,
+  "island_names": [
+   "[I1] Island 1 (5 faces)"
+  ],
+  "seams": 4,
+  "files": [
+   "raw_1-20.svg"
+  ]
+ },
+ "sofa_curved_1-10": {
+  "case": "sofa_curved",
+  "scale": "1-10",
+  "divisor": 1000.0,
+  "error": "RuntimeError: Invalid Input Error: An island is too big to fit onto page of the given size. Either downscale the model or find and split that island manually.\nExport failed, sorry.\n",
+  "seconds": 0.0041,
+  "islands": 1,
+  "island_names": [
+   "[I1] Island 1 (5 faces)"
+  ],
+  "seams": 2,
+  "files": []
+ },
+ "sofa_curved_1-20": {
+  "case": "sofa_curved",
+  "scale": "1-20",
+  "divisor": 2000.0,
+  "unfold_result": [
+   "FINISHED"
+  ],
+  "export_result": [
+   "FINISHED"
+  ],
+  "seconds": 0.0045,
+  "islands": 1,
+  "island_names": [
+   "[I1] Island 1 (5 faces)"
+  ],
+  "seams": 2,
+  "files": [
+   "raw_1-20.svg"
+  ]
+ },
+ "sofa_curved_1-10_limit": {
+  "case": "sofa_curved",
+  "scale": "1-10",
+  "divisor": 1000.0,
+  "variant": "limit_by_page=True, scene page_size_preset=A3",
+  "scene_cage_m": [
+   0.296999990940094,
+   0.41999998688697815
+  ],
+  "error": "RuntimeError: Error: Python: Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/addon_path/io_export_paper_model/unfold_operator.py\", line 85, in execute\n    unfolder.prepare(cage_size, priority_effect, scale, settings.limit_by_page)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/addon_path/io_export_paper_model/unfolder.py\", line 179, in prepare\n    self.mesh.generate_cuts(cage_size / scale if limit_by_page and cage_size else None, priority_effect)\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/addon_path/io_export_paper_model/unfolder.py\", line 369, in generate_cuts\n    balance = sum((+1 if edge.angle > 0 else -1) for edge in island_edges)\n  File \"/tmp/claude-0/-home-claude/a08d6e43-68ac-59f1-b38b-18f3d9cee4ba/scratchpad/addon_path/io_export_paper_model/unfolder.py\", line 369, in <genexpr>\n    balance = sum((+1 if edge.angle > 0 else -1) for edge in island_edges)\n                         ^^^^^^^^^^^^^^\nTypeError: '>' not supported between instances of 'NoneType' and 'int'\nLocation: /root/rir2101-flatpack/research/export_paper_model/run_export.py:85\n",
+  "seconds": 0.004,
+  "islands": 0,
+  "island_names": [],
+  "seams": 0,
+  "files": []
+ }
+}

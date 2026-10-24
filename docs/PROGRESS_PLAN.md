@@ -20,16 +20,17 @@ Status key: ⬜ open · 🟡 in progress · ✅ passed · ❌ failed (→ fix, r
 
 | # | Action | Owner | Due | Pass when | Status |
 |---|---|---|---|---|---|
-| A1 | Tell the class the exceptions (now printed in red on every chair, sofa and table sheet, EN/AR): chair/sofa back and its side tabs fold **toward** you; table tabs — glue the top, trim the rest | Reham / TAs | Sun 25 Oct | said in studio; sheets carry it (v4.2.4) | 🟡 sheets ✅, class briefing ⬜ |
+| A1 | Brief the class on **v4.3.1** (student release from 24 Oct): every blue line folds away from you, printed side out; the chair/sofa BACK is a separate panel glued printed side to the rear; B1/B2 sides go printed side out, post at the back. Students holding **v4.2.4** sheets: follow the red notes + glue B2 with its post at the back, printed side inward (F2) | Reham / TAs | Sun 25 Oct | said in studio | ⬜ |
 | A2 | Collect every chair, sofa and table that needed a corrective cut (photo + student ID) | TAs | Sun 25 Oct | list with count n / class size | ⬜ |
 | A3 | Hotfix v4.2.4: exceptions printed on chair/sofa/table sheets | Claude | 24 Oct | 104/104; v4.2.3 stamps still verify | ✅ |
+| A5 | v4.3 promoted to the root by instructor decision (v4.3.0, then v4.3.1 F2 fix); v4.2.4 kept at `/v4.2.4/`; course folder updated, old files in `9 Superseded/before-flatpack-v4_3_1-2026-10-24` | Claude | 24 Oct | root 117/117 · testing 113/113 · v4.2.4 104/104; handout 3 A4 | ✅ |
 | A4 | Course folder (P3-6): v4.2.4 tool + handout in `Week 06/2 Studio/FlatPack Tool`, preview in its `TESTING ONLY` subfolder; v4.2.1, old handouts, old `studio_flat_pack_maker_1_20_1_10.html`, 7 raw Gemini images and the 4 audit files from the course root moved to `Week 06/9 Superseded/before-flatpack-v4_2_4-2026-10-24` | Claude | 24 Oct | nothing deleted; `_README.txt` logged | ✅ |
 
-## Track B — Promotion gates for v4.3 (all must pass)
+## Track B — Physical gates for v4.3 (post-release since 24 Oct: v4.3 was promoted before them; any ❌ → v4.3.x patch)
 
 | # | Gate | Evidence | Owner | Target | Pass criterion | Status |
 |---|---|---|---|---|---|---|
-| B1 | Geometry | `testing/tests/regress.html` | Claude | done | 112 / 112, fold verifier 22 / 22 | ✅ |
+| B1 | Geometry | `tests/regress.html` | Claude | done | 117 / 117, fold verifier 22 / 22, independent judge 6 / 6 (research/) | ✅ |
 | B2 | FIT TEST strip | slots A–D (−0.1 / 0 / +0.1 / +0.2 mm) on 1.5 mm board, laser and hand-cut, 3 repeats | TA | Week 6 studio | one slot holds a rib by friction, no forcing; value recorded per cutter | ⬜ |
 | B3 | E1 table 1:10 Waffle | `testing/tests/prints/E1_table_1-10_waffle_{LASER,HANDCUT}_v4_3.pdf` | TA | Week 6 studio | assembled upside down, turned upright, 5 lift-and-place cycles, glued X2–X13 hold; size within ±1 mm of 140 × 80 × 75 | ⬜ |
 | B4 | 1:20 hand-cut slot depth | table/chair 1:20 Waffle from the tool | TA | Week 6 | web under a 3 mm slot does not split in 3 of 3 tries → lower the 4 mm warning; else keep it | ⬜ |
@@ -39,19 +40,19 @@ Status key: ⬜ open · 🟡 in progress · ✅ passed · ❌ failed (→ fix, r
 | B8 | Usability (first-year) | 5 students, think-aloud, task: one chair + one table to print | Reham | after B5 | each finishes alone in ≤ 20 min; no student prints from the wrong version | ⬜ |
 | B10 | Template transfer (P2-1) | glue stick vs spray mount on 1.5 mm board; re-measure the 50 mm ruler after 5 min | TA | Week 6–7 | spray mount ≤ 0.2 mm change; wet glue result recorded | ⬜ |
 | B11 | Score coupon (P2-4) | 0.5 mm Bristol, both grain directions, light vs deep score | TA | Week 6–7 | no cracking or spring-back on the H08 method; result in the H08 tip | ⬜ |
-| B9 | Image path | 3 cases: clean elevation with size; same, hand-checked outline; room photo | Reham + 3 students | after B8 | room photo is stopped by the gate; the other two print at Neufert size | ⬜ |
+| B9 | Image path | 3 cases: clean elevation with size; same, hand-checked outline; room photo | Reham + 3 students | after B8 | room photo is stopped by the gate; the other two print at Neufert size | ⬜ — note F3: the automatic gate did not fire on H14 (research/vtracer) |
 
-**Promotion step (Claude, after B2–B11 pass):** copy `testing/index.html` → root, remove the banner and sheet watermark, set `TOOL_VERSION = '4.3.0'`, change `VERIFY_SALT` only if a new semester, merge `testing/tests/` into `tests/`, regenerate the handout, re-run both regressions, tag `v4.3.0`, keep `testing/` for the next preview.
+**Promotion step (done 24 Oct by instructor decision, before B2–B11):** copy `testing/index.html` → root, remove the banner and sheet watermark, set `TOOL_VERSION = '4.3.0'`, change `VERIFY_SALT` only if a new semester, merge `testing/tests/` into `tests/`, regenerate the handout, re-run both regressions, tag `v4.3.0`, keep `testing/` for the next preview.
 
 ## Track C — Research (paper)
 
-Detailed protocol, decision rule and integration path: [TOOLS_INTEGRATION_PLAN.md](TOOLS_INTEGRATION_PLAN.md) (steps D0–D10; C1 = D4–D7, C2 = scoring inside D4–D7, C3 = D8, C4 = D10). Status 24 Oct: nothing run yet.
+Detailed protocol, decision rule and integration path: [TOOLS_INTEGRATION_PLAN.md](TOOLS_INTEGRATION_PLAN.md) (steps D0–D10; C1 = D4–D7, C2 = scoring inside D4–D7, C3 = D8, C4 = D10). Status 24 Oct, 19:40: D0–D7 and D9 done (decision: keep ours in every case); D8 physical builds and D10 paper open.
 
 | # | Step | Output | Status |
 |---|---|---|---|
-| C1 | Same 3 cases (chair, table, curved sofa) in Export Paper Model (Blender) and PolyZamboni; Lamina for Waffle; VTracer for tracing | exported SVG nets per tool | ⬜ |
-| C2 | Score every net with `fold_verify.js` (size, fold direction, tab landing, overlap) — the common, independent judge | table: tool × case × 4 metrics | ⬜ |
-| C3 | Add student time and corrective-cut counts from B5/B8 | builds per tool | ⬜ |
+| C1 | Same 3 cases (chair, table, curved sofa) in Export Paper Model (Blender) and PolyZamboni; Lamina for Waffle; VTracer for tracing | exported SVG nets per tool | ✅ 24 Oct (`research/`) |
+| C2 | Score every net with one independent judge — **`research/net_judge.py`** (fold_verify.js cannot read other tools' nets) + `research/waffle_judge.py` | table: tool × case × metrics | ✅ `research/RESULTS.md` |
+| C3 | Add student time and corrective-cut counts from B5/B8 | builds per tool | ⬜ (D8) |
 | C4 | Methods + results section; limits stated (zero thickness, final-state overlap only, one side profile cannot describe arms/seat/back sections that differ) | draft in project docs | ⬜ |
 
 ## Check-in rhythm

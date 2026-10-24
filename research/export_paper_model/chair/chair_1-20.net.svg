@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="297mm" height="420mm" viewBox="0 0 297 420"
+     data-tool="Export Paper Model 1.4.2 (d688dcd)" data-pages="1" data-printed-side="viewer">
+<g id="00_PAGES"><rect x="0" y="0" width="297" height="420" fill="none" stroke="#bbb" stroke-width="0.2"/></g>
+<g id="01_CUT_RED" fill="none" stroke="#e00000" stroke-width="0.25">
+<path data-part="1" data-page="1" d="M 8.4505 415 L 5 410.066 L 5.7314 403.8086 L 25.7006 405.2366 L 21.1292 401.2791 L 27.4769 390.04 L 12.2803 388.2638 L 5.129 387.4279 L 7.7411 365.0801 L 14.8924 365.9159 L 30.0889 367.6922 L 31.8652 352.4956 L 12.1049 349.2798 L 12.8363 343.0224 L 13.4893 337.4355 L 14.1423 331.8485 L 14.7953 326.2615 L 15.4484 320.6746 L 35.3131 322.9964 L 37.5827 334.5883 L 32.701 345.3443 L 55.0489 347.9564 L 52.4368 370.3043 L 49.8247 392.6521 L 47.2126 415 L 24.8648 412.3879 Z"/>
+</g>
+<g id="02_SCORE_BLUE" stroke="#0050ff" stroke-width="0.25">
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="27.4769" y1="390.04" x2="49.8247" y2="392.6521"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="52.4368" y1="370.3043" x2="30.0889" y2="367.6922"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="30.0889" y1="367.6922" x2="27.4769" y2="390.04"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="27.4769" y1="390.04" x2="25.7006" y2="405.2366"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="5" y1="410.066" x2="24.8648" y2="412.3879"/>
+<line data-part="1" data-fold="mountain" data-kind="panel" data-raw-class="convex" x1="32.701" y1="345.3443" x2="12.8363" y2="343.0224"/>
+<line data-part="1" data-fold="mountain" data-kind="tab-hinge" data-raw-class="convex" x1="31.8652" y1="352.4956" x2="30.0889" y2="367.6922"/>
+<line data-part="1" data-fold="valley" data-kind="tab-hinge" data-raw-class="concave" x1="32.701" y1="345.3443" x2="35.3131" y2="322.9964"/>
+</g>
+<g id="03_LABELS_BLACK" fill="#000">
+<text transform="matrix(-0.1161 0.9932 -0.9932 -0.1161 7.4283 376.3701)" font-size="5" text-anchor="middle">1</text>
+<text transform="matrix(-0.1161 0.9932 -0.9932 -0.1161 34.901 334.2749)" font-size="4.5" text-anchor="middle">1</text>
+<text transform="matrix(-0.9932 -0.1161 0.1161 -0.9932 25.2647 322.8287)" font-size="5" text-anchor="middle">2</text>
+<text transform="matrix(-0.9932 -0.1161 0.1161 -0.9932 14.8279 412.1209)" font-size="4.5" text-anchor="middle">2</text>
+</g>
+</svg>

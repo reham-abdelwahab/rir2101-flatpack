@@ -1,0 +1,335 @@
+{
+ "note": "instrumentation of Lamina internals (core.modes.folded.Folded.build); not a Lamina output",
+ "mesh_faces": 21,
+ "mesh_area_mm2": 10686.700022697449,
+ "refold_error_mm": 1.5888218580782548e-14,
+ "panels": [
+  {
+   "label": "P-1",
+   "faces": 21,
+   "panel_area_mm2": 10686.7,
+   "lines": [
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       42.5,
+       90.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": true,
+     "coords": [
+      [
+       42.5,
+       0.0
+      ],
+      [
+       42.5,
+       90.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       42.5,
+       0.0
+      ],
+      [
+       63.5,
+       90.0
+      ]
+     ]
+    },
+    {
+     "style": "dashed",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": false,
+     "coords": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       0.0,
+       90.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       0.0,
+       90.0
+      ],
+      [
+       -26.0,
+       67.5
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       -26.0,
+       67.5
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       -19.0,
+       0.0
+      ],
+      [
+       -26.0,
+       67.5
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       -26.0,
+       67.5
+      ],
+      [
+       -26.0,
+       22.5
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": true,
+     "coords": [
+      [
+       42.5,
+       90.0
+      ],
+      [
+       63.5,
+       90.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       42.5,
+       90.0
+      ],
+      [
+       63.5,
+       132.5
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": true,
+     "coords": [
+      [
+       42.5,
+       0.0
+      ],
+      [
+       63.5,
+       0.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       42.5,
+       -42.5
+      ],
+      [
+       63.5,
+       0.0
+      ]
+     ]
+    },
+    {
+     "style": "dashed",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": false,
+     "coords": [
+      [
+       0.0,
+       90.0
+      ],
+      [
+       -19.0,
+       90.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       0.0,
+       90.0
+      ],
+      [
+       -19.0,
+       101.9
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       0.0,
+       90.0
+      ],
+      [
+       -7.6,
+       103.6
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       0.0,
+       90.0
+      ],
+      [
+       -7.6,
+       132.5
+      ]
+     ]
+    },
+    {
+     "style": "dashed",
+     "kind": "fold",
+     "dihedral_deg": 90.0,
+     "convex": false,
+     "coords": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       -19.0,
+       0.0
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       -0.0,
+       0.0
+      ],
+      [
+       -19.0,
+       -11.9
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       -0.0,
+       0.0
+      ],
+      [
+       -7.6,
+       -13.6
+      ]
+     ]
+    },
+    {
+     "style": "solid",
+     "kind": "fold",
+     "dihedral_deg": 0.0,
+     "convex": true,
+     "coords": [
+      [
+       -0.0,
+       0.0
+      ],
+      [
+       -7.6,
+       -42.5
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}
