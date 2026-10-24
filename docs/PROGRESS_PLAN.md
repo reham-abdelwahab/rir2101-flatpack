@@ -21,11 +21,13 @@ Status key: ⬜ open · 🟡 in progress · ✅ passed · ❌ failed (→ fix, r
 | # | Action | Owner | Due | Pass when | Status |
 |---|---|---|---|---|---|
 | A1 | Brief the class on **v4.3.1** (student release from 24 Oct): every blue line folds away from you, printed side out; the chair/sofa BACK is a separate panel glued printed side to the rear; B1/B2 sides go printed side out, post at the back. Students holding **v4.2.4** sheets: follow the red notes + glue B2 with its post at the back, printed side inward (F2) | Reham / TAs | Sun 25 Oct | said in studio | ⬜ |
-| A2 | Collect every chair, sofa and table that needed a corrective cut (photo + student ID) | TAs | Sun 25 Oct | list with count n / class size | ⬜ |
+| A2 | Collect every chair, sofa and table that needed a corrective cut (photo + student ID) | TAs | Sun 25 Oct | tally: models built / finished with no corrective cut / corrective cut / failed, out of students present; photo + student ID for every corrective cut or failure (a problem-only log cannot show the success rate) | ⬜ |
 | A3 | Hotfix v4.2.4: exceptions printed on chair/sofa/table sheets | Claude | 24 Oct | 104/104; v4.2.3 stamps still verify | ✅ |
 | A5 | v4.3 promoted to the root by instructor decision (v4.3.0, then v4.3.1 F2 fix); v4.2.4 kept at `/v4.2.4/`; course folder updated, old files in `9 Superseded/before-flatpack-v4_3_1-2026-10-24` | Claude | 24 Oct | root 117/117 · testing 113/113 · v4.2.4 104/104; handout 3 A4 | ✅ |
 | A6 | v4.3.2 student release: F1 curve offsets in real cm, F3 frame test in the room gate, T1 verifier places side profiles printed side out; v4.3.1 stamps still verify; research re-run and report corrected | Claude | 24 Oct | root 125/125 · testing 120/120 · v4.2.4 104/104; judges reproduce byte for byte; handout 3 A4 | ✅ |
 | A4 | Course folder (P3-6): v4.2.4 tool + handout in `Week 06/2 Studio/FlatPack Tool`, preview in its `TESTING ONLY` subfolder; v4.2.1, old handouts, old `studio_flat_pack_maker_1_20_1_10.html`, 7 raw Gemini images and the 4 audit files from the course root moved to `Week 06/9 Superseded/before-flatpack-v4_2_4-2026-10-24` | Claude | 24 Oct | nothing deleted; `_README.txt` logged | ✅ |
+
+**Closeout 24 Oct 2026 (evening):** v4.3.2 software work is closed for the studio pilot. The live release and the generated-sheet version were checked on 24 October 2026 (independent browser check: tool and chair sheet read v4.3.2, print enabled). Physical performance remains unverified until classroom use. Further changes will respond to observed failures (Track B).
 
 ## Track B — Physical gates for v4.3 (post-release since 24 Oct: v4.3 was promoted before them; any ❌ → v4.3.x patch)
 
