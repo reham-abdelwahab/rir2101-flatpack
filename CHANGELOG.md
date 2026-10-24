@@ -1,5 +1,27 @@
 # Changelog
 
+## v4.3 — 2026-10-24 (modification list v4.3: P1–P4 closed in code; physical values left to the studio)
+**Fold & Glue — proven by folding the exported nets (P4-2)**
+- New `tests/fold_verify.js`: reads only the printed sheet SVGs, splits every part into faces along its blue lines, folds them in 3D, places the separate parts by the assembly rule, and checks size, fold direction, glue tabs and overlaps. 22 nets (5 types × 1:10/1:20 × flat/arched/sloped tops): all fold to the target W × D × H with mountain folds only; 110 of 110 tabs land on a face (162 hinges).
+- What it found in v4.2.3 (8 of 22 passed): the chair/sofa back folded UP from the seat is a **valley** fold, so "all blue lines fold away from you" was false for every chair and sofa; a sloped back's raised corner left its tab hanging above the post; the table's tabs ran along the full leg edges and met the apron only near the top.
+- Fixes: the chair/sofa back **A1** is a separate panel (drawn mirrored, "printed side to the rear") with side tabs only up to the post top; the table tabs sit on the four apron ends (apron ≥ 6 mm). The fold rule is now true for every net. Fold & Glue strip note for chair/sofa backs (EN/AR).
+**Waffle and bookcase**
+- **FIT TEST strip** on every Waffle and bookcase sheet: three slots at base − 0.1, base, base + 0.1 mm (P1-1). **Slot fit** in A (−0.1 … +0.2 mm) applies the measured result to every slot; laser kerf and hand-cut clearance are shown separately (P1-2). The slot width is part of the VERIFY stamp, so laser, hand-cut and corrected sheets carry different stamps (P3-4).
+- **Assembly order from the real ribs** (P1-3, P1-4, P4-3): every sheet lists the steps for all ribs — upright, or upside down on the Y-ribs' top edges, whichever needs fewer glued parts — names the ribs that need glue (table 1:10: X2–X13; chair 1:10: X2–X3; chair 1:20: none) and the finished size including the outer ribs, in English and Arabic. The H11 tip no longer names "the two middle ribs".
+- Hand-cut slots shallower than 4 mm warn (table 1:20: 3 mm) with laser / 1:10 / Fold & Glue as the fix (P1-6). The Waffle panel recommends 1:10.
+- "Waffle (laser)" is now **Waffle**; the cutting process (LASER / HAND-CUT +0.2 mm) is shown on the sheet and in the parts list (P1-8). Arabic for the board, slot width, rib directions, order and glue warning on the sheet (P1-9).
+- Hand-cut slot picture (HC1) and upside-down picture (UD1) drawn in the build strip; spray-mount step H07 added to the Waffle strip with "no wet PVA or glue stick" (P2-1, P2-2, P2-3).
+**Board and materials**
+- Fold & Glue on 1.5 mm board or thicker always warns, with the fix: cut that piece from 0.5 mm Bristol, the net is the same (P1-5). Material label: "1.5 mm — Maquette Carton (Waffle, bookcase)". Board-measuring helper: stack 10, divide by 10, finished thickness (P1-7).
+**From image**
+- Width of a traced Waffle starts from the Neufert width of the chosen furniture type and must be confirmed (no 45 cm default) (P1-11).
+- Trace quality gate: removed fragments shown grey over the picture; a room/background warning when the outline fills the picture or touches three edges; the student confirms "only the furniture" before the parts can print (P1-12).
+- Three named outputs: Profile study, Waffle interpretation, Folded approximation (nearest type at Neufert size), each stating what it represents, simplifies and leaves to design (P2-10). Six simplification steps and a "My simplification" field, printed on the sheet (P2-11). Student-drawn blue lines are labelled "not checked as a net" (P2-12). Calibration is named "Give the picture a Neufert size" (P2-8).
+**Wording and sheets**
+- The 3D view is labelled an illustration, not a fold test; checks say "geometry" (P1-10, P2-7). Score before cut: blue listed first on sheets and in the toolbar; scoring method in the H08 tip (P2-4). Glue timing in H10 (P2-5). "Change the scale of the whole model" (P2-6). Vertical 50 mm ruler and ID-card edge (85.6 mm) in the sheet margins (P2-9). "1 model = N parts" with a ☐ checklist (P3-2). Neufert table names the source size of each model size (P3-1). Paper-skinning sequence (P3-3).
+**Tests**
+- `tests/_baseline.html` (v3.4) is hosted, so the full regression runs from GitHub Pages (P3-5). 112 checks pass, including the fold verifier and its negative case. Waffle rib geometry: 20/20 identical to v4.2.2. Handout 3 A4 pages.
+
 ## v4.2.3 — 2026-10-24 (P0 fixes from the v4.3 modification list, before the student release)
 - **P0-1 · Bookcase locked below 1.5 mm board.** The bookcase uses slotted notches, the same joint as Waffle. On 0.5 mm Bristol it now shows a red check before printing and an EN/AR lock note in the piece editor; while a bookcase piece exists, choosing paper or a custom thickness under 1.5 mm is refused.
 - **P0-2 · Bookcase build pictures.** The bookcase no longer receives the Fold & Glue strip (score, fold, glue tabs). It gets its own strip (H07 → H09 → bookcase picture → H12) with an EN/AR caption and tip, and every bookcase sheet carries an assembly picture drawn from its geometry: front view, uprights V1–V3 (slots from the front edge), shelves H (slots from the back edge), "no folding · board t mm · glue only if loose". The archetype tip "Egg-crate slots need zero glue" is replaced.
