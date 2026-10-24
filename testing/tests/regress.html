@@ -707,6 +707,18 @@ function overlapCheck(w, svgId) {
     log(bad.length === 0, 'F2 Chair and sofa: B1 LEFT post at the left of its drawing and B2 RIGHT its mirror, so both sides glue printed side out with the post at the rear (1:10, 1:20)', bad.join(' | '));
   }
 
+  // ---------------- Build Steps pages (24 Oct): linked from E · Build, F · Picture guide and I · Instructor ----------------
+  {
+    const d = wc.document, L = id => d.getElementById(id), site = 'https://reham-abdelwahab.github.io/rir2101-flatpack/';
+    const e = L('link-build-steps'), f = L('link-build-steps-help'), r = L('link-fold-review');
+    log(!!e && !!f && e.href === site + 'steps/' && f.href === site + 'steps/' && e.target === '_blank' && /شاهد خطوات البناء/.test(e.textContent) && /Watch the build steps/.test(e.textContent) && e.closest('#step-E') && f.closest('#step-F'),
+      'Build Steps link (EN/AR) in E · Build and F · Picture guide → /steps/, new tab');
+    log(!!r && r.href === site + 'review/' && r.closest('details'), 'Fold review (staff) link inside I · Instructor → /review/');
+    const pages = await Promise.all(['steps/index.html', 'review/index.html'].map(u => fetch('../../' + u).then(x => x.ok ? x.text() : '').catch(() => '')));
+    log(/<title>Maquette Build Steps<\/title>/.test(pages[0]) && /const DATA = \{/.test(pages[0]) && /<title>Maquette Fold Review<\/title>/.test(pages[1]) && /const DATA = \{/.test(pages[1]),
+      'steps/ and review/ pages are built with data (tools/fold_review/build.py)');
+  }
+
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));
   window.REGRESS ={ pass: results.every(r => r.ok), results };
   out.insertAdjacentHTML('beforeend', `\n\n<b>${window.REGRESS.pass ? 'ALL PASS' : 'FAILURES'}</b> (${results.filter(r => r.ok).length}/${results.length})`);

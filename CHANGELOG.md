@@ -1,5 +1,12 @@
 # Changelog
 
+## Build Steps pages — 2026-10-24 (site update; v4.3.1 sheets and stamps unchanged)
+- **`steps/` — Maquette Build Steps (students, EN/AR):** each Fold & Glue net folds hinge by hinge and each Waffle model goes together in the order printed on its sheet, with one English and one Arabic line per step and the current fold line lit on the printed sheet. Build order a person can follow: base panels, then each separate part is placed before the tabs that glue onto it. Side profiles are placed printed side out (white printed side, brown back).
+- **`review/` — Maquette Fold Review (staff):** the same replay for v4.3.1, v4.3.0 and v4.2.4 with pass/fail per net (valley folds, tabs landed, side profiles); v4.3.0 and v4.2.4 show F2 (B2 RIGHT post at the front).
+- Data only from the tool's own checks: `tests/fold_verify.js` (`spec.trace`), `waffleForPiece()`, `waffleAssemblyPlan()`. Built by `tools/fold_review/extract.py` + `build.py`.
+- Links in the tool (root and `testing/`): "Watch the build steps ▶ / شاهد خطوات البناء" in E · Build and F · Picture guide; "Fold review (staff)" in I · Instructor. Not printed (`no-print`). `TOOL_VERSION` stays 4.3.1: no sheet, part or stamp changes.
+- Tests: 3 new checks in both suites (links EN/AR → `/steps/`, staff link → `/review/`, both pages built with data). Root 120/120 · testing 116/116 · v4.2.4 104/104.
+
 ## Research — 2026-10-24 (research/, no change to the tool)
 - Tool comparison D0–D7 + D9 run and scored: Export Paper Model 1.4.2, PolyZamboni 1.3.1, Lamina 0.3.0, VTracer 0.6.15 against ours, chair / table / curved sofa at 1:10 and 1:20 on A3. One generic net judge (`research/net_judge.py`) and one waffle judge (`research/waffle_judge.py`) score every tool; validated on the v4.2.4 nets as a negative control. Decision: keep ours in every case. Details: `research/RESULTS.md`.
 - **Open for the next preview (testing/):** F1 curve offsets in paper mm (scale-dependent design); F3 room/background gate silent on picture H14; place side profiles by printed side inside `tests/fold_verify.js` (the regression check added in v4.3.1 already guards F2).

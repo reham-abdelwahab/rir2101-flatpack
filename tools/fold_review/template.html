@@ -32,6 +32,7 @@
   --cut: #f05a4f; --score: #6f9bff; --valley: #fb8b4f; --tab: #e8b04d; --paper: #f1f3ef; --kraft: #9c8461;
   --ok: #4cc38a; --bad: #ff7b6e; --stage: #252b28; color-scheme: dark }
 * { box-sizing: border-box }
+[hidden] { display: none !important }
 body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--body); margin: 0 }
 .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 18px 28px; max-width: 1400px; margin: 0 auto; display: grid; gap: 14px }
 header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px }
@@ -45,7 +46,7 @@ button { cursor: pointer }
 button:hover { border-color: var(--muted) }
 button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--score); outline-offset: 2px }
 .verdict { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
-.chip { font: 500 12.5px/1 var(--mono); padding: 6px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); white-space: nowrap }
+.chip { font: 500 12.5px/1 var(--mono); padding: 6px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); max-width: 100%; line-height: 1.3 }
 .chip.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, var(--line)) }
 .chip.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line)) }
 .main { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 14px }
@@ -89,7 +90,7 @@ ol.steps .n { font: 12px var(--mono); color: var(--muted); font-variant-numeric:
 
   <div class="pickers">
     <div class="field"><label for="selVer">Version</label>
-      <select id="selVer"><option value="v4.3.0">v4.3.0 · student release</option><option value="v4.2.4">v4.2.4 · previous</option></select></div>
+      <select id="selVer"><option value="v4.3.1">v4.3.1 · student release</option><option value="v4.3.0">v4.3.0 · before the F2 fix</option><option value="v4.2.4">v4.2.4 · kept version</option></select></div>
     <div class="field"><label for="selMethod">Build method</label>
       <select id="selMethod"><option value="fold">Fold &amp; Glue</option><option value="waffle">Waffle</option></select></div>
     <div class="field"><label for="selCase">Model</label><select id="selCase"></select></div>
@@ -121,6 +122,7 @@ ol.steps .n { font: 12px var(--mono); color: var(--muted); font-variant-numeric:
   <div class="card notes">
     <p><b>How to read it.</b> White is the printed side of the card and brown is the back. The sheet rule says the printed side stays outside and every blue line folds away from you (a mountain fold). A fold that goes the other way is drawn in orange and listed as a valley fold. Waffle ribs that need glue are orange.</p>
     <p><b>What the order is.</b> For a net, the order is the one the checker used: it starts from the base panel and works outward, panels first, then glue tabs, then the separate parts. That order is valid, but it is not always the easiest order for a student's hands. For waffle, the order is the assembly plan printed on the sheet.</p>
+    <p><b>Side profiles.</b> Each side is placed with its printed side facing out, as the sheet rule says, and the page then reports where its post lands. In v4.3.0 and v4.2.4, B2 RIGHT was drawn identical to B1 LEFT, so with its printed side out its post sits at the front (fault F2, fixed in v4.3.1 by drawing B2 mirrored).</p>
     <p><b>Limits.</b> The card has zero thickness. Overlap is checked only in the finished shape, so two panels passing through each other during a fold would not be caught. Separate parts are placed by a stated rule rather than searched for. Physical fit, glue strength and paper stretch are tested in the studio (gates B2–B11).</p>
   </div>
 </div>
@@ -166,7 +168,7 @@ function makeMaterials() {
   MAT = {
     paper: new THREE.MeshLambertMaterial({ color: c('--paper'), side: THREE.FrontSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }),
     kraft: new THREE.MeshLambertMaterial({ color: c('--kraft'), side: THREE.BackSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }),
-    tab: new THREE.MeshLambertMaterial({ color: c('--tab'), side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }),
+    tab: new THREE.MeshLambertMaterial({ color: c('--tab'), side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -2 }),   // glued tabs lie on a face: draw them in front of it
     tabBad: new THREE.MeshLambertMaterial({ color: c('--bad'), side: THREE.DoubleSide }),
     rib: new THREE.MeshLambertMaterial({ color: c('--kraft'), side: THREE.DoubleSide }),
     ribGlue: new THREE.MeshLambertMaterial({ color: c('--tab'), side: THREE.DoubleSide }),
@@ -183,7 +185,10 @@ function clearWorld() { while (world.children.length) { const o = world.children
 // ===== FOLD =====
 function buildFold(c) {
   const T = c.trace, parts = [];
-  T.parts.forEach((P, pi) => {
+  // side profiles are placed by their PRINTED side facing out (not by the checker's post rule), so a wrongly drawn side shows up
+  const sideByName = Object.fromEntries((c.sides || []).map(sd => [sd.name, sd]));
+  const tparts = T.parts.map(P => sideByName[P.name] ? { name: P.name, faces: [sideByName[P.name].ring], names: [P.name.replace(/^B\d\s*/, '')], isTab: [false], hinges: [], root: 0, steps: [], M: sideByName[P.name].M, side: sideByName[P.name] } : P);
+  tparts.forEach((P, pi) => {
     if (P.static3D) {   // a flat part placed by the assembly rule (side profiles, headboard)
       const g = new THREE.BufferGeometry(), pts = P.static3D, tri = triFan3(pts);
       g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(pts.length * 3), 3)); g.setIndex(tri);
@@ -221,12 +226,19 @@ function buildFold(c) {
     return { text: `${P.name}: fold ${a} – ${b}`, dir: s.sign > 0 ? 'm' : 'v', tag: s.sign > 0 ? 'mountain' : 'valley' };
   };
   const main = parts[0];
+  // build order a person can follow: fold the base part's panels; then for each separate part, place it and
+  // glue on the tabs that land on it; a tab is folded only once the part it is glued to is in place
   main.P.steps.forEach((s, i) => { if (!s.tab) tl.push({ part: main, i, ...label(main.P, s) }); });
-  main.P.steps.forEach((s, i) => { if (s.tab) tl.push({ part: main, i, ...label(main.P, s) }); });
+  const tabs = []; parts.forEach(pt => { if (!pt.static) pt.P.steps.forEach((s, i) => { if (s.tab) tabs.push({ pt, s, i, done: false }); }); });
+  const present = new Set([main.P.name]);
+  const flush = () => tabs.forEach(tb => { if (tb.done || !present.has(tb.pt.P.name)) return; const onto = tb.s.onto ? [...present].some(n => tb.s.onto.startsWith(n)) : true; if (onto) { tb.done = true; tl.push({ part: tb.pt, i: tb.i, ...label(tb.pt.P, tb.s) }); } });
+  flush();
   parts.slice(1).forEach(pt => {
-    tl.push({ part: pt, arrive: true, text: `Place ${pt.P.name}`, dir: 'p', tag: 'place' });
-    if (!pt.static) pt.P.steps.forEach((s, i) => tl.push({ part: pt, i, ...label(pt.P, s) }));
+    const sd = pt.P.side;
+    tl.push({ part: pt, arrive: true, text: sd ? `Place ${pt.P.name}, printed side out${sd.postAtBack === false ? ': its post lands at the FRONT' : ''}` : `Place ${pt.P.name}`, dir: sd && sd.postAtBack === false ? 'x' : 'p', tag: sd ? (sd.postAtBack === false ? 'wrong side' : 'printed out') : 'place' });
+    present.add(pt.P.name); flush();
   });
+  tabs.forEach(tb => { if (!tb.done) tl.push({ part: tb.pt, i: tb.i, ...label(tb.pt.P, tb.s) }); });
   // unmated tabs are flagged in the label already; also tint them red
   parts.forEach(pt => { if (pt.static) return; pt.P.steps.forEach(s => { if (s.tab && !s.onto) pt.faces[s.to].meshes.forEach(m => m.material = MAT.tabBad); }); });
   // span for the camera
@@ -346,6 +358,8 @@ function verdictHTML(c) {
     chips.push(c.ok ? `<span class="chip ok">✔ folds to ${c.assembled.map(v => +v.toFixed(1)).join(' × ')} mm</span>` : `<span class="chip bad">✘ fails the sheet rule</span>`);
     chips.push(c.valley.length ? `<span class="chip bad">${c.valley.length} valley fold${c.valley.length > 1 ? 's' : ''}</span>` : `<span class="chip ok">0 valley folds</span>`);
     chips.push(`<span class="chip ${c.tabs[0] === c.tabs[1] ? 'ok' : 'bad'}">tabs landed ${c.tabs[0]}/${c.tabs[1]}</span>`);
+    if (c.sides && c.sides.length) { const bad = c.sides.filter(sd => sd.postAtBack === false);
+      chips.push(bad.length ? `<span class="chip bad">✘ ${bad.map(sd => sd.name).join(', ')}: printed side out puts the post at the front</span>` : `<span class="chip ok">sides: printed side out, posts at the back</span>`); }
   } else {
     chips.push(c.valid ? `<span class="chip ok">✔ all slots open, grid connected</span>` : `<span class="chip bad">✘ waffle check failed</span>`);
     chips.push(`<span class="chip">${c.ribs.length} parts · board ${c.t} mm</span>`);
@@ -364,14 +378,15 @@ function netsHTML(c) {
     return `<div class="nets">${xs.concat(ys).slice(0, 14).map(thumb).join('')}</div>${c.ribs.length > 14 ? `<div class="cap" style="font:12px var(--mono);color:var(--muted);margin-top:6px">+ ${c.ribs.length - 14} more ribs</div>` : ''}`;
   }
   $('netTitle').textContent = 'Printed parts (sheet view)';
-  return c.trace.parts.filter(P => P.faces).map((P, pi) => {
+  const sideNames = new Set((c.sides || []).map(sd => sd.name));
+  return c.trace.parts.filter(P => P.faces || sideNames.has(P.name)).map(P => sideNames.has(P.name) ? { name: P.name, faces: [c.sides.find(sd => sd.name === P.name).ring], names: [P.name.replace(/^B\d\s*/, '')], isTab: [false], hinges: [], steps: [] } : P).map((P, pi) => {
     const pts = P.faces.flat(), x0 = Math.min(...pts.map(p => p[0])), x1 = Math.max(...pts.map(p => p[0])), y0 = Math.min(...pts.map(p => p[1])), y1 = Math.max(...pts.map(p => p[1]));
     const sw = Math.max(0.12, (x1 - x0) / 260);
     const faces = P.faces.map((r, k) => `<path d="M${r.map(p => `${(p[0] - x0).toFixed(2)},${(p[1] - y0).toFixed(2)}`).join('L')}Z" fill="${P.isTab[k] ? 'var(--tab)' : 'var(--paper)'}" fill-opacity="${P.isTab[k] ? .35 : 1}" stroke="var(--cut)" stroke-width="${sw}"/>`).join('');
     const hinges = P.hinges.map((h, hi) => { const s = P.steps.find(st => st.hinge === hi); return `<line data-p="${pi}" data-h="${hi}" x1="${(h.p[0] - x0).toFixed(2)}" y1="${(h.p[1] - y0).toFixed(2)}" x2="${(h.q[0] - x0).toFixed(2)}" y2="${(h.q[1] - y0).toFixed(2)}" stroke="${s && s.sign < 0 ? 'var(--valley)' : 'var(--score)'}" stroke-width="${sw * 1.6}" stroke-dasharray="${sw * 6} ${sw * 4}"/>`; }).join('');
     const labels = P.faces.map((r, k) => { if (P.isTab[k] || !P.names[k] || P.names[k] === 'panel') return ''; const cx = r.reduce((s, p) => s + p[0], 0) / r.length - x0, cy = r.reduce((s, p) => s + p[1], 0) / r.length - y0; return `<text x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="${Math.max(1.6, (x1 - x0) / 16).toFixed(2)}" font-family="IBM Plex Mono, monospace" fill="var(--muted)">${P.names[k]}</text>`; }).join('');
     return `<div class="net"><svg viewBox="${-sw * 3} ${-sw * 3} ${(x1 - x0 + sw * 6).toFixed(2)} ${(y1 - y0 + sw * 6).toFixed(2)}" role="img" aria-label="${P.name} net">${faces}${hinges}${labels}</svg><div class="cap">${P.name} · ${(x1 - x0).toFixed(1)} × ${(y1 - y0).toFixed(1)} mm</div></div>`;
-  }).join('') + (c.trace.parts.some(P => P.static3D) ? `<div class="net"><div class="cap">${c.trace.parts.filter(P => P.static3D).map(P => P.name).join(', ')}: flat parts, no folds</div></div>` : '');
+  }).join('') + (c.trace.parts.some(P => P.static3D && !sideNames.has(P.name)) ? `<div class="net"><div class="cap">${c.trace.parts.filter(P => P.static3D && !sideNames.has(P.name)).map(P => P.name).join(', ')}: flat part, no folds</div></div>` : '');
 }
 function stepsHTML(m) {
   return m.tl.map((e, k) => `<li data-k="${k}"><span class="n">${k + 1}</span><span>${e.text}</span><span class="dir ${e.dir}">${e.tag}</span></li>`).join('');

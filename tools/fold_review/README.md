@@ -1,14 +1,20 @@
-# Maquette Fold Review — how to regenerate
+# Build Steps pages — how they are made and rebuilt
 
-A 3D step-by-step replay of (1) how each Fold & Glue net folds and (2) how each Waffle model is assembled, built only from what the tool's own checks compute:
-- nets: `tests/fold_verify.js` with `spec.trace = true` returns the faces, hinges, fold order (breadth-first from the base panel), angle and direction of every fold, and the placement of each separate part;
-- waffle: the rib polygons from `waffleForPiece()` and the order from `waffleAssemblyPlan()` (the steps printed on the sheet).
+Two pages on the site replay, in 3D, what the tool's own checks compute from the printed sheets:
+- `steps/index.html` — **Maquette Build Steps** for students (EN/AR, newest version only).
+- `review/index.html` — **Maquette Fold Review** for staff (all versions in `data.json`, pass/fail per net).
 
-Regenerate after any change to the nets or the waffle code:
-1. `python3 -m http.server 8765` in the repo root.
-2. `python3 tools/fold_review/extract.py` → `data.json` (v4.3.0 root + v4.2.4 kept version; fold cases at 1:20, waffle at 1:10 and 1:20).
-3. Replace `/*DATA*/null` in `template.html` with the JSON and republish the artifact.
+Sources here: `student_template.html`, `template.html` (staff), `extract.py`, `build.py`. The built pages and `data.json` are committed so GitHub Pages serves them.
 
-Display notes: the checker counts the printed side as +Z with the sheet's y running down, so its fold models are the mirror image of the paper build; the viewer mirrors them back (x → −x). Waffle ribs are real geometry and are not mirrored.
+## Rebuild (part of every release that touches nets, side profiles or Waffle code)
+1. From the repo root: `git show ba04eee:index.html > _v430.html` (the v4.3.0 control for the staff page; do not commit it).
+2. `python3 -m http.server 8765 &`
+3. `python3 tools/fold_review/extract.py` → `tools/fold_review/data.json`. Expected today: v4.3.1 all ok and both side posts at the back; v4.3.0 and v4.2.4 B2 RIGHT post at the FRONT (F2); v4.2.4 chair, sofa, table FAIL.
+4. `python3 tools/fold_review/build.py` → `steps/index.html`, `review/index.html`. The student page takes the highest version in `data.json`: add a new version to `extract.py` when you release one.
+5. `rm _v430.html`; run the regression suites (they check the links and that both pages are built with data).
 
-Limits (also on the page): zero card thickness; overlap checked only in the finished shape (no swept-motion check); separate parts placed by a stated rule; the net order is the checker's valid order, not necessarily the easiest order for a student's hands.
+## What the pages do (and do not) show
+- Fold order: the base part's panels in the checker's order (breadth-first from the base panel); then each separate part is placed, followed by the tabs that glue onto it — no tab is glued onto a part that is not there yet.
+- Side profiles are placed **printed side out** (not by the checker's post rule) and both faces are coloured, so a side drawn the wrong way round shows its post at the front (F2).
+- The checker's frame is the mirror image of the paper build (printed side = +Z with the sheet's y down); fold models are shown mirrored back (x → −x). Waffle ribs are real geometry.
+- Limits (on both pages): zero card thickness; overlap checked only in the finished shape (no swept-motion check); separate parts placed by a stated rule.
