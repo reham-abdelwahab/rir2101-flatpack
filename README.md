@@ -7,23 +7,23 @@ A single, self-contained HTML tool that works offline. First-year interior-desig
 | | Student release | Previous version (kept) | Testing version |
 |---|---|---|---|
 | URL | https://reham-abdelwahab.github.io/rir2101-flatpack/ | https://reham-abdelwahab.github.io/rir2101-flatpack/v4.2.4/ | https://reham-abdelwahab.github.io/rir2101-flatpack/testing/ |
-| Version | **v4.3.1** (`index.html`) | **v4.2.4** (`v4.2.4/index.html`) | **v4.3.2-preview.0** (`testing/index.html`) |
+| Version | **v4.3.2** (`index.html`) | **v4.2.4** (`v4.2.4/index.html`) | **v4.3.3-preview.0** (`testing/index.html`) |
 | Use | coursework from 25 Oct 2026 | TAs verify sheets printed before 25 Oct; fallback | next features only — red "Experimental" banner (EN/AR) and sheet warning |
-| Regression | `tests/regress.html` — 120 / 120, incl. the net-folding verifier | `v4.2.4/tests/regress.html` — 104 / 104 | `testing/tests/regress.html` — 116 / 116 |
-| Handout | `RIR2101_FlatPack_Student_Handout_v4_3_1.pdf` (same content also under the old name `…_v4_0_1.pdf`) | `v4.2.4/RIR2101_FlatPack_Student_Handout_v4_2_4.pdf` | `testing/RIR2101_FlatPack_Student_Handout_PREVIEW.pdf` |
+| Regression | `tests/regress.html` — 125 / 125, incl. the net-folding verifier | `v4.2.4/tests/regress.html` — 104 / 104 | `testing/tests/regress.html` — 120 / 120 |
+| Handout | `RIR2101_FlatPack_Student_Handout_v4_3_2.pdf` (same content also under the old name `…_v4_0_1.pdf`; `…_v4_3_1.pdf` kept) | `v4.2.4/RIR2101_FlatPack_Student_Handout_v4_2_4.pdf` | `testing/RIR2101_FlatPack_Student_Handout_PREVIEW.pdf` |
 | Browser setting key | `bi-guide-hidden` | `bi-guide-hidden` | `preview:bi-guide-hidden` |
 
-All three suites were re-run headless (Chromium 153, Linux) on 24 Oct 2026.
+All three suites were re-run headless (Chromium 153, Linux) on 24 Oct 2026: `python3 tools/run_suites.py` (Playwright) prints the pass count of each.
 
 **Build Steps pages.** Two 3D pages replay how each net folds and how each Waffle model is assembled, using only what the tool's own checks compute from the printed sheet:
 - **https://reham-abdelwahab.github.io/rir2101-flatpack/steps/** — *Maquette Build Steps*, for students (EN/AR, current version). Linked as "Watch the build steps ▶ / شاهد خطوات البناء" in E · Build and F · Picture guide.
-- **https://reham-abdelwahab.github.io/rir2101-flatpack/review/** — *Maquette Fold Review*, for staff (v4.3.1, v4.3.0, v4.2.4 with pass/fail per net). Linked in I · Instructor.
+- **https://reham-abdelwahab.github.io/rir2101-flatpack/review/** — *Maquette Fold Review*, for staff (v4.3.2, v4.3.1, v4.3.0, v4.2.4 with pass/fail per net). Linked in I · Instructor.
 
 They load three.js from a CDN, so they need internet; the tool itself stays offline. Rebuild them whenever nets or Waffle code change: see [tools/fold_review/README.md](tools/fold_review/README.md).
 
-**What v4.3.1 is proven for, and what it is not.** Geometry is proven: every one of the 22 Fold & Glue nets folds to its target size with mountain folds only (v4.2.x: 8 of 22), and all 20 Waffle assembly plans reach the target size. A second, independent judge (`research/net_judge.py`: any net onto a shared 3D target, placement searched, printed side checked on every panel) passes the chair, table and curved sofa at 1:10 and 1:20, and found one fault our own verifier could not see (F2, fixed in v4.3.1: the right side profile was not mirrored, so one side glued printed side inward). The physical gates B2–B11 (FIT TEST, E1 table, class trial, curved backs, glue timing, usability, image path, template transfer, score coupon) have **not** been run. On 24 Oct 2026 the instructor decided to promote v4.3 before them, because the geometry of v4.2.4 is known to be wrong for chair, sofa and table nets. The physical gates are now post-release checks in [docs/PROGRESS_PLAN.md](docs/PROGRESS_PLAN.md) (Track B). Any ❌ there becomes a v4.3.x patch.
+**What v4.3.2 is proven for, and what it is not.** Geometry is proven: every one of the 22 Fold & Glue nets folds to its target size with mountain folds only (v4.2.x: 8 of 22), and all 20 Waffle assembly plans reach the target size. A second, independent judge (`research/net_judge.py`: any net onto a shared 3D target, placement searched, printed side checked on every panel) passes the chair, table and curved sofa at 1:10 and 1:20, and found one fault our own verifier could not see (F2, fixed in v4.3.1: the right side profile was not mirrored, so one side glued printed side inward). Since v4.3.2 our own verifier also glues every side profile printed side out and fails a post at the front (T1), and curved backs are stored in real cm, so a design does not change with the scale (F1). The physical gates B2–B11 (FIT TEST, E1 table, class trial, curved backs, glue timing, usability, image path, template transfer, score coupon) have **not** been run. On 24 Oct 2026 the instructor decided to promote v4.3 before them, because the geometry of v4.2.4 is known to be wrong for chair, sofa and table nets. The physical gates are now post-release checks in [docs/PROGRESS_PLAN.md](docs/PROGRESS_PLAN.md) (Track B). Any ❌ there becomes a v4.3.x patch.
 
-**Stamps.** Only v4.3.1 sheets verify in the current version: v4.2.x and v4.3.0 chair, sofa and table sheets differ, so their stamps are not listed in `STAMP_COMPATIBLE`. If a TA types a v4.2.x version into the verify box, the tool points to `v4.2.4/`, where those sheets still verify.
+**Stamps.** v4.3.1 and v4.3.2 sheets verify in the current version (type the version printed on the sheet): v4.3.2 changed no part, packing or sheet contents line. v4.2.x and v4.3.0 chair, sofa and table sheets differ, so their stamps are not listed in `STAMP_COMPATIBLE`. If a TA types a v4.2.x version into the verify box, the tool points to `v4.2.4/`, where those sheets still verify.
 
 Open either version in its own browser tab, not in an iframe, because printing and downloads are blocked in iframes. You can also download `index.html` and open it locally. The version history is in [CHANGELOG.md](CHANGELOG.md), the v4 specification in [docs/v4_SPEC.md](docs/v4_SPEC.md) and the original handover in [docs/HANDOVER.md](docs/HANDOVER.md).
 
@@ -75,9 +75,9 @@ To check a sheet, a TA opens **Help → I · Instructor → Verify a Printed She
 ## Regression checks
 
 The laptop has no Python or Node, so the tests run in a browser.
-- **Student release v4.3.1:** `tests/regress.html` (117 checks against the hosted v3.4 baseline, including the fold verifier and the promotion checks).
+- **Student release v4.3.2:** `tests/regress.html` (125 checks against the hosted v3.4 baseline, including the fold verifier, the promotion checks and F1/F3/T1).
 - **Previous version v4.2.4:** `v4.2.4/tests/regress.html` (104 checks).
-- **Testing version:** `testing/tests/regress.html` (113 checks).
+- **Testing version:** `testing/tests/regress.html` (120 checks).
 - Online, prefix either with https://reham-abdelwahab.github.io/rir2101-flatpack/. Offline, start `pwsh -NoProfile -File tests/serve.ps1` (port 8765, or `$env:PORT`). `?base=` (empty) runs the self-checks only.
 
 Validation for the paper (geometry, assembly, physical) is in [docs/VALIDATION.md](docs/VALIDATION.md). Studio test prints are in `testing/tests/prints/`. The tool comparison (Export Paper Model, PolyZamboni, Lamina, VTracer) is in [research/](research/): results in [research/RESULTS.md](research/RESULTS.md) — no tool beat ours, so nothing was integrated.

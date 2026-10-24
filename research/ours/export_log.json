@@ -1,41 +1,41 @@
 {
  "chair_1-10": {
-  "version": "4.3.1",
+  "version": "4.3.2",
   "sheets": 1,
   "parts": 4,
   "folds": 7,
-  "seconds": 0.02
+  "seconds": 0.01
  },
  "chair_1-20": {
-  "version": "4.3.1",
+  "version": "4.3.2",
   "sheets": 1,
   "parts": 4,
   "folds": 7,
   "seconds": 0.01
  },
  "table_1-10": {
-  "version": "4.3.1",
+  "version": "4.3.2",
   "sheets": 1,
   "parts": 1,
   "folds": 8,
   "seconds": 0.01
  },
  "table_1-20": {
-  "version": "4.3.1",
+  "version": "4.3.2",
   "sheets": 1,
   "parts": 1,
   "folds": 8,
   "seconds": 0.01
  },
  "sofa_curved_1-10": {
-  "version": "4.3.1",
+  "version": "4.3.2",
   "sheets": 1,
   "parts": 4,
   "folds": 7,
   "seconds": 0.01
  },
  "sofa_curved_1-20": {
-  "version": "4.3.1",
+  "version": "4.3.2",
   "sheets": 1,
   "parts": 4,
   "folds": 7,

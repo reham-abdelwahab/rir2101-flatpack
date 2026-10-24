@@ -4,8 +4,8 @@ Settings and sheet counts are read from each tool's settings.md / export logs wh
 import json, os, glob
 HERE = os.path.dirname(os.path.abspath(__file__))
 CASES = ['chair', 'table', 'sofa_curved']; SCALES = ['1-10', '1-20']
-NET_TOOLS = [('ours', 'Ours v4.3.1'), ('export_paper_model', 'Export Paper Model 1.4.2'), ('polyzamboni', 'PolyZamboni 1.3.1'), ('lamina', 'Lamina 0.3.0 (Folded)'), ('ours_v4_2_4', 'Ours v4.2.4 (negative control)')]
-WAF_TOOLS = [('ours', 'Ours v4.3.1'), ('lamina', 'Lamina 0.3.0 (Interlocked)')]
+NET_TOOLS = [('ours', 'Ours v4.3.2'), ('export_paper_model', 'Export Paper Model 1.4.2'), ('polyzamboni', 'PolyZamboni 1.3.1'), ('lamina', 'Lamina 0.3.0 (Folded)'), ('ours_v4_2_4', 'Ours v4.2.4 (negative control)')]
+WAF_TOOLS = [('ours', 'Ours v4.3.2'), ('lamina', 'Lamina 0.3.0 (Interlocked)')]
 
 def load(p):
     try: return json.load(open(p))

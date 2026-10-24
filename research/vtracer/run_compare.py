@@ -10,6 +10,7 @@ functions are called (imgLoadSrc -> calibration -> imgAutoTrace -> renderTraceGa
 Outputs (research/vtracer/out/): raw VTracer SVGs, our tool's raw shapes (JSON, image px),
 per-run flattened outlines in mm (JSON); research/vtracer/results.json.
 """
+import os
 import argparse, base64, json, platform, re, sys, time
 from pathlib import Path
 
@@ -284,7 +285,7 @@ def main():
                         "leak_rule": f"connected piece of (traced - GT.buffer({LEAK_BAND_MM} mm, mitre)) with area > {LEAK_MIN_MM2} mm^2",
                         "run_started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, "cases": {}}
     with sync_playwright() as pw:
-        br = pw.chromium.launch()
+        br = pw.chromium.launch(executable_path=os.environ.get('CHROME') or None)
         results["meta"]["chromium"] = br.version
         page = br.new_page(viewport={"width": 1400, "height": 1000})
         console = []

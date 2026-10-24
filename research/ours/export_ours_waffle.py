@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 CASES = {'chair': 'chair', 'table': 'table', 'sofa_curved': 'sofa'}
 with sync_playwright() as pw:
-    b = pw.chromium.launch(); pg = b.new_page(); pg.goto('http://localhost:8765/index.html'); pg.wait_for_timeout(3000)
+    b = pw.chromium.launch(executable_path=os.environ.get('CHROME') or None); pg = b.new_page(); pg.goto('http://localhost:8765/index.html'); pg.wait_for_timeout(3000)
     for case, a in CASES.items():
         for sc in (10, 20):
             r = pg.evaluate("""([a, sc]) => { const A = archetypes[a]; const p = { ...newPiece(a), archetype: a, w: A.w, d: A.d, h: A.h, subH: A.subH, method: 'waffle', kerf: 'laser', slotAdj: 0 };

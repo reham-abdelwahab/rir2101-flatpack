@@ -8,7 +8,9 @@ JS=r"""(args)=>{ const [cases, scale]=args; const ID={chair:'CH1',sofa:'SF1',tab
   for (const [a,v,curve] of cases){ const f=10/scale, p={...newPiece(a,'fold'), curveOffsets:curve};
     const n=nestAll([p],{scale, sheetSize:'A4', thicknessMm:0.5, name:'REVIEW', id:'0', course:'RIR2101'}), svgs=n.sheets.map(s=>s.svg);
     const W=p.w*f, D=p.d*f, H=p.h*f;
-    const r=FoldVerify.verifyModel(svgs, ID[a], {archetype:a, W, D, H, sub:p.subH*f, curve, trace:true}, polygonClipping);
+    // v4.3.2 (F1): curve offsets are real cm (CURVE_UNITS_PER_CM exists); older builds stored paper mm
+    const cv=typeof CURVE_UNITS_PER_CM!=='undefined' ? curve.map(v=>v*f) : curve;
+    const r=FoldVerify.verifyModel(svgs, ID[a], {archetype:a, W, D, H, sub:p.subH*f, curve:cv, trace:true}, polygonClipping);
     const sides=[];
     if ((a==='chair'||a==='sofa') && r.trace) {
       // place every side profile by its PRINTED side facing out (x = 0 → printed normal −x, x = W → +x), not by the post rule
@@ -32,10 +34,12 @@ WJS=r"""()=>{ const out=[]; for (const a of ['chair','table','sofa','bed','cabin
   out.push({type:'waffle', archetype:a, scale, size:[p.w,p.d,p.h], t:res.t, valid:w.validation.ok, plan,
     ribs:res.ribs.map(r=>({name:r.name, dir:r.dir, pos:+r.pos.toFixed(3), poly:(function rd(x){return typeof x[0]==='number'?[+x[0].toFixed(3),+x[1].toFixed(3)]:x.map(rd)})(r.poly)}))}); }
   return out; }"""
+import os
 data={'generated':'2026-10-24','versions':{}}
 with sync_playwright() as pw:
-    b=pw.chromium.launch()
-    for ver,url,allc,waf in [('v4.3.1',B+'index.html',True,True),('v4.3.0',B+'_v430.html',False,False),('v4.2.4',B+'v4.2.4/index.html',False,False)]:
+    b=pw.chromium.launch(executable_path=os.environ.get('CHROME') or None)
+    # controls: _v431.html = git show c0d7e37:index.html, _v430.html = git show ba04eee:index.html (neither is committed)
+    for ver,url,allc,waf in [('v4.3.2',B+'index.html',True,True),('v4.3.1',B+'_v431.html',True,False),('v4.3.0',B+'_v430.html',False,False),('v4.2.4',B+'v4.2.4/index.html',False,False)]:
         pg=b.new_page(); pg.goto(url); pg.wait_for_timeout(2000); pg.add_script_tag(content=FV)
         tv=pg.evaluate("()=>TOOL_VERSION"); assert tv==ver[1:], (tv,ver)
         cases=CASES if allc else [c for c in CASES if c[1]=='flat' and c[0] in ('chair','sofa','table','bed','cabinet')]

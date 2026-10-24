@@ -6,7 +6,9 @@ reader only: it applies the SVG transforms and assigns each blue line to its par
 direction per line: the printed rule "all blue lines fold away from you" applies, so every fold is written
 data-fold="unmarked" and judged with --unmarked mountain. Also writes the v4.2 chair net (back folded up from
 the seat) as a negative control.
-Curve offsets are stored in paper mm by the tool (finding F1), so the 1:20 sofa gets offsets × 0.5 to keep the same real shape. Needs the repo served at http://localhost:8765/.
+Curve offsets: from v4.3.2 the tool stores them in real cm (F1 fixed), so the same offsets give the same real shape at every
+scale; older builds (no CURVE_UNITS_PER_CM) stored paper mm, and the 1:20 sofa then got offsets × 0.5 by hand. Needs the repo
+served at http://localhost:8765/.
 """
 import json, os, time
 from playwright.sync_api import sync_playwright
@@ -31,14 +33,14 @@ def write_svg(path, parts, note):
 if __name__ == '__main__':
     log = {}
     with sync_playwright() as pw:
-        b = pw.chromium.launch(); pg = b.new_page(); pg.goto(URL); pg.wait_for_function('window.REGRESS', timeout=180000)
+        b = pw.chromium.launch(executable_path=os.environ.get('CHROME') or None); pg = b.new_page(); pg.goto(URL); pg.wait_for_function('window.REGRESS', timeout=180000)
         if not pg.evaluate('typeof FoldVerify !== "undefined"'): pg.add_script_tag(url='http://localhost:8765/tests/fold_verify.js')   # older suites (v4.2.4) do not load the reader
         for case, (a, mid, curve) in CASES.items():
             os.makedirs(os.path.join(HERE, case), exist_ok=True)
             for sc in (10, 20):
                 t0 = time.time()
                 r = pg.evaluate("""([a, mid, curve, sc]) => { const wc = document.getElementById('fc').contentWindow, A = wc.eval('archetypes')[a];
-                  const p = { archetype: a, w: A.w, d: A.d, h: A.h, subH: A.subH, qty: 1, method: 'fold', curveOffsets: curve.map(v => v * 10 / sc) };   // curve offsets are paper mm in the tool: scale them so the real shape is the same at 1:20
+                  const p = { archetype: a, w: A.w, d: A.d, h: A.h, subH: A.subH, qty: 1, method: 'fold', curveOffsets: wc.eval('typeof CURVE_UNITS_PER_CM') !== 'undefined' ? curve : curve.map(v => v * 10 / sc) };   // v4.3.2+: real cm; older builds: paper mm, scaled by hand
                   const n = wc.nestAll([p], { scale: sc, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' });
                   const parts = FoldVerify.parseModel(n.sheets.map(s => s.svg), mid);
                   return { sheets: n.sheets.length, version: wc.eval('TOOL_VERSION'), parts: parts.map(p => ({ sheet: p.sheet, name: p.name, ring: p.ring, scores: p.scores, labels: p.labels.map(l => ({ t: l.t, at: l.at })) })) }; }""", [a, mid, curve, sc])

@@ -2,14 +2,16 @@
  "meta": {
   "python": "3.13.17",
   "shapely": "2.2.0",
-  "numpy": "2.5.4",
+  "numpy": "2.5.3",
   "playwright": "1.63.0",
   "url": "http://localhost:8765/index.html",
   "px_per_mm": 10,
   "leak_rule": "connected piece of (traced - GT.buffer(0.5 mm, mitre)) with area > 1.0 mm^2",
-  "run_started": "2026-10-24T19:06:26+0300",
+  "run_started": "2026-10-24T20:29:29+0300",
   "chromium": "153.0.8010.12",
-  "browser_console_errors": []
+  "browser_console_errors": [
+   "error: Failed to load resource: the server responded with a status of 404 (File not found)"
+  ]
  },
  "cases": {
   "chair_clean": {
@@ -24,7 +26,7 @@
      "settings": {
       "colormode": "binary"
      },
-     "wall_s": 0.0297,
+     "wall_s": 0.0341,
      "n_paths": 1,
      "fills": [
       "#000000"
@@ -70,7 +72,7 @@
       "mode": "polygon",
       "filter_speckle": 16
      },
-     "wall_s": 0.0247,
+     "wall_s": 0.0286,
      "n_paths": 1,
      "fills": [
       "#000000"
@@ -122,8 +124,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.312,
-     "trace_ms_in_page": 173.9,
+     "wall_s": 0.3646,
+     "trace_ms_in_page": 242.1,
      "image_px": [
       750,
       1150
@@ -164,7 +166,7 @@
       "background_leak": false,
       "hausdorff_boundary_mm": 0.158
      },
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     },
     "ours_dark_on_light": {
      "settings": {
@@ -178,8 +180,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.2122,
-     "trace_ms_in_page": 158.7,
+     "wall_s": 0.2019,
+     "trace_ms_in_page": 143.6,
      "image_px": [
       750,
       1150
@@ -220,7 +222,7 @@
       "background_leak": false,
       "hausdorff_boundary_mm": 0.158
      },
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     }
    }
   },
@@ -236,7 +238,7 @@
      "settings": {
       "colormode": "binary"
      },
-     "wall_s": 0.0423,
+     "wall_s": 0.0482,
      "n_paths": 1,
      "fills": [
       "#000000"
@@ -282,7 +284,7 @@
       "mode": "polygon",
       "filter_speckle": 16
      },
-     "wall_s": 0.032,
+     "wall_s": 0.0257,
      "n_paths": 1,
      "fills": [
       "#000000"
@@ -334,8 +336,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.3929,
-     "trace_ms_in_page": 182.9,
+     "wall_s": 0.5661,
+     "trace_ms_in_page": 363.4,
      "image_px": [
       750,
       1150
@@ -376,7 +378,7 @@
       "background_leak": false,
       "hausdorff_boundary_mm": 0.255
      },
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     },
     "ours_dark_on_light": {
      "settings": {
@@ -390,8 +392,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.2579,
-     "trace_ms_in_page": 111.2,
+     "wall_s": 0.5812,
+     "trace_ms_in_page": 320.3,
      "image_px": [
       750,
       1150
@@ -434,7 +436,7 @@
       "background_leak": true,
       "hausdorff_boundary_mm": 0.75
      },
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     }
    }
   },
@@ -450,7 +452,7 @@
      "settings": {
       "colormode": "binary"
      },
-     "wall_s": 0.0595,
+     "wall_s": 0.0672,
      "n_paths": 107,
      "fills": [
       "#000000"
@@ -474,7 +476,7 @@
       "mode": "polygon",
       "filter_speckle": 16
      },
-     "wall_s": 0.0484,
+     "wall_s": 0.079,
      "n_paths": 6,
      "fills": [
       "#000000"
@@ -504,8 +506,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.261,
-     "trace_ms_in_page": 152.9,
+     "wall_s": 0.3859,
+     "trace_ms_in_page": 290.8,
      "image_px": [
       800,
       800
@@ -521,21 +523,21 @@
      "traceQA": {
       "bboxFrac": 0.5238140625,
       "edges": 0,
-      "suspect": false,
+      "suspect": true,
       "keptArea": 335961,
       "n_dropped": 3
      },
-     "warns_or_stops": false,
-     "warning_text": null,
+     "warns_or_stops": true,
+     "warning_text": "\u26a0 This looks like a room or background, not one piece of furniture (the outline is a frame around a whole drawing: 69 separate lines inside it). Use a flat elevation on white (H13), or hand-trace only the furniture. \u064a\u0628\u062f\u0648 \u0647\u0630\u0627 \u063a\u0631\u0641\u0629 \u0623\u0648 \u062e\u0644\u0641\u064a\u0629 \u0648\u0644\u064a\u0633 \u0642\u0637\u0639\u0629 \u0623\u062b\u0627\u062b \u0648\u0627\u062d\u062f\u0629. \u0627\u0633\u062a\u062e\u062f\u0645 \u0648\u0627\u062c\u0647\u0629 \u0645\u0633\u0637\u062d\u0629 \u0639\u0644\u0649 \u062e\u0644\u0641\u064a\u0629 \u0628\u064a\u0636\u0627\u0621 \u0623\u0648 \u062a\u062a\u0628\u0651\u0639 \u0627\u0644\u0642\u0637\u0639\u0629 \u064a\u062f\u0648\u064a\u064b\u0627. 3 fragments were removed (grey boxes).",
      "gate_visible": true,
-     "gate_text": "Check the red outline over your picture. 3 fragments were removed (grey boxes).",
+     "gate_text": "\u26a0 This looks like a room or background, not one piece of furniture (the outline is a frame around a whole drawing: 69 separate lines inside it). Use a flat elevation on white (H13), or hand-trace only the furniture. \u064a\u0628\u062f\u0648 \u0647\u0630\u0627 \u063a\u0631\u0641\u0629 \u0623\u0648 \u062e\u0644\u0641\u064a\u0629 \u0648\u0644\u064a\u0633 \u0642\u0637\u0639\u0629 \u0623\u062b\u0627\u062b \u0648\u0627\u062d\u062f\u0629. \u0627\u0633\u062a\u062e\u062f\u0645 \u0648\u0627\u062c\u0647\u0629 \u0645\u0633\u0637\u062d\u0629 \u0639\u0644\u0649 \u062e\u0644\u0641\u064a\u0629 \u0628\u064a\u0636\u0627\u0621 \u0623\u0648 \u062a\u062a\u0628\u0651\u0639 \u0627\u0644\u0642\u0637\u0639\u0629 \u064a\u062f\u0648\u064a\u064b\u0627. 3 fragments were removed (grey boxes).",
      "print_blocked_until_student_confirms": true,
      "print_blocking_checks": [
       "Type your name and student ID",
       "#1 SIDE PROFILE: check the traced outline over your picture and confirm it is ONLY the furniture"
      ],
      "metrics_all_paths": {},
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     },
     "ours_dark_on_light": {
      "settings": {
@@ -549,8 +551,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.1562,
-     "trace_ms_in_page": 76.9,
+     "wall_s": 0.208,
+     "trace_ms_in_page": 73,
      "image_px": [
       800,
       800
@@ -580,7 +582,7 @@
       "#1 SIDE PROFILE: check the traced outline over your picture and confirm it is ONLY the furniture"
      ],
      "metrics_all_paths": {},
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     }
    }
   },
@@ -642,7 +644,7 @@
       "mode": "polygon",
       "filter_speckle": 16
      },
-     "wall_s": 0.0411,
+     "wall_s": 0.0521,
      "n_paths": 1,
      "fills": [
       "#000000"
@@ -694,8 +696,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.3634,
-     "trace_ms_in_page": 254.3,
+     "wall_s": 0.5058,
+     "trace_ms_in_page": 367.4,
      "image_px": [
       1150,
       1100
@@ -736,7 +738,7 @@
       "background_leak": false,
       "hausdorff_boundary_mm": 0.255
      },
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     },
     "ours_dark_on_light": {
      "settings": {
@@ -750,8 +752,8 @@
       "img-invert": false,
       "img-largest": true
      },
-     "wall_s": 0.261,
-     "trace_ms_in_page": 182.4,
+     "wall_s": 0.311,
+     "trace_ms_in_page": 217.8,
      "image_px": [
       1150,
       1100
@@ -792,7 +794,7 @@
       "background_leak": false,
       "hausdorff_boundary_mm": 0.354
      },
-     "tool_version": "4.3.1"
+     "tool_version": "4.3.2"
     }
    }
   }

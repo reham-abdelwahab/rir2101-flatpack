@@ -738,6 +738,7 @@
             <div>
               <h3 class="font-display font-bold text-xs sm:text-sm text-paper-900">Optional: Trace Top Curve / Headboard / Backrest Over Your Photo</h3>
               <p class="text-[11px] text-paper-700">Drag the <strong>5 Red Dots</strong> up or down—updates both the <strong>2D Cut Sheet</strong> and the <strong>3D Fold Simulator</strong> live!</p>
+              <p class="text-[11px] text-paper-600 mt-0.5">Dots move the top edge in real cm, so the shape stays the same when you change the scale. <i lang="ar" dir="rtl">النقاط تحرّك الحافة العليا بالسنتيمتر الحقيقي، فيبقى الشكل نفسه عند تغيير مقياس الرسم.</i></p>
             </div>
           </div>
           <button type="button" onclick="resetProfileCurve()" class="px-2.5 py-1 rounded-lg bg-paper-200 hover:bg-paper-300 text-paper-800 font-semibold text-[11px] transition">
@@ -1625,10 +1626,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.3.1';
-    // v4.3.x: only sheets of this exact version verify here. v4.2.x chair/sofa/table nets differ, so v4.2.x stamps are NOT listed;
+    const TOOL_VERSION = '4.3.2';
+    // v4.3.x: only sheets of these versions verify here. v4.2.x chair/sofa/table nets differ, so v4.2.x stamps are NOT listed;
     // TAs verify v4.2.x sheets in the kept previous version at v4.2.4/.
-    const STAMP_COMPATIBLE = ['4.3.1'];   // v4.3.0 (live a few hours on 24 Oct, nothing printed in class) chair/sofa sheets differ: not listed
+    // v4.3.2 (F1, F3, T1) changes no part, packing or sheet contents line, so v4.3.1 nested-sheet stamps still verify.
+    const STAMP_COMPATIBLE = ['4.3.1', '4.3.2'];   // v4.3.0 (live a few hours on 24 Oct, nothing printed in class) chair/sofa sheets differ: not listed
     const PREVIEW_BUILD = false;  // student release: no experimental banner or sheet watermark
 
     // =========================================================================
@@ -2882,7 +2884,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         activeCircle.setAttribute('cy', clampedY);
 
         const idx = parseInt(activeCircle.getAttribute('data-idx'), 10);
-        state.curveOffsets[idx] = Math.round((clampedY - 45) * 0.25 * 10) / 10;
+        state.curveOffsets[idx] = Math.round((clampedY - 45) / CURVE_UNITS_PER_CM * 2) / 2;   // v4.3.2: real cm, 0.5 cm steps
         updateTracerPreviewPath();
         renderA4Sheet();
         render3DFoldPreview();
@@ -2903,11 +2905,14 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       document.getElementById('tracer-elevation-path').setAttribute('d', d);
     }
 
+    // v4.3.2 (F1): offsets are real cm (negative = the top edge rises). Before, a preset drew its dots at 2 units per value
+    // but a drag read 4 units per value, so touching a dot after a preset halved it, and −20 lay outside the drag range.
+    const CURVE_UNITS_PER_CM = 1.5;   // editor y 12…85 ↔ −22 … +26.7 cm
     function applyCurvePreset(offsetsMm) {
       state.curveOffsets = [...offsetsMm];
       const circles = document.querySelectorAll('.curve-handle');
       circles.forEach((c, idx) => {
-        c.setAttribute('cy', 45 + offsetsMm[idx] * 2);
+        c.setAttribute('cy', 45 + offsetsMm[idx] * CURVE_UNITS_PER_CM);
       });
       updateTracerPreviewPath();
       renderA4Sheet();
@@ -3051,7 +3056,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
 
       const ang = t * (Math.PI / 2); // 0 to 90 degrees in radians
       // Traced curve delta scaled for 3D backrest/headboard top
-      const curveMid = -state.curveOffsets[2] * 0.7;
+      const curveMid = -state.curveOffsets[2] * scale3D;   // v4.3.2 (F1): offsets in real cm, drawn at the preview's scale
 
       if (state.archetype === 'chair' || state.archetype === 'sofa') {
         const seatZ = subH * t;
@@ -3264,7 +3269,10 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const ox = 14;
       const oy = 33;                         // content starts below header
       const tabD = Math.max(4, t * 2.5);     // glue tab depth actually used (mm)
-      const minOff = Math.min(0, ...state.curveOffsets);
+      // v4.3.2 (F1): curve offsets are stored in REAL cm (like w/d/h), so a preset is the same design at every scale.
+      // Before, they were paper mm: the same arch rose 20 cm at 1:10 but 40 cm at 1:20. At 1:10 the sheet is unchanged.
+      const cvMm = (state.curveOffsets || [0, 0, 0, 0, 0]).map(v => (+v || 0) * factor);
+      const minOff = Math.min(0, ...cvMm);
       const fs = (w) => Math.max(1.4, Math.min(3.2, w / 12)).toFixed(2); // label size that fits the panel
       const P = (n) => (+n).toFixed(2);
       const sheetJoinery = 'fold';   // v4: slot joinery for table/chair/… is the waffle (Slot & Laser tab); the bookcase keeps its notches
@@ -3312,7 +3320,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
           stripX = ox + tabD; s1x = ox; s2x = ox + D + 8;
           sy = stripY + stripH + 10;
         }
-        const o = state.curveOffsets;
+        const o = cvMm;
         const yBk = stripY + back, yS = yBk + G, yL = yS + D, yB = stripY + stripH;
         const x0 = stripX, x4 = stripX + W;
         // A1 BACK: drawn mirrored (it is glued with its printed side to the REAR, so the curve reads correctly from the front).
@@ -3410,7 +3418,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         }
         if (isBed) {
           const hx = bx, hy = headY - minOff;
-          cutLayer += `<path d="${buildCurvedTopRectPath(hx, hy, bW, H, state.curveOffsets)}" fill="#FFFFFF"/>`;
+          cutLayer += `<path d="${buildCurvedTopRectPath(hx, hy, bW, H, cvMm)}" fill="#FFFFFF"/>`;
           labelLayer += guide(hx, hy + H - baseH, hx + bW, hy + H - baseH);
           labelLayer += `
             <text x="${P(hx + bW/2)}" y="${P(hy + (H - baseH)/2)}" text-anchor="middle" font-weight="bold" font-size="${fs(bW)}">A2: HEADBOARD (H ${H.toFixed(1)} mm)</text>
@@ -3868,6 +3876,13 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         const rad = Math.round(clean * Math.max(W, H) / 900);   // scale with image size
         if (rad > 0) { mask = imgErode(mask, W, H, rad); mask = imgDilate(mask, W, H, rad); }
       }
+      // v4.3.2 (F3): ink = pixels that differ from the background (Remove background: by colour from the edge background;
+      // threshold methods: the mask before the fill). Used below to see what the kept outline encloses.
+      let rawMask;
+      if (method === 'bg') { const bg = imgState.bgPick || imgEdgeBackground(), tol = +document.getElementById('img-bgtol').value, d = imgState.rgb;
+        rawMask = new Uint8Array(W * H); for (let j = 0; j < W * H; j++) { const i = j * 4, dr = d[i] - bg[0], dg = d[i + 1] - bg[1], db = d[i + 2] - bg[2];
+          rawMask[j] = Math.sqrt(dr * dr + dg * dg + db * db) > tol ? 1 : 0; } }
+      else rawMask = mask.slice();
       // 2. optional fill: anything NOT reachable from the border through background becomes object
       if (fill) {
         const seen = new Uint8Array(W * H); const q = new Int32Array(W * H); let qh = 0, qt = 0;
@@ -3916,7 +3931,26 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         const bx = [Math.min(...pts.map(q => q[0])), Math.min(...pts.map(q => q[1])), Math.max(...pts.map(q => q[0])), Math.max(...pts.map(q => q[1]))], m = 2;
         qa.bboxFrac = (bx[2] - bx[0]) * (bx[3] - bx[1]) / (W * H);
         qa.edges = [bx[0] <= m, bx[1] <= m, bx[2] >= W - 1 - m, bx[3] >= H - 1 - m].filter(Boolean).length;
-        qa.suspect = qa.bboxFrac > 0.85 || qa.edges >= 3; imgState.traceQA = qa; }
+        // v4.3.2 (F3): a frame or card border around a drawing passes the two rules above (H14: 0.52 of the picture, no edge
+        // touched). Measure what the kept outline encloses: the share that is filled-in background, not ink, and how many
+        // separate ink pieces lie inside it. One piece of furniture is mostly ink with a few inner lines; a framed room
+        // drawing is mostly paper with many separate strokes.
+        { const inK = new Uint8Array(nl + 1); keep.forEach(l => { inK[l] = 1; });
+          let reg = 0, ink = 0; const seenI = new Uint8Array(W * H), qi = new Int32Array(W * H); let parts = 0;
+          for (let j = 0; j < W * H; j++) { if (!inK[lab[j]]) continue; reg++; if (rawMask[j]) ink++; }
+          const minInk = Math.max(6, Math.round(W * H * 0.00002));
+          for (let s0 = 0; s0 < W * H; s0++) {
+            if (seenI[s0] || !rawMask[s0] || !inK[lab[s0]]) continue; let qh = 0, qt = 0, a = 0, edge = false; qi[qt++] = s0; seenI[s0] = 1;
+            while (qh < qt) { const i = qi[qh++]; a++; const x = i % W, y = (i / W) | 0;
+              for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dy) continue; const xx = x + dx, yy = y + dy;
+                if (xx < 0 || yy < 0 || xx >= W || yy >= H) { edge = true; continue; } const j = yy * W + xx;
+                if (!inK[lab[j]]) { edge = true; continue; } if (rawMask[j] && !seenI[j]) { seenI[j] = 1; qi[qt++] = j; } } }
+            if (!edge && a >= minInk) parts++; }
+          qa.fillShare = reg ? 1 - ink / reg : 0; qa.innerParts = parts; }
+        // thresholds from measured cases (research/vtracer + tests): H14 card frame 0.78 / 69 pieces; furniture line drawings
+        // (chair, cabinet, wardrobe 4 doors + 3 drawers, sofa with 6 cushions) ≤ 11 pieces; solid silhouettes 0
+        qa.frame = qa.fillShare >= 0.5 && qa.innerParts >= 25;
+        qa.suspect = qa.bboxFrac > 0.85 || qa.edges >= 3 || qa.frame; imgState.traceQA = qa; }
       imgState.shapes = shapes; imgState.draft = null;
       imgSetMode('select'); imgRenderOverlay(); renderImageSheet(); imgStepState();
       document.getElementById('img-trace-info').textContent = `${shapes.length} outline(s), ${shapes.reduce((n, s) => n + s.pts.length, 0)} points. Not right? adjust threshold / simplify and trace again, or hand-trace.`;
@@ -4867,7 +4901,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const countLine = countsLine(counts, cfg.sheetSize);
       const sheets = nest.sheets.map((sh, k) => {
         const idx = k + 1, used = sh.placed.reduce((s, it) => s + (it.p.area || 0), 0), usePct = 100 * used / (SW * SH);
-        const stamp = computeStamp({ version: TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces, cfg.thicknessMm),
+        const stamp = computeStamp({ version: cfg.stampVersion || TOOL_VERSION, name: cfg.name, id: cfg.id, archetype: 'sheet', pieces: sheetCanon(sh, idx, total, pieces, cfg.thicknessMm),
           scale: cfg.scale, sheet: cfg.sheetSize, thickness: cfg.thicknessMm, joinery: '' });
         let cut = '', score = '', label = '';
         sh.placed.forEach(it => {
@@ -5056,7 +5090,7 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const qa = imgState.traceQA || {}, n = (qa.dropped || []).length;
       g.classList.toggle('v4-info', !qa.suspect);
       document.getElementById('img-trace-gate-msg').innerHTML = (qa.suspect
-        ? '⚠ <b>This looks like a room or background, not one piece of furniture</b> (the outline fills the picture or touches its edges). Use a flat elevation on white (H13), or hand-trace only the furniture. <i lang="ar" dir="rtl">يبدو هذا غرفة أو خلفية وليس قطعة أثاث واحدة. استخدم واجهة مسطحة على خلفية بيضاء أو تتبّع القطعة يدويًا.</i>'
+        ? `⚠ <b>This looks like a room or background, not one piece of furniture</b> (${qa.frame ? `the outline is a frame around a whole drawing: ${qa.innerParts} separate lines inside it` : 'the outline fills the picture or touches its edges'}). Use a flat elevation on white (H13), or hand-trace only the furniture. <i lang="ar" dir="rtl">يبدو هذا غرفة أو خلفية وليس قطعة أثاث واحدة. استخدم واجهة مسطحة على خلفية بيضاء أو تتبّع القطعة يدويًا.</i>`
         : 'Check the red outline over your picture.') + (n ? ` ${n} fragment${n > 1 ? 's were' : ' was'} removed (grey boxes).` : '');
       document.getElementById('img-trace-ok').checked = !!p.traceOk;
     }
@@ -5420,8 +5454,10 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
       const val = id => document.getElementById(id).value;
       const printed = val('vf-stamp').toUpperCase().replace(/[^A-Z2-7]/g, '').replace(/^(.{4})(.{4}).*$/, '$1-$2');
       if (!printed) return ok;
-      const n = nestAll(window.__vfPieces, { scale: +val('vf-scale'), sheetSize: val('vf-sheet'), thicknessMm: +val('vf-th'), name: val('vf-name'), id: val('vf-id'), course: state.courseCode });
-      const hit = STAMP_COMPATIBLE.map(v => vNorm.version(v)).includes(vNorm.version(val('vf-ver'))) ? n.sheets.find(s => s.stamp === printed) : null;
+      // v4.3.2: a compatible earlier version (v4.3.1) is recomputed with ITS version in the stamp, as the student's sheet was
+      const ver = vNorm.version(val('vf-ver')), okVer = STAMP_COMPATIBLE.find(v => vNorm.version(v) === ver) || null;
+      const n = okVer ? nestAll(window.__vfPieces, { scale: +val('vf-scale'), sheetSize: val('vf-sheet'), thicknessMm: +val('vf-th'), name: val('vf-name'), id: val('vf-id'), course: state.courseCode, stampVersion: okVer }) : null;
+      const hit = n ? n.sheets.find(s => s.stamp === printed) : null;
       if (hit) { const out = document.getElementById('vf-result'); out.textContent = `✔ MATCH — ${printed} is sheet ${hit.idx} of ${n.total} of this student's pieces.`; out.style.color = '#166534'; return true; }
       if (/^4\.2\./.test(vNorm.version(val('vf-ver')))) { const out = document.getElementById('vf-result');
         out.innerHTML = 'This sheet was made with v' + escapeXml(vNorm.version(val('vf-ver'))) + '. Verify it in the previous version: <a href="v4.2.4/" style="text-decoration:underline">v4.2.4</a>. · <span lang="ar" dir="rtl">هذه اللوحة من إصدار سابق؛ تحقّق منها في الإصدار v4.2.4.</span>'; out.style.color = '#92400E'; }

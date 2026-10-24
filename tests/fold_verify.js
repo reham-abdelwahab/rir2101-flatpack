@@ -15,6 +15,10 @@
 (function (root) {
   'use strict';
   const E = 1e-3;
+  // v4.3.2 (T1): how a side profile drawn on the sheet maps onto the model when glued printed side OUT. In this checker's
+  // frame (printed side = +Z with the sheet's y down, the mirror image of the paper build) the LEFT side is flipped.
+  // Fixed by the controls: v4.3.1 → both posts at the back; v4.3.0 / v4.2.4 (B2 not mirrored) → B2 post at the front.
+  let SIDE_FLIP_LEFT = false;
 
   // ---------- 2D / 3D helpers ----------
   const sub = (a, b) => [a[0] - b[0], a[1] - b[1], (a[2] || 0) - (b[2] || 0)];
@@ -190,10 +194,20 @@
     others.forEach(P => {
       const LR = P.localRing, bb = { x0: Math.min(...LR.map(p => p[0])), x1: Math.max(...LR.map(p => p[0])), y0: Math.min(...LR.map(p => p[1])), y1: Math.max(...LR.map(p => p[1])) };
       if (/LEFT|RIGHT/.test(P.name) && (A === 'chair' || A === 'sofa')) {
-        // side profile: stands in the plane x = 0 (B1) or x = W (B2); its tall post goes under the back panel
-        const x = /LEFT/.test(P.name) ? 0 : W, postLeft = (() => { const tallAt = LR.filter(p => Math.abs(p[1] - bb.y0) < 0.05).map(p => p[0]); return Math.min(...tallAt) - bb.x0 < (bb.x1 - bb.x0) / 2; })();
-        const backAtMax = backY != null && backY > D / 2, flip = postLeft === backAtMax;
-        surfaces.push({ part: P.name, face: P.name, P3: LR.map(p => [x, flip ? bb.x1 - p[0] : p[0] - bb.x0, bb.y1 - p[1]]) });
+        // side profile: stands in the plane x = 0 (B1) or x = W (B2).
+        // v4.3.2 (T1): placed by its PRINTED SIDE (out), as a student glues it, not by where its post is. The post must then
+        // land at the back, under the back panel; a profile whose post lands at the front breaks "printed side out" (F2).
+        const left = /LEFT/.test(P.name), x = left ? 0 : W, flip = left === SIDE_FLIP_LEFT;
+        const P3 = LR.map(p => [x, flip ? bb.x1 - p[0] : p[0] - bb.x0, bb.y1 - p[1]]);
+        const zTop = Math.max(...P3.map(X => X[2])), postY = (() => { const ys = P3.filter(X => Math.abs(X[2] - zTop) < 0.05).map(X => X[1]); return (Math.min(...ys) + Math.max(...ys)) / 2; })();
+        // where the back is: the BACK face of the main part (v4.2.x), else the side opposite the FRONT panel (v4.3: separate back)
+        const frontK = main.F.faces.findIndex((_, i) => /FRONT/.test(name(main, i) || '')), frontY = frontK >= 0 && panels3[frontK] ? panels3[frontK].reduce((s2, X) => s2 + X[1], 0) / panels3[frontK].length : null;
+        const rearY = backY != null ? backY : frontY != null ? D - frontY : null;
+        if (rearY == null) out.notes.push(`side profile ${P.name}: no BACK or FRONT panel to tell the rear`);
+        const backAtMax = rearY != null && rearY > D / 2, postBack = rearY != null && (backAtMax ? postY > D / 2 : postY < D / 2);
+        (out.sides = out.sides || []).push({ part: P.name, postAtBack: postBack });
+        if (!postBack) out.notes.push(`side profile ${P.name}: printed side out puts its post at the FRONT (F2)`);
+        surfaces.push({ part: P.name, face: P.name, P3 });
       } else if (/HEADBOARD/.test(P.name)) {
         out.headboard = { width: +(bb.x1 - bb.x0).toFixed(2), height: +(bb.y1 - bb.y0).toFixed(2) };
         surfaces.push({ part: P.name, face: P.name, glue: true, P3: LR.map(p => [p[0] - bb.x0, backY != null && backY > D / 2 ? D : 0, bb.y1 - p[1]]) });
@@ -248,7 +262,8 @@
       out.assembled = bb.size.map(v => +v.toFixed(2)); out.assembledTarget = [W, D, Hfull];
       if (!sortedEq(bb.size, [W, D, Hfull], 0.05)) { out.sizeOk = false; out.notes.push(`assembled ${out.assembled.join(' × ')} ≠ ${[W, D, Hfull].map(v => +v.toFixed(2)).join(' × ')}`); } }
     out.ruleOk = out.valley.length === 0;   // the printed rule: every blue line folds away from the printed side
-    out.ok = out.ruleOk && out.sizeOk && out.curveOk !== false && out.tabsUnmated.length === 0 && out.unmatchedScores === 0 && out.collisions === 0 && !out.notes.some(n => /headboard/.test(n));
+    out.sidesOk = !(out.sides || []).some(sd => !sd.postAtBack);
+    out.ok = out.ruleOk && out.sizeOk && out.curveOk !== false && out.sidesOk && out.tabsUnmated.length === 0 && out.unmatchedScores === 0 && out.collisions === 0 && !out.notes.some(n => /headboard/.test(n));
     out.order = best.f.order.map(k => name(main, k) || (main.isTab[k] ? 'tab' : 'face'));
     // optional trace for the visual review (spec.trace): the exact faces, hinges, fold order and angles this check used
     if (spec.trace) {
@@ -271,5 +286,5 @@
     return out;
   }
 
-  root.FoldVerify = { verifyModel, parseModel, splitFaces };
+  root.FoldVerify = { verifyModel, parseModel, splitFaces, __setSideFlip: v => { SIDE_FLIP_LEFT = !!v; } };   // __setSideFlip: research / convention check only
 })(typeof window !== 'undefined' ? window : globalThis);

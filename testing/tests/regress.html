@@ -678,7 +678,7 @@ function overlapCheck(w, svgId) {
       if (curve[1] && !['chair', 'sofa', 'bed'].includes(a)) continue;
       const p = { archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty: 1, method: 'fold', curveOffsets: curve }, f = 10 / sc2;
       const n = wc.nestAll([p], { scale: sc2, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' });
-      const r = FoldVerify.verifyModel(n.sheets.map(s => s.svg), { chair: 'CH1', sofa: 'SF1', table: 'TB1', bed: 'BD1', cabinet: 'CB1' }[a], { archetype: a, W: p.w * f, D: p.d * f, H: p.h * f, sub: p.subH * f, curve }, wc.polygonClipping);
+      const r = FoldVerify.verifyModel(n.sheets.map(s => s.svg), { chair: 'CH1', sofa: 'SF1', table: 'TB1', bed: 'BD1', cabinet: 'CB1' }[a], { archetype: a, W: p.w * f, D: p.d * f, H: p.h * f, sub: p.subH * f, curve: curve.map(v => v * f) }, wc.polygonClipping);   // v4.3.2 (F1): curve in real cm
       rows.push(r); if (!r.ok) bad.push(`${a} 1:${sc2} [${curve}]: ${[...r.valley, ...r.tabsUnmated, ...r.notes].slice(0, 2).join('; ')}`);
     }
     log(bad.length === 0, `P4-2 Every exported Fold & Glue net folds to its target W × D × H with mountain folds only; every glue tab lands on a face; no overlaps (${rows.length} nets, ${rows.reduce((s, r) => s + r.hinges, 0)} hinges, ${rows.reduce((s, r) => s + r.tabsMated, 0)} tabs)`, bad.slice(0, 3).join(' | '));
@@ -717,6 +717,55 @@ function overlapCheck(w, svgId) {
     const pages = await Promise.all(['steps/index.html', 'review/index.html'].map(u => fetch('../../' + u).then(x => x.ok ? x.text() : '').catch(() => '')));
     log(/<title>Maquette Build Steps<\/title>/.test(pages[0]) && /const DATA = \{/.test(pages[0]) && /<title>Maquette Fold Review<\/title>/.test(pages[1]) && /const DATA = \{/.test(pages[1]),
       'steps/ and review/ pages are built with data (tools/fold_review/build.py)');
+  }
+
+  // ---------------- v4.3.2 · F1 curve offsets in real cm (scale-independent design) ----------------
+  if (typeof FoldVerify !== 'undefined') {
+    const A = wc.eval('archetypes'), bad = [];
+    const backH = (a, sc2, curve) => { const p = { archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty: 1, method: 'fold', curveOffsets: curve };
+      const B = FoldVerify.parseModel(wc.nestAll([p], { scale: sc2, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' }).sheets.map(s => s.svg), { chair: 'CH1', sofa: 'SF1', bed: 'BD1' }[a])
+        .find(q => /BACK|HEADBOARD/.test(q.name)); if (!B) return NaN; const ys = B.localRing.map(q => q[1]); return Math.max(...ys) - Math.min(...ys); };
+    for (const a of ['chair', 'sofa', 'bed']) for (const curve of [[0, -14, -20, -14, 0], [-15, -8, 0, 8, 15]]) {
+      const h10 = backH(a, 10, curve), h20 = backH(a, 20, curve);
+      if (!(Math.abs(h10 / h20 - 2) < 0.02)) bad.push(`${a} [${curve}]: back ${h10.toFixed(2)} mm at 1:10 vs ${h20.toFixed(2)} mm at 1:20 (ratio ${(h10 / h20).toFixed(3)}, want 2)`);
+    }
+    log(bad.length === 0, 'F1 A curved back or headboard is the same design at every scale: its printed height at 1:10 is exactly twice that at 1:20 (offsets in real cm)', bad.join(' | '));
+    const ed = []; const U = wc.eval('typeof CURVE_UNITS_PER_CM === "undefined" ? null : CURVE_UNITS_PER_CM');
+    if (U == null) ed.push('no single editor mapping (CURVE_UNITS_PER_CM missing)');
+    for (const pre of [[0, -14, -20, -14, 0], [0, 0, -18, 0, 0], [-15, -8, 0, 8, 15], [-12, -6, 0, 6, 12]]) {
+      if (U == null) break; wc.applyCurvePreset(pre); const cy = [...wc.document.querySelectorAll('.curve-handle')].map(c => +c.getAttribute('cy'));
+      cy.forEach((y, i) => { if (y < 12 || y > 85 || Math.abs((y - 45) / U - pre[i]) > 1e-9) ed.push(`[${pre}] dot ${i}: cy ${y}`); });
+    }
+    wc.applyCurvePreset([0, 0, 0, 0, 0]);
+    log(ed.length === 0, 'F1 Curve editor: every preset dot sits inside the drag range and reads back its own value when dragged (one mapping both ways)', ed.join(' | '));
+  }
+
+  // ---------------- v4.3.2 · T1 fold verifier places side profiles by their printed side ----------------
+  if (typeof FoldVerify !== 'undefined') {
+    const A = wc.eval('archetypes'), a = 'chair', p = { archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty: 1, method: 'fold', curveOffsets: [0, 0, 0, 0, 0] };
+    const spec = { archetype: a, W: p.w, D: p.d, H: p.h, sub: p.subH };
+    const live = FoldVerify.verifyModel(wc.nestAll([p], { scale: 10, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' }).sheets.map(s => s.svg), 'CH1', spec, wc.polygonClipping);
+    const old = await fetch('fixtures/v430_chair_1-10_A3.svg').then(x => x.text());
+    const neg = FoldVerify.verifyModel([old], 'CH1', spec, wc.polygonClipping);
+    log(live.ok && live.sides && live.sides.length === 2 && live.sides.every(sd => sd.postAtBack) && !neg.ok && neg.notes.some(n => /B2 RIGHT.*FRONT \(F2\)/.test(n)),
+      'T1 Fold verifier glues side profiles printed side out and checks the post: this chair passes; the v4.3.0 chair (B2 not mirrored) fails with F2',
+      `live ${JSON.stringify(live.sides)} · v4.3.0 ${neg.notes.join('; ')}`);
+  }
+
+  // ---------------- v4.3.2 · F3 room gate: frame around a whole drawing (H14) ----------------
+  {
+    const dataUrl = u => fetch(u).then(x => x.blob()).then(b => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }));
+    wc.addPiece();   // a fresh piece open in the editor, as a student starts a From-image piece
+    const traceQA = async src => { wc.setPieceMethod('image'); wc.eval('imgState').loaded = false; wc.imgLoadSrc(await dataUrl(src));
+      for (let i = 0; i < 300 && !wc.eval('imgState').loaded; i++) await sleep(20);
+      ['img-method', 'img-bgtol', 'img-thr', 'img-clean', 'img-tol'].forEach(id => { const el = wc.document.getElementById(id); el.value = el.tagName === 'SELECT' ? [...el.options].find(o => o.defaultSelected).value : el.defaultValue; });
+      ['img-shadow', 'img-fill', 'img-invert', 'img-largest'].forEach(id => { const el = wc.document.getElementById(id); el.checked = el.defaultChecked; });
+      wc.imgMethodUI(); wc.imgAutoTrace(); wc.renderTraceGate();
+      return { qa: wc.eval('imgState.traceQA') || {}, msg: wc.document.getElementById('img-trace-gate-msg').textContent }; };
+    const room = await traceQA('fixtures/room_h14.jpg'), ward = await traceQA('fixtures/wardrobe_lines.png');
+    log(room.qa.suspect && room.qa.frame && /frame around a whole drawing/.test(room.msg) && !ward.qa.suspect,
+      'F3 Room gate: the H14 room picture (a framed drawing) is flagged; a wardrobe line drawing (4 doors, 3 drawers) is not',
+      `H14 fill ${(room.qa.fillShare || 0).toFixed(2)} · ${room.qa.innerParts} inner pieces · wardrobe ${(ward.qa.fillShare || 0).toFixed(2)} · ${ward.qa.innerParts}`);
   }
 
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));

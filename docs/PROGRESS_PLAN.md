@@ -24,6 +24,7 @@ Status key: ⬜ open · 🟡 in progress · ✅ passed · ❌ failed (→ fix, r
 | A2 | Collect every chair, sofa and table that needed a corrective cut (photo + student ID) | TAs | Sun 25 Oct | list with count n / class size | ⬜ |
 | A3 | Hotfix v4.2.4: exceptions printed on chair/sofa/table sheets | Claude | 24 Oct | 104/104; v4.2.3 stamps still verify | ✅ |
 | A5 | v4.3 promoted to the root by instructor decision (v4.3.0, then v4.3.1 F2 fix); v4.2.4 kept at `/v4.2.4/`; course folder updated, old files in `9 Superseded/before-flatpack-v4_3_1-2026-10-24` | Claude | 24 Oct | root 117/117 · testing 113/113 · v4.2.4 104/104; handout 3 A4 | ✅ |
+| A6 | v4.3.2 student release: F1 curve offsets in real cm, F3 frame test in the room gate, T1 verifier places side profiles printed side out; v4.3.1 stamps still verify; research re-run and report corrected | Claude | 24 Oct | root 125/125 · testing 120/120 · v4.2.4 104/104; judges reproduce byte for byte; handout 3 A4 | ✅ |
 | A4 | Course folder (P3-6): v4.2.4 tool + handout in `Week 06/2 Studio/FlatPack Tool`, preview in its `TESTING ONLY` subfolder; v4.2.1, old handouts, old `studio_flat_pack_maker_1_20_1_10.html`, 7 raw Gemini images and the 4 audit files from the course root moved to `Week 06/9 Superseded/before-flatpack-v4_2_4-2026-10-24` | Claude | 24 Oct | nothing deleted; `_README.txt` logged | ✅ |
 
 ## Track B — Physical gates for v4.3 (post-release since 24 Oct: v4.3 was promoted before them; any ❌ → v4.3.x patch)
@@ -40,7 +41,7 @@ Status key: ⬜ open · 🟡 in progress · ✅ passed · ❌ failed (→ fix, r
 | B8 | Usability (first-year) | 5 students, think-aloud, task: one chair + one table to print | Reham | after B5 | each finishes alone in ≤ 20 min; no student prints from the wrong version | ⬜ |
 | B10 | Template transfer (P2-1) | glue stick vs spray mount on 1.5 mm board; re-measure the 50 mm ruler after 5 min | TA | Week 6–7 | spray mount ≤ 0.2 mm change; wet glue result recorded | ⬜ |
 | B11 | Score coupon (P2-4) | 0.5 mm Bristol, both grain directions, light vs deep score | TA | Week 6–7 | no cracking or spring-back on the H08 method; result in the H08 tip | ⬜ |
-| B9 | Image path | 3 cases: clean elevation with size; same, hand-checked outline; room photo | Reham + 3 students | after B8 | room photo is stopped by the gate; the other two print at Neufert size | ⬜ — note F3: the automatic gate did not fire on H14 (research/vtracer) |
+| B9 | Image path | 3 cases: clean elevation with size; same, hand-checked outline; room photo | Reham + 3 students | after B8 | room photo is stopped by the gate; the other two print at Neufert size | ⬜ — F3 fixed in v4.3.2 for a frame around a drawing (H14 default now warns); an outline that is a symbol around the furniture still passes the automatic test, so the student's tick stays the gate |
 
 **Promotion step (done 24 Oct by instructor decision, before B2–B11):** copy `testing/index.html` → root, remove the banner and sheet watermark, set `TOOL_VERSION = '4.3.0'`, change `VERIFY_SALT` only if a new semester, merge `testing/tests/` into `tests/`, regenerate the handout, re-run both regressions, tag `v4.3.0`, keep `testing/` for the next preview.
 
