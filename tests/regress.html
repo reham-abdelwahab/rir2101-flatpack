@@ -720,8 +720,12 @@ function overlapCheck(w, svgId) {
       if (!L || !R) { bad.push(`${a} 1:${sc2}: sides not found`); continue; }
       const xL = Math.max(...L.localRing.map(q => q[0])), mirL = L.localRing.map(q => [xL - q[0], q[1]]);
       if (norm(R.localRing) !== norm(mirL) || norm(R.localRing) === norm(L.localRing)) bad.push(`${a} 1:${sc2}: B2 is not the mirror of B1`);
+      // B1 orientation pinned to the one the independent judge places printed side out with the post at the rear:
+      // the tall post (the edge reaching the top, y = 0 in the drawing) is at the LEFT of B1's drawing
+      const yTop = Math.min(...L.localRing.map(q => q[1])), x0L = Math.min(...L.localRing.map(q => q[0])), postX = Math.max(...L.localRing.filter(q => Math.abs(q[1] - yTop) < 0.05).map(q => q[0]));
+      if (postX - x0L > (xL - x0L) / 2) bad.push(`${a} 1:${sc2}: B1 post is not at the left of its drawing`);
     }
-    log(bad.length === 0, 'F2 Chair and sofa: B2 RIGHT is drawn as the mirror of B1 LEFT, so both sides glue with the printed side out (1:10, 1:20)', bad.join(' | '));
+    log(bad.length === 0, 'F2 Chair and sofa: B1 LEFT post at the left of its drawing and B2 RIGHT its mirror, so both sides glue printed side out with the post at the rear (1:10, 1:20)', bad.join(' | '));
   }
 
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));
