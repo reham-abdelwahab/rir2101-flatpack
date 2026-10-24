@@ -688,14 +688,14 @@ function overlapCheck(w, svgId) {
     log(!rOld.ok && rOld.valley.some(v => /BACK–SEAT|SEAT–BACK/.test(v)), 'P4-2 Negative case: a back folded up from the seat is reported as a valley fold (breaks the printed rule)', rOld.valley.join('; '));
   }
 
-  // ---------------- v4.3.0 · promotion to the student release (24 Oct 2026) ----------------
+  // ---------------- v4.3.x · promotion to the student release (24 Oct 2026) ----------------
   {
     const html = await (await fetch(CAND.split('?')[0], { cache: 'no-store' })).text();
     const allSvg = wc.nestAll([{ ...wc.eval("newPiece('chair')"), qty: 1 }], { scale: 10, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' }).sheets.map(s => s.svg).join('');
-    log(wc.eval('TOOL_VERSION') === '4.3.0' && wc.eval('PREVIEW_BUILD') === false && !wc.document.getElementById('preview-banner') && !/EXPERIMENTAL/.test(wc.document.title) && !/EXPERIMENTAL|NOT FOR COURSEWORK/.test(allSvg),
-      'Promotion: v4.3.0 student build — no experimental banner, title or sheet watermark');
-    log(JSON.stringify(wc.eval('STAMP_COMPATIBLE')) === '["4.3.0"]' && /bi-guide-hidden/.test(html) && !/preview:bi-guide-hidden/.test(html),
-      'Promotion: only v4.3.0 stamps verify here (v4.2.x nets differ); student browser key, not the preview key');
+    log(wc.eval('TOOL_VERSION') === '4.3.1' && wc.eval('PREVIEW_BUILD') === false && !wc.document.getElementById('preview-banner') && !/EXPERIMENTAL/.test(wc.document.title) && !/EXPERIMENTAL|NOT FOR COURSEWORK/.test(allSvg),
+      'Promotion: v4.3.1 student build — no experimental banner, title or sheet watermark');
+    log(JSON.stringify(wc.eval('STAMP_COMPATIBLE')) === '["4.3.1"]' && /bi-guide-hidden/.test(html) && !/preview:bi-guide-hidden/.test(html),
+      'Promotion: only v4.3.1 stamps verify here (v4.2.x and v4.3.0 chair/sofa sheets differ); student browser key, not the preview key');
     let ptr = '';
     try {
       const set = (id, v) => { const e = wc.document.getElementById(id); if (e) e.value = v; };
@@ -707,6 +707,21 @@ function overlapCheck(w, svgId) {
     let prev = '';
     try { prev = await (await fetch(new URL('../v4.2.4/index.html', new URL(CAND.split('?')[0], location.href)), { cache: 'no-store' })).text(); } catch (e) {}
     log(/TOOL_VERSION = '4\.2\.4'/.test(prev) && /id="previous-banner"/.test(prev) && /PREVIOUS VERSION v4\.2\.4/.test(prev), 'Promotion: previous version v4.2.4 kept at v4.2.4/ with a bilingual "previous version" banner');
+  }
+
+  // ---------------- v4.3.1 · F2 side profiles printed side out (research judge, 24 Oct 2026) ----------------
+  if (typeof FoldVerify !== 'undefined') {
+    const A = wc.eval('archetypes'), bad = [];
+    for (const a of ['chair', 'sofa']) for (const sc2 of [10, 20]) {
+      const p = { archetype: a, w: A[a].w, d: A[a].d, h: A[a].h, subH: A[a].subH, qty: 1, method: 'fold', curveOffsets: [0, 0, 0, 0, 0] };
+      const parts = FoldVerify.parseModel(wc.nestAll([p], { scale: sc2, sheetSize: 'A3', thicknessMm: 0.5, name: 'T', id: '1', course: 'RIR2101' }).sheets.map(s => s.svg), { chair: 'CH1', sofa: 'SF1' }[a]);
+      const norm = r => { const x0 = Math.min(...r.map(q => q[0])), y0 = Math.min(...r.map(q => q[1])); return r.map(q => [+(q[0] - x0).toFixed(2), +(q[1] - y0).toFixed(2)]).map(q => q.join(',')).sort().join(' '); };
+      const L = parts.find(q => /LEFT/.test(q.name)), R = parts.find(q => /RIGHT/.test(q.name));
+      if (!L || !R) { bad.push(`${a} 1:${sc2}: sides not found`); continue; }
+      const xL = Math.max(...L.localRing.map(q => q[0])), mirL = L.localRing.map(q => [xL - q[0], q[1]]);
+      if (norm(R.localRing) !== norm(mirL) || norm(R.localRing) === norm(L.localRing)) bad.push(`${a} 1:${sc2}: B2 is not the mirror of B1`);
+    }
+    log(bad.length === 0, 'F2 Chair and sofa: B2 RIGHT is drawn as the mirror of B1 LEFT, so both sides glue with the printed side out (1:10, 1:20)', bad.join(' | '));
   }
 
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));

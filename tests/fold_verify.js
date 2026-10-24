@@ -267,6 +267,7 @@
       });
       out.trace = { parts: parts3, target: out.assembledTarget, valley: out.valley, tabsUnmated: out.tabsUnmated, ok: out.ok, notes: out.notes };
     }
+    out.surfaces = surfaces.filter(s2 => !s2.glue).map(s2 => ({ part: s2.part, face: s2.face, P3: s2.P3.map(X => X.map(v => +v.toFixed(4))) }));   // research/: assembled panels (no tabs) for the shared target meshes
     return out;
   }
 

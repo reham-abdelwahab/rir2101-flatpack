@@ -1622,10 +1622,10 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
     // =========================================================================
     // TOOL VERSION (edit here only — bump on every release; printed in header + title blocks)
     // =========================================================================
-    const TOOL_VERSION = '4.3.0';
-    // v4.3.0: only v4.3.0 sheets verify here. v4.2.x chair/sofa/table nets differ, so v4.2.x stamps are NOT listed;
+    const TOOL_VERSION = '4.3.1';
+    // v4.3.x: only sheets of this exact version verify here. v4.2.x chair/sofa/table nets differ, so v4.2.x stamps are NOT listed;
     // TAs verify v4.2.x sheets in the kept previous version at v4.2.4/.
-    const STAMP_COMPATIBLE = ['4.3.0'];
+    const STAMP_COMPATIBLE = ['4.3.1'];   // v4.3.0 (live a few hours on 24 Oct, nothing printed in class) chair/sofa sheets differ: not listed
     const PREVIEW_BUILD = false;  // student release: no experimental banner or sheet watermark
 
     // =========================================================================
@@ -3337,8 +3337,11 @@ If the reference shows a 3/4 view, infer the true side elevation from it; do not
         `;
         // Side profiles (cut only — they do NOT fold). Dotted grey = where seat tabs glue.
         const armH = state.archetype === 'sofa' ? subH + (H - subH) * 0.4 : subH;
+        // v4.3.1 (research judge, finding F2): B2 RIGHT is drawn as the MIRROR of B1 LEFT. The profile is not symmetric
+        // (post at the rear), so two identical drawings forced one side to be glued with its printed side inward.
         [[s1x, 'B1 LEFT'], [s2x, 'B2 RIGHT']].forEach(([sx, lbl]) => {
-          const pth = `M ${P(sx)},${P(sy + H)} L ${P(sx)},${P(sy)} L ${P(sx + D*0.28)},${P(sy)} L ${P(sx + D*0.32)},${P(sy + H - armH)} L ${P(sx + D)},${P(sy + H - armH)} L ${P(sx + D)},${P(sy + H)} Z`;
+          const mx = x => lbl === 'B2 RIGHT' ? sx + D - (x - sx) : x;
+          const pth = `M ${P(mx(sx))},${P(sy + H)} L ${P(mx(sx))},${P(sy)} L ${P(mx(sx + D*0.28))},${P(sy)} L ${P(mx(sx + D*0.32))},${P(sy + H - armH)} L ${P(mx(sx + D))},${P(sy + H - armH)} L ${P(mx(sx + D))},${P(sy + H)} Z`;
           cutLayer += `<path d="${pth}" fill="#FFFFFF"/>`;
           labelLayer += guide(sx, sy + H - subH, sx + D, sy + H - subH);
           labelLayer += `<text x="${P(sx + D/2)}" y="${P(sy + H - 2)}" text-anchor="middle" font-weight="bold" font-size="${fs(D)}">${lbl}</text>`;

@@ -1,8 +1,8 @@
-# Validation — Studio Flat-Pack Maker v4.3.0 (student release since 24 Oct 2026)
+# Validation — Studio Flat-Pack Maker v4.3.1 (student release since 24 Oct 2026)
 
 *RIR2101 Interior Design 1 · 24 October 2026 · for the paper on the tool*
 
-**Release status.** The code validated here as v4.3.0-preview.2 was promoted unchanged to the student release v4.3.0 on 24 Oct 2026 (banner and watermark removed only). Proofs 1 and 2 hold for v4.3.0. Proof 3 was **not** done before the release, so it is recorded as post-release evidence (section 3). The verifier now lives in `tests/fold_verify.js` (copy kept in `testing/tests/`).
+**Release status.** The code validated here as v4.3.0-preview.2 was promoted to the student release v4.3.0 on 24 Oct 2026 (banner and watermark removed only) and patched the same evening to v4.3.1 (F2, mirrored right side profile — found by the independent judge in `research/net_judge.py`; see `research/RESULTS.md`). Proofs 1 and 2 hold for v4.3.0. Proof 3 was **not** done before the release, so it is recorded as post-release evidence (section 3). The verifier now lives in `tests/fold_verify.js` (copy kept in `testing/tests/`).
 
 A convincing picture proves nothing on its own. Each build method needs three separate proofs. This file states what is proven, how, and what is still open.
 
