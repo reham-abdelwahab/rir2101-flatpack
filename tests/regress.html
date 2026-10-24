@@ -51,6 +51,7 @@ function load(frame, src) {
 // Lines the candidate adds on purpose (version credit, verification stamp) are removed before comparing.
 const normalize = s => s
   .replace(/<text[^>]*class="fold-rule"[^>]*>[^<]*<\/text>/g, '')   // v4.1 fold rule line
+  .replace(/<text[^>]*>⚠ PATTERN DOES NOT FIT[^<]*<\/text>/g, '').replace(/<text[^>]*class="nest-fit-note"[^>]*>[^<]*<\/text>/g, '')   // v4.2.3: fit is decided by the nesting
   .replace(/<text[^>]*>Studio Flat-Pack Maker v[^<]*<\/text>/g, '')
   .replace(/<text[^>]*class="verify-line"[^>]*>.*?<\/text>/g, '')
   .replace(/\s+/g, ' ');
@@ -582,6 +583,35 @@ function overlapCheck(w, svgId) {
     // O — TA dropdown wording (values unchanged so old stamps still verify)
     const opts = [...wc.document.getElementById('vf-type').options].map(o => `${o.value}=${o.textContent}`).join(' | ');
     log(/cut=Furniture sheet/.test(opts) && /image=Image trace sheet/.test(opts) && !/Tab [13]/.test(opts), 'O TA verify dropdown: "Furniture sheet" / "Image trace sheet" (values cut / image kept)', opts);
+  }
+
+  // ---------------- v4.2.3 · P0 (modification list 24 Oct) ----------------
+  {
+    const f2 = document.createElement('iframe'); f2.style.display = 'none'; document.body.appendChild(f2);
+    const w2 = await load(f2, CAND); await sleep(300);
+    const d2 = id => w2.document.getElementById(id);
+    // P0-3: table 140 × 80, 1:10, A4, Waffle on 1.5 mm: parts fit 2 sheets → no overflow warning anywhere in the editor
+    d2('select-thickness').value = '1.5'; w2.updateThicknessSelect('1.5'); w2.setSheetSize('A4'); w2.setScale(10);
+    w2.eval("pieces = [{ ...newPiece('table'), w: 140, d: 80, h: 75 }]"); w2.editPiece(0); w2.setPieceMethod('waffle'); w2.refreshV4(); await sleep(200);
+    const iss = w2.collectWorkflowIssues().map(i => i.title).join(' | ');
+    log(!/Overflow|not fit/i.test(iss) && /fit A4/.test(d2('diag-text-1').textContent) && d2('inline-err-step-2').classList.contains('hidden'), 'P0-3 Waffle table 140×80 1:10 A4: no "net overflows" warning when the packed parts fit', d2('diag-text-1').textContent);
+    // P0-1: the bookcase is locked below 1.5 mm, like Waffle
+    w2.eval("pieces = [{ ...newPiece('shelf') }]"); w2.editPiece(0); w2.refreshV4();
+    d2('select-thickness').value = '0.5'; w2.updateThicknessSelect('0.5');
+    log(w2.eval('state.thicknessMm') === 1.5, 'P0-1 With a bookcase piece, 0.5 mm Bristol is refused (board stays 1.5 mm)', `t ${w2.eval('state.thicknessMm')}`);
+    w2.eval('state.thicknessMm = 0.5'); w2.refreshWaffleLock(); w2.refreshV4(); await sleep(150);
+    log(/bookcase has slotted shelves — it needs board 1\.5 mm/.test(d2('check-list').textContent) && !d2('notch-lock-note').classList.contains('hidden') && /المكتبة/.test(d2('notch-lock-note').textContent), 'P0-1 Bookcase on 0.5 mm (old Help Code): red check before printing + EN/AR lock note');
+    // P0-2: the bookcase gets its own pictures — no score / fold / glue-tab panels — and an assembly picture on its sheet
+    w2.eval('state.thicknessMm = 1.5'); d2('select-thickness').value = '1.5'; w2.updateThicknessSelect('1.5'); w2.closeEditor(); w2.switchMainTab('print'); w2.refreshV4(); await sleep(150);
+    const bk = [...d2('build-strips').querySelectorAll('img')].map(i => i.dataset.img).join(' ');
+    log(bk === 'H07 H09 H12' && d2('build-strips').querySelectorAll('svg.bi-svg').length === 1 && /Bookcase strip/.test(d2('build-strips').textContent) && !/Fold &amp; Glue strip|Fold & Glue strip/.test(d2('build-strips').textContent), 'P0-2 Bookcase build strip: H07 H09 + bookcase picture + H12 (no H08 score / H10 glue tabs)', bk);
+    const bks = w2.eval('v4Nest').sheets.map(s => s.svg).join('');
+    log(/ASSEMBLY/.test(bks) && /No folding: no blue lines/.test(bks) && !/Egg-crate slots need zero glue/.test(w2.document.documentElement.innerHTML), 'P0-2 Bookcase sheet carries its assembly picture; the "zero glue" claim is gone');
+    // P0-4: failure advice matches the error and never says "thinner board"
+    const bad = { method: 'image', archetype: 'image', imageBuild: 'waffle', qty: 1, widthCm: 45, label: 'X', captureScale: 20, parts: [{ w: 3, h: 40, label: 'X', shapes: [{ kind: 'cut', closed: true, pts: [[0, 0], [3, 0], [3, 40], [0, 40]] }] }] };
+    w2.eval('pieces = ' + JSON.stringify([bad])); const it = w2.collectV4Checks(w2.v4Cfg(), w2.nestAll(w2.eval('pieces'), w2.v4Cfg())).filter(i => i.cls === 'err' && /waffle check failed/.test(i.en));
+    log(it.length === 1 && /الحد الخارجي/.test(it[0].ar) && /traced outline/.test(it[0].en) && !/أرق/.test(w2.document.documentElement.innerHTML.replace(/data:[^"']+/g, '')), 'P0-4 Image Waffle failure: "check and repair the traced outline first" (EN/AR); no "thinner board" advice anywhere', it[0] && it[0].ar);
+    log(w2.__errors.length === 0, 'P0 checks: no console errors', w2.__errors.join(' | '));
   }
 
   log(wc.__errors.length === 0, 'No console errors after all checks', wc.__errors.join(' | '));

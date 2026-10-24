@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.2.3 — 2026-10-24 (P0 fixes from the v4.3 modification list, before the student release)
+- **P0-1 · Bookcase locked below 1.5 mm board.** The bookcase uses slotted notches, the same joint as Waffle. On 0.5 mm Bristol it now shows a red check before printing and an EN/AR lock note in the piece editor; while a bookcase piece exists, choosing paper or a custom thickness under 1.5 mm is refused.
+- **P0-2 · Bookcase build pictures.** The bookcase no longer receives the Fold & Glue strip (score, fold, glue tabs). It gets its own strip (H07 → H09 → bookcase picture → H12) with an EN/AR caption and tip, and every bookcase sheet carries an assembly picture drawn from its geometry: front view, uprights V1–V3 (slots from the front edge), shelves H (slots from the back edge), "no folding · board t mm · glue only if loose". The archetype tip "Egg-crate slots need zero glue" is replaced.
+- **P0-3 · No false overflow warning.** Fit in the editor (Step 2 issue list, diagnostic card 1, "Make it fit") now comes from packing the open piece on its own, as in PRINT & BUILD. Table 140 × 80 cm, 1:10, A4, Waffle: "all parts fit A4 (2 sheets)" instead of "net overflows A4". The one-sheet Fold & Glue preview says "Preview layout only — packs on N sheets" when the packed parts fit. The overflow message now says to change the scale of the whole model, furniture and room plan together.
+- **P0-4 · Waffle failure advice matches the error.** "Increase the spacing or use thinner board" is gone. Image pieces: "check and repair the traced outline first". Web too thin: increase rib spacing. Piece too small: larger scale for the whole model, or Fold & Glue. The advice is also shown at the top of the Waffle panel's check list.
+- No waffle geometry changes: 20/20 cases give identical cut paths and sheet counts to v4.2.2. Regression 97/97 (7 new P0 checks). Handout still 3 A4 pages, regenerated under the same filename.
+
 ## v4.2.2 — 2026-10-24 (Waffle locked below 1.5 mm board, after the first paper test)
 - Why: Reham's first E1 try used 600 gsm card in slots drawn for 1.5 mm board, and the joints were loose. Paper and Bristol card are too thin and too flexible for a waffle; the tool can only size the slot from the thickness chosen in A.
 - **Lock.** With material under 1.5 mm, the Waffle button and "Waffle from the outline" are greyed out and refuse with an EN/AR message; a note under the build methods explains why. Choosing Waffle no longer raises the material silently to 1.5 mm.
