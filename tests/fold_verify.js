@@ -117,7 +117,7 @@
         const pm = maps[k], P = pm(h.p), u = norm(sub(pm(h.q), P)), n = normalOf(k), c = centroid(F.faces[other]), C = pm(c);
         const s = signs[hi] ?? 1;   // +1 = mountain (away from the printed side), −1 = valley
         let th = Math.PI / 2; if (dot(sub(rotAbout(P, u, th)(C), P), n) * s > 0) th = -th;
-        const R = rotAbout(P, u, th); maps[other] = p => R(pm(p)); order.push(other); dirs.push({ hinge: hi, from: k, to: other, sign: s });
+        const R = rotAbout(P, u, th); maps[other] = p => R(pm(p)); order.push(other); dirs.push({ hinge: hi, from: k, to: other, sign: s, th });
       });
     }
     return { maps, order, dirs, normalOf };
@@ -231,6 +231,7 @@
         const hit = surfaces.find(sf => !(sf.part === j.P.name && sf.face === (name(j.P, parent) || 'panel')) && overlapArea(pc, T, sf.P3) >= 0.95 * At);
         if (hit) { mated = { s, onto: `${hit.part}${hit.face !== hit.part ? ' ' + hit.face : ''}` }; break; }
       }
+      (j.P.tabSigns = j.P.tabSigns || {})[hi] = { s: mated ? mated.s : 1, onto: mated ? mated.onto : null };
       const tag = `${j.P.name} tab on ${name(j.P, parent) || 'panel'}`;
       if (mated) { out.tabsMated++; out.folds.push({ part: j.P.name, hinge: tag, dir: mated.s > 0 ? 'mountain' : 'valley', onto: mated.onto }); if (mated.s < 0) out.valley.push(tag + ' → ' + mated.onto); }
       else out.tabsUnmated.push(tag);
@@ -249,6 +250,23 @@
     out.ruleOk = out.valley.length === 0;   // the printed rule: every blue line folds away from the printed side
     out.ok = out.ruleOk && out.sizeOk && out.curveOk !== false && out.tabsUnmated.length === 0 && out.unmatchedScores === 0 && out.collisions === 0 && !out.notes.some(n => /headboard/.test(n));
     out.order = best.f.order.map(k => name(main, k) || (main.isTab[k] ? 'tab' : 'face'));
+    // optional trace for the visual review (spec.trace): the exact faces, hinges, fold order and angles this check used
+    if (spec.trace) {
+      const affine = fn => { const o = fn([0, 0, 0]), ex = sub(fn([1, 0, 0]), o), ey = sub(fn([0, 1, 0]), o), ez = sub(fn([0, 0, 1]), o); return [ex[0], ey[0], ez[0], o[0], ex[1], ey[1], ez[1], o[1], ex[2], ey[2], ez[2], o[2]]; };
+      const tracePart = (P, rootK, panelSigns, M) => {
+        const signs = { ...panelSigns }; Object.entries(P.tabSigns || {}).forEach(([hi, v]) => { signs[hi] = v.s; });
+        const f = fold(P.F, rootK, signs);
+        return { name: P.name, faces: P.F.faces.map(r => r.map(q => [+q[0].toFixed(3), +q[1].toFixed(3)])), names: P.F.faces.map((_, k) => name(P, k) || (P.isTab[k] ? 'tab' : 'panel')), isTab: P.isTab,
+          hinges: P.F.hinges.map(h => ({ a: h.a, b: h.b, p: h.p, q: h.q })), root: rootK,
+          steps: f.dirs.map(d => ({ hinge: d.hinge, from: d.from, to: d.to, th: d.th, tab: !!(P.isTab[d.to]), sign: signs[d.hinge] ?? 1, onto: (P.tabSigns || {})[d.hinge] ? P.tabSigns[d.hinge].onto : null })), M };
+      };
+      const parts3 = [tracePart(main, rootIdx, best.signs, affine(place))];
+      others.forEach(P => {
+        if (P.placed) parts3.push(tracePart(P, P.placed.k, {}, affine(P.placed.top)));
+        else { const sf = surfaces.find(s2 => s2.part === P.name); if (sf) parts3.push({ name: P.name, static3D: sf.P3.map(X => X.map(v => +v.toFixed(3))), glue: !!sf.glue }); }
+      });
+      out.trace = { parts: parts3, target: out.assembledTarget, valley: out.valley, tabsUnmated: out.tabsUnmated, ok: out.ok, notes: out.notes };
+    }
     return out;
   }
 
